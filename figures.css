@@ -1,0 +1,671 @@
+/* figures.css · the herbarium's figures (fig-*.js).
+
+   Each figure mounts into the .figure-stage of a <figure class="figure" data-figure="…">
+   and adds what it needs: a canvas or an SVG that fits the stage, real form controls,
+   readouts, a "drawn by" line. ink.css styles the figure itself (caption, provenance tags,
+   "Read the numbers"), the controls (.button, .toggle, range, select) and the paper slip;
+   this file only places things and gives the figures their own few marks. Colours come
+   from ink.css's custom properties, so a figure follows its theme and forced colours.   */
+
+/* 1 · Stage ====================================================================== */
+
+.figure-stage.fig-live {
+  position: relative;
+  display: grid;
+  gap: var(--space-3, 12px);
+  min-inline-size: 0;
+  container-type: inline-size;
+}
+
+.fig-frame {
+  position: relative;
+  min-inline-size: 0;
+}
+
+.fig-canvas {
+  display: block;
+  inline-size: 100%;
+  touch-action: pan-y;
+}
+
+/* A stage given its height by the page (data-fit="fill"): the canvas fills it. */
+.figure-stage[data-fit="fill"].fig-live {
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+
+.figure-stage[data-fit="fill"] .fig-frame {
+  min-block-size: 0;
+}
+
+.fig-canvas.is-fill {
+  block-size: 100%;
+}
+
+.fig-drawn-by {
+  margin: 0;
+  text-align: end;
+}
+
+
+/* 2 · Controls, notes, legends ===================================================== */
+
+.fig-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3, 12px) var(--space-6, 32px);
+  color: var(--ink-2);
+}
+
+.fig-control {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2, 8px) var(--space-3, 12px);
+  min-inline-size: 0;
+}
+
+.fig-control-name {
+  color: var(--ink-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  line-height: 1.3;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+  white-space: nowrap;
+}
+
+.fig-control input[type="range"] {
+  inline-size: clamp(8rem, 30cqi, 15rem);
+}
+
+.fig-control select {
+  min-block-size: 2.25rem;
+  padding-block: .3em;
+  font-size: .9375rem;
+}
+
+.fig-value {
+  min-inline-size: 8ch;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.fig-note {
+  margin: 0;
+  max-inline-size: 48ch;
+  color: var(--ink-3);
+  font-family: var(--font-text);
+  font-size: var(--fs-caption);
+  font-style: italic;
+  line-height: var(--lh-caption);
+  text-wrap: pretty;
+}
+
+.fig-note:empty {
+  display: none;
+}
+
+.fig-listen-group {
+  align-items: flex-start;
+  flex: 1 1 22rem;
+  flex-wrap: nowrap;
+}
+
+.fig-listen-group[hidden] {
+  display: none;
+}
+
+@container (max-width: 520px) {
+  .fig-listen-group {
+    flex-wrap: wrap;
+  }
+}
+
+.fig-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 8px) var(--space-5, 24px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-axis);
+}
+
+.fig-key {
+  display: inline-flex;
+  align-items: center;
+  gap: .6em;
+}
+
+.fig-swatch {
+  flex: none;
+  inline-size: 24px;
+  block-size: 0;
+  border-block-start: 1.25px solid var(--print);
+}
+
+.fig-key-zeros .fig-swatch {
+  border-color: var(--gold);
+}
+
+.fig-key-band .fig-swatch {
+  block-size: 9px;
+  border: 1px solid var(--print-2);
+  border-inline-width: 0;
+  background-image: repeating-linear-gradient(-45deg, var(--print-3) 0 1px, transparent 1px 4px);
+}
+
+.fig-readout {
+  margin: 0;
+  min-block-size: 1.45em;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-axis);
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+}
+
+.fig-readout-corner {
+  position: absolute;
+  inset-block-start: 4px;
+  inset-inline-end: 12px;
+  text-align: end;
+  pointer-events: none;
+}
+
+.fig-ring-readout {
+  flex: 1 1 20rem;
+}
+
+
+/* 3 · Points you can read (critical strip) ========================================= */
+
+.fig-hotspots {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.fig-hotspot {
+  position: absolute;
+  inline-size: 26px;
+  block-size: 26px;
+  margin: -13px 0 0 -13px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.fig-hotspot:focus-visible {
+  outline: 2px solid var(--ring, var(--gold));
+  outline-offset: 2px;
+}
+
+.fig-tip {
+  position: absolute;
+  z-index: 1;
+  margin: 0;
+  padding: 3px 8px;
+  border: 1px solid var(--line-strong);
+  background-color: var(--ground-deep);
+  color: var(--print);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.fig-tip[hidden] {
+  display: none;
+}
+
+
+/* 4 · The mirror: drawing and steps side by side, stacked when narrow ============== */
+
+.fig-mirror {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(13rem, 1fr);
+  align-items: center;
+  gap: var(--space-5, 24px) var(--space-6, 32px);
+}
+
+@container (max-width: 640px) {
+  .fig-mirror {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.fig-steps {
+  display: grid;
+  align-content: center;
+  gap: var(--space-3, 12px);
+}
+
+.fig-step-count {
+  margin: 0;
+  color: var(--ink-3);
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+
+.fig-step-text {
+  margin: 0;
+  min-block-size: 3em;
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 1.1875rem;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.fig-step-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 8px);
+}
+
+
+/* 5 · Five flowers =================================================================== */
+
+.fig-flowers-svg {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  overflow: visible;
+}
+
+.fig-stem,
+.fig-leaf,
+.fig-soil,
+.fig-bulb,
+.fig-petal,
+.fig-vein {
+  vector-effect: non-scaling-stroke;
+}
+
+.fig-stem {
+  fill: none;
+  stroke: var(--print-2);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+}
+
+.fig-stem-main {
+  stroke: var(--print);
+  stroke-width: 1.25;
+}
+
+.fig-leaf {
+  fill: none;
+  stroke: var(--print-3);
+  stroke-width: .85;
+}
+
+.fig-soil {
+  stroke: var(--print-3);
+  stroke-width: 1;
+  stroke-dasharray: 2 5;
+}
+
+.fig-bulb {
+  fill: none;
+  stroke: var(--print);
+  stroke-width: 1.1;
+}
+
+.fig-term {
+  fill: var(--print-2);
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+.fig-term-root {
+  fill: var(--print);
+}
+
+.fig-term-link {
+  outline: none;
+}
+
+.fig-term-link:is(:hover, :focus-visible) .fig-term {
+  fill: var(--print);
+  text-decoration: underline;
+}
+
+.fig-term-link:focus-visible .fig-term {
+  fill: var(--gold);
+}
+
+/* State inks of a flower (design §3.1): accepted gold, running live, pending pencil. */
+.fig-flower {
+  --flower: var(--state-pending, var(--print-3));
+}
+
+.fig-flower[data-state="gold"] {
+  --flower: var(--state-passed, var(--gold));
+}
+
+.fig-flower[data-state="live"] {
+  --flower: var(--state-running, var(--live));
+}
+
+.fig-flower[data-state="heather"] {
+  --flower: var(--state-inconclusive, var(--heather));
+}
+
+.fig-flower[data-state="vermilion"] {
+  --flower: var(--state-failed, var(--vermilion));
+}
+
+.fig-petal {
+  fill: color-mix(in srgb, var(--flower) 12%, transparent);
+  stroke: var(--flower);
+  stroke-width: 1.1;
+}
+
+.fig-flower:is([data-state="pending"], [data-state="outside"]) .fig-petal {
+  fill: none;
+  stroke-dasharray: 3 3;
+}
+
+.fig-vein {
+  stroke: var(--flower);
+  stroke-width: .75;
+  opacity: .7;
+}
+
+.fig-floret {
+  fill: var(--flower);
+}
+
+.fig-flower-label {
+  fill: var(--print);
+  font-family: var(--font-text);
+  font-size: 17px;
+}
+
+/* The tall drawing is shown narrower, so its words are set larger in drawing units. */
+.fig-flowers-svg.is-tall .fig-flower-label {
+  font-size: 21px;
+}
+
+.fig-flowers-svg.is-tall .fig-term {
+  font-size: 19px;
+}
+
+.fig-flower-focus {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.fig-flower.is-selected .fig-flower-focus {
+  stroke: var(--print-3);
+  stroke-dasharray: 1 4;
+}
+
+.fig-flower-link {
+  outline: none;
+  cursor: pointer;
+}
+
+.fig-flower-link:focus-visible .fig-flower-focus {
+  stroke: var(--ring, var(--gold));
+  stroke-width: 2;
+  stroke-dasharray: none;
+}
+
+.fig-card {
+  display: grid;
+  gap: var(--space-2, 8px);
+  max-inline-size: 70ch;
+  min-inline-size: 0;
+}
+
+.fig-card > p {
+  margin: 0;
+}
+
+.fig-card-head {
+  color: var(--ink);
+  font-family: var(--font-text);
+}
+
+.fig-card-head code {
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+
+.fig-card-words {
+  color: var(--ink);
+  font-family: var(--font-text);
+  line-height: 1.5;
+}
+
+pre.lean.fig-card-lean {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.fig-card-meta {
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-axis);
+  line-height: 1.6;
+}
+
+.fig-state {
+  font-family: var(--font-text);
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+  color: var(--state-pending, var(--print-3));
+}
+
+.fig-state[data-state="gold"] {
+  color: var(--state-passed, var(--gold));
+}
+
+.fig-state[data-state="live"] {
+  color: var(--state-running, var(--live));
+}
+
+.fig-state[data-state="heather"] {
+  color: var(--state-inconclusive, var(--heather));
+}
+
+.fig-state[data-state="vermilion"] {
+  color: var(--state-failed, var(--vermilion));
+}
+
+
+/* 6 · The label with three lines (a paper slip) ======================================= */
+
+.fig-label {
+  max-inline-size: 46rem;
+}
+
+.fig-label-head {
+  margin: 0 0 var(--space-3, 12px);
+  color: var(--ink-2);
+  font-family: var(--font-text);
+}
+
+.fig-label-lines {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fig-label-line {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--space-4, 16px);
+  padding-block: .6em .5em;
+  border-block-end: 1px solid var(--paper-2);
+}
+
+@container (max-width: 520px) {
+  .fig-label-line {
+    grid-template-columns: minmax(0, 1fr);
+    gap: .25em;
+  }
+}
+
+.fig-label-key {
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 1.0625rem;
+  font-style: italic;
+}
+
+.fig-label-body {
+  display: grid;
+  gap: .35em;
+  min-inline-size: 0;
+}
+
+.fig-label-text {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+/* Ink: the lettering ink. Gold: inked and marked with the seal's gold. Pencil: graphite,
+   lighter, in the hand of Text italic, waiting for a receipt. */
+.fig-label-line[data-ink="gold"] > .fig-label-key,
+.fig-label-line[data-ink="gold"] .fig-label-text,
+.fig-label-row[data-ink="gold"] .fig-label-text {
+  color: var(--gold-ink);
+}
+
+.fig-label-line[data-ink="gold"] > .fig-label-key::after,
+.fig-label-row[data-ink="gold"]::before {
+  content: "";
+  display: inline-block;
+  inline-size: .5em;
+  block-size: .5em;
+  margin-inline: .45em 0;
+  border-radius: 50%;
+  background-color: var(--seal-gold);
+  vertical-align: .1em;
+}
+
+.fig-label-row[data-ink="gold"]::before {
+  margin-inline: 0 .55em;
+}
+
+.fig-label-row[data-ink="red"] .fig-label-text {
+  color: var(--state-failed);
+}
+
+.fig-label :is(.fig-label-line, .fig-label-row)[data-ink="pencil"] .fig-label-text,
+.fig-label-line[data-ink="pencil"] > .fig-label-key {
+  color: color-mix(in srgb, var(--paper-ink-2) 88%, var(--paper));
+  font-family: var(--font-text);
+  font-size: 1rem;
+  font-style: italic;
+  letter-spacing: .01em;
+}
+
+.fig-label-blank {
+  display: block;
+  block-size: 1.35em;
+  border-block-end: 1px dashed color-mix(in srgb, var(--paper-ink-2) 55%, transparent);
+}
+
+.fig-label-det {
+  margin: var(--space-3, 12px) 0 0;
+  color: var(--ink-2);
+  font-size: var(--fs-axis);
+}
+
+.fig-label-det[hidden] {
+  display: none;
+}
+
+
+/* 7 · Forced colours ================================================================= */
+
+@media (forced-colors: active) {
+  .fig-stem,
+  .fig-leaf,
+  .fig-soil,
+  .fig-bulb,
+  .fig-petal,
+  .fig-vein {
+    stroke: CanvasText;
+  }
+
+  .fig-petal {
+    fill: none;
+  }
+
+  .fig-flower[data-state="gold"] .fig-petal,
+  .fig-flower[data-state="gold"] .fig-floret {
+    stroke: Highlight;
+    fill: Highlight;
+  }
+
+  .fig-flower[data-state="gold"] .fig-petal {
+    fill: none;
+  }
+
+  .fig-floret {
+    fill: CanvasText;
+  }
+
+  .fig-term,
+  .fig-flower-label {
+    fill: CanvasText;
+  }
+
+  .fig-flower-link:focus-visible .fig-flower-focus {
+    stroke: Highlight;
+  }
+
+  .fig-tip {
+    border-color: CanvasText;
+    background-color: Canvas;
+    color: CanvasText;
+  }
+
+  .fig-swatch,
+  .fig-key-band .fig-swatch {
+    border-color: CanvasText;
+    background-image: none;
+  }
+}
+
+
+/* 8 · Marginal specimens (fig-margin-specimen.js) ========================================
+
+   A plant printed in Lean beside each chapter head: decorative (the mount is aria-hidden),
+   so the stage holds only its canvas. The page places and sizes .margin-specimen.        */
+
+.margin-specimen .figure-stage.fig-live {
+  display: block;
+}
+
+.margin-specimen .fig-canvas {
+  pointer-events: none;
+}

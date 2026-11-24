@@ -1,0 +1,19 @@
+{
+  "ts": "2026-11-20T18:13:35+00:00",
+  "lean_release": {
+    "filename": "lean-4.33.1-linux.tar.zst",
+    "url": "https://github.com/leanprover/lean4/releases/download/v4.33.1/lean-4.33.1-linux.tar.zst",
+    "sha256": "890afd185370f85666025b883914ab4f4b339136f8c96167b69cfb62aecaf235",
+    "bytes": 570405234
+  },
+  "installed_tools": {
+    "lean": {
+      "version": "Lean (version 4.33.1, x86_64-unknown-linux-gnu, commit 819816b2e0a3bf405af45ae5c7af2491d8f5bee6, Release)",
+      "sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550"
+    },
+    "lake": {
+      "version": "Lake version 5.0.0-src+819816b (Lean version 4.33.1)",
+      "sha256": "60330ab6f07dce20f3fa9ebb08e8b984ea9549eac172afeb15d9d2227060e2b3"
+    }
+  }
+}

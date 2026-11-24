@@ -1,0 +1,73 @@
+{
+  "run_id": "rh-20261120",
+  "result": "running",
+  "result_scope": "local_build",
+  "replay_results": {
+    "reference_export": "passed"
+  },
+  "records": {
+    "source-provenance.json": {
+      "url": "./feed/evidence/source-provenance.json",
+      "sha256": "e502d026b1df55e8e4e0dd3830ed05329779202e8cae4668f5b7f885c0b907ff"
+    },
+    "upstream-provenance.json": {
+      "url": "./feed/evidence/upstream-provenance.json",
+      "sha256": "a8855c8028ae129643ecad73b0ba2434511b59846a1fc493af6e9edd9dd4a168"
+    },
+    "compiler-provenance.json": {
+      "url": "./feed/evidence/compiler-provenance.json",
+      "sha256": "55d0ff4e68cc60a03a7b42fb6666ce1ca9fac5a1e907c3dcf0b19fe8f5bd1b16"
+    },
+    "interrupted-build-smoke.json": {
+      "url": "./feed/evidence/interrupted-build-smoke.json",
+      "sha256": "f42107f730e8307d0591779465c89262640f75fabde65289185eeb8507b7592a"
+    },
+    "verifier-smoke-preparation.json": {
+      "url": "./feed/evidence/verifier-smoke-preparation.json",
+      "sha256": "8e9d411e44d8dd7644df0b40cf7a4bbffad57b2dba916ec1809b596b8c5fbeac"
+    },
+    "verifier-smoke.json": {
+      "url": "./feed/evidence/verifier-smoke.json",
+      "sha256": "f76a2af6e7382ea32cf0891739814014f25b8cf011dfbd93628e3908bdbb135d"
+    },
+    "verifier-integration-controls.json": {
+      "url": "./feed/evidence/verifier-integration-controls.json",
+      "sha256": "a81e33e33610f6d661351b089134b90cbf4b90311630132bd7f19c4ac6fcc5de"
+    },
+    "verifier-swap-capability.json": {
+      "url": "./feed/evidence/verifier-swap-capability.json",
+      "sha256": "fca8cd65678ed734b45cf852e3dd8b544f47e016c9656410e98e99d9be4cba02"
+    },
+    "verifier-swap-controls.json": {
+      "url": "./feed/evidence/verifier-swap-controls.json",
+      "sha256": "3c5f5fd49879682bd4d026f5086024e3f2fcf5cfb4f5ae645ad5c99d1d43e00b"
+    },
+    "challenge.json": {
+      "url": "./feed/evidence/challenge.json",
+      "sha256": "ff84c8ac62a6cc5adb1909e54b9aa6d737331ddf60500d9938a2010de58dc6cc"
+    },
+    "build-attestation.json": {
+      "url": "./feed/evidence/build-attestation.json",
+      "sha256": "0eda2f5f21791734da31f451bd650f3cc2521577bf164d8dfdb0249bf0668057"
+    },
+    "verification.json": {
+      "url": "./feed/evidence/verification.json",
+      "sha256": "7dbaca13525d79bf863890c9e0ae8fbf8298c0f5277e54551779d2159db01bef"
+    },
+    "export-interruption.json": {
+      "url": "./feed/evidence/export-interruption.json",
+      "sha256": "3a815f077a936fbdfc476ca456696559249ae37ee3d9a8b2e63de68bb56d0165"
+    },
+    "reference-replay.json": {
+      "url": "./feed/evidence/reference-replay.json",
+      "sha256": "6df5f74252efbc52afd37452331bd442cbea7a7ecff760332fa1ed4c731dd45a"
+    }
+  },
+  "publisher": "https://alpo.ge/remark.pdf",
+  "permitted_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "updated": "2026-11-24T06:05:25+00:00"
+}

@@ -1,0 +1,544 @@
+/* ==========================================================================
+   masthead.css · the herbarium's masthead (design §5.2b)
+   ==========================================================================
+
+   Shared by the proof desk (index.html) and the keeper's local pages. Colours,
+   type and the .toggle come from ink.css; this sheet only sets the bar.
+
+     <header class="masthead">
+       <div class="masthead-bar">
+         <a class="brand" href="/">
+           <span class="brand-mark" aria-hidden="true">ζ</span><span class="brand-name">Lark</span>
+           <span class="brand-sep" aria-hidden="true">/</span><span class="brand-place">Herbarium</span>
+         </a>
+         <span class="masthead-here"></span>          proof desk: the plate in view
+         <button class="nav-toggle">Plates</button>  proof desk: the plate menu on narrow screens
+         <nav class="masthead-nav [plates-nav]">…</nav>
+         <details class="workspace-menu">…</details>  local mode and local pages
+         <button class="toggle motion-toggle" id="motion-switch">…</button>
+         <span class="link-state" id="link-state" role="status">…</span>
+       </div>
+     </header>
+
+   The current page's link carries aria-current="page" (local pages) or
+   aria-current="location" (plates, set by story.js). Nothing here may make the
+   page wider than the view, down to 320px.                                   */
+
+.masthead {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 50;
+  overflow-x: clip;
+  border-block-end: 1px solid var(--hair);
+  background-color: color-mix(in srgb, var(--ground) 86%, transparent);
+  -webkit-backdrop-filter: blur(12px) saturate(1.12);
+  backdrop-filter: blur(12px) saturate(1.12);
+}
+
+.masthead-bar {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.4vw, 20px);
+  min-block-size: var(--masthead-h, 56px);
+  padding-inline: clamp(10px, 2vw, 28px);
+}
+
+/* 1 · The brand: ζ in a gold ring, "Lark / Herbarium". -------------------- */
+
+.brand {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: .4em;
+  color: var(--print);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.brand-mark {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1.65rem;
+  block-size: 1.65rem;
+  border: 1px solid var(--gold-dim);
+  border-radius: 50%;
+  color: var(--gold);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  font-style: italic;
+  line-height: 1;
+  transition: border-color var(--quick, 140ms) ease;
+}
+
+.brand:hover .brand-mark {
+  border-color: var(--gold);
+}
+
+.brand-sep {
+  color: var(--print-3);
+  font-weight: 400;
+}
+
+.brand-place {
+  color: var(--print-2);
+  font-style: italic;
+}
+
+/* 2 · The plate in view (proof desk, wide screens only). ----------------- */
+
+.masthead-here {
+  display: none;
+}
+
+@media (min-width: 1320px) {
+  .masthead-here {
+    display: block;
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    overflow: hidden;
+    color: var(--print-3);
+    font-family: var(--font-text);
+    font-size: 1rem;
+    font-style: italic;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .masthead-here .here-num {
+    color: var(--print-2);
+    font-family: var(--font-display);
+  }
+}
+
+/* 3 · Navigation. ------------------------------------------------------------ */
+
+.masthead-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.6vw, 22px);
+  min-inline-size: 0;
+  margin-inline-start: auto;
+}
+
+.masthead-nav a {
+  color: var(--print-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-label, .875rem);
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.masthead-nav a:hover {
+  color: var(--print);
+}
+
+.masthead-nav a:is([aria-current="page"], [aria-current="location"]) {
+  color: var(--gold);
+}
+
+.masthead-nav a[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-color: var(--gold-dim);
+  text-underline-offset: .32em;
+}
+
+/* The plates: Roman numerals between two words, like the tabs of a herbarium
+   folder. The plate's title shows on a paper tag on hover and focus. */
+.plates-nav {
+  gap: 0;
+}
+
+.plates-nav a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 1.75rem;
+  block-size: 2.25rem;
+  padding-inline: .3rem;
+  border-radius: var(--radius, 2px);
+  font-variant-caps: normal;
+  letter-spacing: 0;
+}
+
+.plates-nav .nav-num {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-style: italic;
+  line-height: 1;
+}
+
+.plates-nav .nav-num-word {
+  padding-inline: .2rem;
+  font-family: var(--font-text);
+  font-size: var(--fs-label, .875rem);
+  font-style: normal;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+
+/* The plate in view: a gold node on the critical line under its numeral. */
+.plates-nav a[aria-current="location"]::after {
+  content: "";
+  position: absolute;
+  inset-block-end: 1px;
+  inset-inline-start: calc(50% - 2.5px);
+  inline-size: 5px;
+  block-size: 5px;
+  border-radius: 50%;
+  background-color: var(--gold);
+}
+
+.plates-nav .nav-word {
+  position: absolute;
+  inset-block-start: calc(100% + 9px);
+  inset-inline-start: 50%;
+  z-index: 2;
+  display: none;
+  padding: .38em .7em .42em;
+  background-color: var(--paper);
+  box-shadow: var(--shadow-slip);
+  color: var(--paper-ink);
+  font-family: var(--font-text);
+  font-size: .9375rem;
+  font-style: normal;
+  font-weight: 500;
+  font-variant-caps: normal;
+  letter-spacing: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  translate: -50% 0;
+  pointer-events: none;
+}
+
+/* Tags of the last plates open leftwards, so they stay inside the view. */
+.plates-nav a:nth-last-child(-n + 6) .nav-word {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  translate: none;
+}
+
+.plates-nav a:is(:hover, :focus-visible) .nav-word {
+  display: block;
+}
+
+.nav-toggle {
+  display: none;
+}
+
+/* Narrow screens: the plates fold into a menu under the masthead. */
+@media (max-width: 1179.98px) {
+  .nav-toggle {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: .5em;
+    min-block-size: 2.25rem;
+    margin-inline-start: auto;
+    padding: .3em .7em;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius, 2px);
+    background: transparent;
+    color: var(--print-2);
+    font-family: var(--font-text);
+    font-size: var(--fs-label, .875rem);
+    font-weight: 500;
+    font-variant-caps: all-small-caps;
+    letter-spacing: .07em;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .nav-toggle:hover,
+  .nav-toggle[aria-expanded="true"] {
+    background-color: var(--hover-wash);
+    color: var(--print);
+  }
+
+  .nav-toggle-mark {
+    inline-size: .8rem;
+    block-size: .55rem;
+    border-block: 1px solid currentColor;
+    background: linear-gradient(currentColor, currentColor) center / 100% 1px no-repeat;
+  }
+
+  .plates-nav {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 100%;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    max-block-size: calc(100vh - var(--masthead-h, 56px) - 24px);
+    max-block-size: calc(100svh - var(--masthead-h, 56px) - 24px);
+    margin: 0;
+    padding: 8px clamp(10px, 2vw, 28px) 14px;
+    overflow-y: auto;
+    border-block-end: 1px solid var(--hair);
+    background-color: color-mix(in srgb, var(--ground-deep) 96%, transparent);
+    box-shadow: 0 18px 40px rgb(0 0 0 / .35);
+  }
+
+  .plates-nav[data-open] {
+    display: flex;
+  }
+
+  .plates-nav a {
+    justify-content: flex-start;
+    gap: .9rem;
+    block-size: auto;
+    min-block-size: 2.75rem;
+    padding: .3rem .4rem;
+    border-block-end: 1px solid var(--hair);
+  }
+
+  .plates-nav a:last-child {
+    border-block-end: 0;
+  }
+
+  .plates-nav .nav-num {
+    min-inline-size: 2.4rem;
+    text-align: end;
+  }
+
+  .plates-nav .nav-num-word {
+    min-inline-size: 0;
+    padding-inline: 0;
+    font-size: 1rem;
+  }
+
+  .plates-nav .nav-word,
+  .plates-nav a:nth-last-child(-n + 6) .nav-word {
+    position: static;
+    display: inline;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    color: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+    translate: none;
+    white-space: normal;
+  }
+
+  .plates-nav a[aria-current="location"]::after {
+    inset-block-end: auto;
+    inset-inline-start: auto;
+    inset-inline-end: .5rem;
+  }
+}
+
+/* Local pages: their few text links wrap onto a row of their own on phones. */
+@media (max-width: 759.98px) {
+  .masthead-bar:has(.masthead-nav:not(.plates-nav)) {
+    flex-wrap: wrap;
+    row-gap: 0;
+  }
+
+  .masthead-nav:not(.plates-nav) {
+    order: 9;
+    flex: 1 0 100%;
+    gap: 16px;
+    margin-inline-start: 0;
+    padding-block: 2px 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+}
+
+/* 4 · The keeper's bench menu (local only). --------------------------------- */
+
+.workspace-menu {
+  position: relative;
+  flex: none;
+}
+
+.workspace-menu > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: .45em;
+  min-block-size: 2.25rem;
+  padding: .3em .7em;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius, 2px);
+  color: var(--print-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-label, .875rem);
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+  line-height: 1;
+  list-style: none;
+  white-space: nowrap;
+}
+
+.workspace-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.workspace-menu > summary::after {
+  content: "";
+  inline-size: .36em;
+  block-size: .36em;
+  margin-block-start: -.2em;
+  border-block-end: 1px solid currentColor;
+  border-inline-end: 1px solid currentColor;
+  rotate: 45deg;
+}
+
+.workspace-menu > summary:hover,
+.workspace-menu[open] > summary {
+  background-color: var(--hover-wash);
+  color: var(--print);
+}
+
+.workspace-menu > nav {
+  position: absolute;
+  inset-block-start: calc(100% + 8px);
+  inset-inline-end: 0;
+  z-index: 3;
+  display: grid;
+  min-inline-size: 11rem;
+  padding: 6px;
+  background-color: var(--paper);
+  box-shadow: var(--shadow-slip);
+}
+
+.workspace-menu > nav a {
+  padding: .55em .75em;
+  color: var(--paper-ink);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.workspace-menu > nav a:hover {
+  background-color: var(--paper-2);
+}
+
+.workspace-menu > nav a:focus-visible {
+  outline-color: var(--seal-gold-ink);
+}
+
+/* 5 · Motion switch and the link state. ------------------------------------- */
+
+.motion-toggle {
+  flex: none;
+  min-block-size: 2.25rem;
+  padding: .3em .75em;
+  font-size: var(--fs-label, .875rem);
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+  white-space: nowrap;
+}
+
+.link-state {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: .5em;
+  color: var(--print-2);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
+  white-space: nowrap;
+}
+
+.link-state::before {
+  content: "";
+  flex: none;
+  inline-size: .5rem;
+  block-size: .5rem;
+  border: 1px solid var(--print-3);
+  border-radius: 50%;
+}
+
+.link-state[data-state="live"]::before {
+  border-color: var(--live);
+  background-color: var(--live);
+  color: var(--live);
+  animation: heartbeat var(--heartbeat, 2.4s) ease-in-out infinite;
+}
+
+.link-state[data-state="stale"]::before {
+  border-color: var(--heather);
+  background: linear-gradient(90deg, var(--heather) 50%, transparent 50%);
+}
+
+/* 6 · Small screens. --------------------------------------------------------- */
+
+/* The switch keeps its name (motion.js sets aria-label); below 1360px its words give way
+   to its bud, so the plates and the bench menu keep their room. */
+@media (max-width: 1359.98px) {
+  .motion-toggle {
+    inline-size: 2.25rem;
+    padding: 0;
+  }
+
+  .motion-toggle [data-motion-label] {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 599.98px) {
+  .link-detail {
+    display: none;
+  }
+}
+
+@media (max-width: 479.98px) {
+  .brand-sep,
+  .brand-place {
+    display: none;
+  }
+
+  .workspace-menu > summary {
+    gap: 7px;
+    font-size: 0;
+    letter-spacing: 0;
+  }
+
+  .workspace-menu > summary::before {
+    content: "Bench";
+    font-size: var(--fs-label, .875rem);
+    letter-spacing: .07em;
+  }
+}
+
+@media (max-width: 359.98px) {
+  .brand-name {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .masthead {
+    border-block-end-color: CanvasText;
+    background-color: Canvas;
+  }
+
+  .link-state::before,
+  .plates-nav a[aria-current="location"]::after {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+
+  .plates-nav a[aria-current="location"] {
+    text-decoration: underline;
+  }
+}

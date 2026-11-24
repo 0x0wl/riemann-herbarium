@@ -1,0 +1,351 @@
+{
+  "started": "2026-11-24T02:20:47Z",
+  "updated": "2026-11-24T06:05:25Z",
+  "result": "running",
+  "stage": "export",
+  "archive_sha256": "9631b4f020199e580ba86178cb56c6e9b09f690c2369a80dc4334aa93f49c7fc",
+  "mathlib_commit": "0df444a360eaa60ab8c11dca51a86af692955474",
+  "compiler_version": "4.33.1",
+  "selected_kernel": "con-leche",
+  "exporter_commit": "15f6055e299ad5b89345e533cc2192f4cc00f659",
+  "checkpoints": [
+    {
+      "ts": "2026-11-24T02:20:48Z",
+      "stage": "export",
+      "kind": "stage_start",
+      "message": "Preparing the proof export from the sealed local build"
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "systemd-run",
+        "--quiet",
+        "--wait",
+        "--pipe",
+        "--service-type=exec",
+        "--unit",
+        "rh-verifier-99ac574b32a2",
+        "-p",
+        "OOMPolicy=kill",
+        "-p",
+        "KillMode=control-group",
+        "-p",
+        "CPUQuota=600%",
+        "-p",
+        "MemoryHigh=56G",
+        "-p",
+        "MemoryMax=64G",
+        "-p",
+        "MemorySwapMax=112G",
+        "-p",
+        "LimitNOFILE=1048576",
+        "-p",
+        "Nice=10",
+        "-p",
+        "IOWeight=25",
+        "-p",
+        "IOSchedulingClass=idle",
+        "--",
+        "[local path]",
+        "-c",
+        "receipt=$1; shift; \"$@\" && touch \"$receipt\"",
+        "export-receipt",
+        "[local path]",
+        "[local path]",
+        "--unshare-all",
+        "--die-with-parent",
+        "--new-session",
+        "--clearenv",
+        "--cap-drop",
+        "ALL",
+        "--uid",
+        "65534",
+        "--gid",
+        "65534",
+        "--ro-bind",
+        "[local path]",
+        "[local path]",
+        "--proc",
+        "[local path]",
+        "--dev",
+        "[local path]",
+        "--tmpfs",
+        "[local path]",
+        "--dir",
+        "/work",
+        "--dir",
+        "[local path]",
+        "--symlink",
+        "usr/bin",
+        "[local path]",
+        "--symlink",
+        "usr/sbin",
+        "/sbin",
+        "--symlink",
+        "usr/lib",
+        "/lib",
+        "--symlink",
+        "usr/lib64",
+        "/lib64",
+        "--ro-bind",
+        "[local path]",
+        "[local path]",
+        "--ro-bind",
+        "[local path]",
+        "[local path]",
+        "--ro-bind",
+        "[local path]",
+        "/compiler",
+        "--ro-bind",
+        "[local path]",
+        "/objects",
+        "--ro-bind",
+        "[local path]",
+        "[local path]",
+        "--ro-bind",
+        "[local path]",
+        "/deps",
+        "--setenv",
+        "PATH",
+        "[local path]",
+        "--setenv",
+        "HOME",
+        "[local path]",
+        "--setenv",
+        "TMPDIR",
+        "[local path]",
+        "--setenv",
+        "LEAN_ABORT_ON_PANIC",
+        "1",
+        "--setenv",
+        "LC_ALL",
+        "C.UTF-8",
+        "--setenv",
+        "LEAN_NUM_THREADS",
+        "1",
+        "--setenv",
+        "LEAN_PATH",
+        "/objects:[local path]",
+        "--chdir",
+        "/work",
+        "--",
+        "[local path]",
+        "Main",
+        "--",
+        "riemannHypothesis",
+        "riemannZeta_eq_zero_re",
+        "LFunction_ne_zero_of_half_lt_re",
+        "LFunction_eq_zero_re",
+        "LFunction_eq_zero_re_of_isPrimitive",
+        "propext",
+        "Quot.sound",
+        "Classical.choice",
+        "Quot",
+        "Quot.mk",
+        "Quot.lift",
+        "Quot.ind",
+        "Nat.add",
+        "Nat.sub",
+        "Nat.mul",
+        "Nat.pow",
+        "Nat.gcd",
+        "Nat.div",
+        "Nat.mod",
+        "Nat.beq",
+        "Nat.ble",
+        "Nat.land",
+        "Nat.lor",
+        "Nat.xor",
+        "Nat.shiftLeft",
+        "Nat.shiftRight",
+        "String.ofList",
+        "Char.ofNat",
+        "List",
+        "eagerReduce",
+        "Nat",
+        "String",
+        "String.mk",
+        "Char",
+        "optParam",
+        "autoParam",
+        "semiOutParam",
+        "outParam"
+      ],
+      "started": "2026-11-24T02:21:19Z",
+      "log": "[local path]",
+      "attempt": 1
+    }
+  ],
+  "build_record_sha256": "b0b6a182bc61acc88ac8182a405f9ccad4cc251a470116ee5740d9adfc1b65bb",
+  "verifier_sha256": "0055d98ca1c472888b4ce4d3d02a0a56cfa93aa0a921bb74cf708e73bb487952",
+  "theorems": {
+    "riemannHypothesis": {
+      "build": {
+        "result": "passed",
+        "ts": "2026-11-24T02:20:47Z",
+        "message": "Pinned source build completed"
+      },
+      "statement": {
+        "result": "pending"
+      },
+      "axioms": {
+        "result": "pending"
+      },
+      "con-leche": {
+        "result": "pending"
+      }
+    },
+    "riemannZeta_eq_zero_re": {
+      "build": {
+        "result": "passed",
+        "ts": "2026-11-24T02:20:47Z",
+        "message": "Pinned source build completed"
+      },
+      "statement": {
+        "result": "pending"
+      },
+      "axioms": {
+        "result": "pending"
+      },
+      "con-leche": {
+        "result": "pending"
+      }
+    },
+    "LFunction_ne_zero_of_half_lt_re": {
+      "build": {
+        "result": "passed",
+        "ts": "2026-11-24T02:20:47Z",
+        "message": "Pinned source build completed"
+      },
+      "statement": {
+        "result": "pending"
+      },
+      "axioms": {
+        "result": "pending"
+      },
+      "con-leche": {
+        "result": "pending"
+      }
+    },
+    "LFunction_eq_zero_re": {
+      "build": {
+        "result": "passed",
+        "ts": "2026-11-24T02:20:47Z",
+        "message": "Pinned source build completed"
+      },
+      "statement": {
+        "result": "pending"
+      },
+      "axioms": {
+        "result": "pending"
+      },
+      "con-leche": {
+        "result": "pending"
+      }
+    },
+    "LFunction_eq_zero_re_of_isPrimitive": {
+      "build": {
+        "result": "passed",
+        "ts": "2026-11-24T02:20:47Z",
+        "message": "Pinned source build completed"
+      },
+      "statement": {
+        "result": "pending"
+      },
+      "axioms": {
+        "result": "pending"
+      },
+      "con-leche": {
+        "result": "pending"
+      }
+    }
+  },
+  "build": {
+    "run_id": "rh-20261120",
+    "ts": "2026-11-23T10:10:11+00:00",
+    "exit_code": 0,
+    "archive_sha256": "9631b4f020199e580ba86178cb56c6e9b09f690c2369a80dc4334aa93f49c7fc",
+    "module_count": 175187,
+    "compiler": "4.33.1",
+    "toolchain_git": "819816b2e0a3bf405af45ae5c7af2491d8f5bee6",
+    "command": [
+      "systemd-run",
+      "--quiet",
+      "--wait",
+      "--pipe",
+      "--collect",
+      "--unit=rh-certificate-build",
+      "-p",
+      "User=rhbuild",
+      "-p",
+      "MemoryHigh=48G",
+      "-p",
+      "MemoryMax=54G",
+      "-p",
+      "MemorySwapMax=8G",
+      "-p",
+      "CPUQuota=1200%",
+      "-p",
+      "KillMode=control-group",
+      "-p",
+      "Nice=5",
+      "-p",
+      "CPUWeight=50",
+      "-p",
+      "TimeoutStopSec=15",
+      "-p",
+      "OOMPolicy=kill",
+      "[local path]",
+      "[local path]",
+      "--no-cache",
+      "--no-ansi",
+      "-v",
+      "build",
+      "Main"
+    ],
+    "Main.olean_sha256": "9146dfb4148e24d2252e04c50742f3e49dd126dfcc5006d10bf5f873ddf796ad",
+    "upstream": {
+      "prepared_utc": "2026-11-20T17:53:08Z",
+      "packages": {
+        "mathlib": [
+          "leanprover-community/mathlib4",
+          "0df444a360eaa60ab8c11dca51a86af692955474"
+        ],
+        "plausible": [
+          "leanprover-community/plausible",
+          "b7eb3304aeae834b12dda98993a37f6a41f6f0bb"
+        ],
+        "LeanSearchClient": [
+          "leanprover-community/LeanSearchClient",
+          "5f4d51b81cbd3f6b32b156bfad9056621a040404"
+        ],
+        "importGraph": [
+          "leanprover-community/import-graph",
+          "16f02aa7642864af59f1ff0e384a015994db9118"
+        ],
+        "proofwidgets": [
+          "leanprover-community/ProofWidgets4",
+          "4be2e3d5087eeb272cf5a8853b8f9dd025ef5957"
+        ],
+        "aesop": [
+          "leanprover-community/aesop",
+          "3448c0bcc5ce01b2d1546e483ec3620e32df3d0e"
+        ],
+        "Qq": [
+          "leanprover-community/quote4",
+          "92c15be17b7caf78c2ad767ec40f89052d908d81"
+        ],
+        "batteries": [
+          "leanprover-community/batteries",
+          "4488d40d070b9700d4d5a6aa342f0d40c31b2a2d"
+        ],
+        "Cli": [
+          "leanprover/lean4-cli",
+          "6130a47896ce867c6a4a55373441e59e565bad0f"
+        ]
+      },
+      "files": 130468
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "frozen_at": "2026-11-24T06:05:31Z",
+  "source": "http://localhost:8765",
+  "run_id": "rh-20261120",
+  "fetched_at": "2026-11-24T06:05:52Z",
+  "events": {
+    "first_chunk": 24339,
+    "last_chunk": 24502,
+    "earlier_from": 24362,
+    "first_seq": 895919,
+    "last_seq": 896082,
+    "count": 164,
+    "first_ts": "2026-11-24T05:23:08Z",
+    "last_ts": "2026-11-24T06:05:25Z"
+  },
+  "evidence": {
+    "records": 14,
+    "manifest_updated": "2026-11-24T06:05:25+00:00"
+  },
+  "relative_urls": {
+    "note": "In these two files string values that began /feed/ begin ./feed/; every other file is as served.",
+    "feed/status.json": {
+      "strings": 1,
+      "sha256_as_served": "4f600d7d4c8474fe26075fc3cc47cd7b1361f1570a0a12fbb1aa2705432c85b2"
+    },
+    "feed/evidence/manifest.json": {
+      "strings": 14,
+      "sha256_as_served": "e9c7cf62874a756247fb8e9e7e6ce6bf7ffe13cb096b9f6f17fc5a2bea687803"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "ts": "2026-11-20T17:51:02Z",
+  "controls": {
+    "valid": {
+      "pass": true,
+      "exit": 0,
+      "output": "Running nanoda kernel on solution\nnanoda kernel accepts the solution\nRunning Lean default kernel on solution\nLean default kernel accepts the solution\nYour solution is okay!"
+    },
+    "wrong_statement": {
+      "pass": true,
+      "exit": 1,
+      "output": "error: Challenge and solution theorem statement do not match: 'probe'"
+    },
+    "extra_axiom": {
+      "pass": true,
+      "exit": 1,
+      "output": "error: Illegal axiom detected: 'injected'"
+    },
+    "placeholder": {
+      "pass": true,
+      "exit": 1,
+      "output": "error: Illegal axiom detected: 'sorryAx'"
+    },
+    "ill_typed_term": {
+      "pass": true,
+      "exit": 1,
+      "output": "Running nanoda kernel on solution\n\nthread 'thread_0' (3) panicked at src/tc.rs:955:71:\nassertion failed: self.def_eq(u, v)\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\nthread 'main' (2) panicked at src/tc.rs:173:26:\nA thread in `check_all_declars` panicked while being joined: Any { .. }\nnanoda kernel rejected the solution\nRunning Lean default kernel on solution\nLean default kernel rejected the solution\nerror: nanoda exited with 101"
+    }
+  },
+  "valid_control_axioms": {
+    "probe": []
+  }
+}

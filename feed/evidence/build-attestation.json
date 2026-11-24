@@ -1,0 +1,87 @@
+{
+  "run_id": "rh-20261120",
+  "ts": "2026-11-23T10:10:11+00:00",
+  "exit_code": 0,
+  "archive_sha256": "9631b4f020199e580ba86178cb56c6e9b09f690c2369a80dc4334aa93f49c7fc",
+  "module_count": 175187,
+  "compiler": "4.33.1",
+  "toolchain_git": "819816b2e0a3bf405af45ae5c7af2491d8f5bee6",
+  "command": [
+    "systemd-run",
+    "--quiet",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--unit=rh-certificate-build",
+    "-p",
+    "User=rhbuild",
+    "-p",
+    "MemoryHigh=48G",
+    "-p",
+    "MemoryMax=54G",
+    "-p",
+    "MemorySwapMax=8G",
+    "-p",
+    "CPUQuota=1200%",
+    "-p",
+    "KillMode=control-group",
+    "-p",
+    "Nice=5",
+    "-p",
+    "CPUWeight=50",
+    "-p",
+    "TimeoutStopSec=15",
+    "-p",
+    "OOMPolicy=kill",
+    "[local path]",
+    "[local path]",
+    "--no-cache",
+    "--no-ansi",
+    "-v",
+    "build",
+    "Main"
+  ],
+  "Main.olean_sha256": "9146dfb4148e24d2252e04c50742f3e49dd126dfcc5006d10bf5f873ddf796ad",
+  "upstream": {
+    "prepared_utc": "2026-11-20T17:53:08Z",
+    "packages": {
+      "mathlib": [
+        "leanprover-community/mathlib4",
+        "0df444a360eaa60ab8c11dca51a86af692955474"
+      ],
+      "plausible": [
+        "leanprover-community/plausible",
+        "b7eb3304aeae834b12dda98993a37f6a41f6f0bb"
+      ],
+      "LeanSearchClient": [
+        "leanprover-community/LeanSearchClient",
+        "5f4d51b81cbd3f6b32b156bfad9056621a040404"
+      ],
+      "importGraph": [
+        "leanprover-community/import-graph",
+        "16f02aa7642864af59f1ff0e384a015994db9118"
+      ],
+      "proofwidgets": [
+        "leanprover-community/ProofWidgets4",
+        "4be2e3d5087eeb272cf5a8853b8f9dd025ef5957"
+      ],
+      "aesop": [
+        "leanprover-community/aesop",
+        "3448c0bcc5ce01b2d1546e483ec3620e32df3d0e"
+      ],
+      "Qq": [
+        "leanprover-community/quote4",
+        "92c15be17b7caf78c2ad767ec40f89052d908d81"
+      ],
+      "batteries": [
+        "leanprover-community/batteries",
+        "4488d40d070b9700d4d5a6aa342f0d40c31b2a2d"
+      ],
+      "Cli": [
+        "leanprover/lean4-cli",
+        "6130a47896ce867c6a4a55373441e59e565bad0f"
+      ]
+    },
+    "files": 130468
+  }
+}

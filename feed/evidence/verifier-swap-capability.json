@@ -1,0 +1,59 @@
+{
+  "utc": "2026-11-20T12:58:51.469945-05:00",
+  "bytes": 67108864,
+  "parts": [
+    {
+      "before": "FilenameTypeSizeUsedPriority\n[local path]                                partition167772160-2"
+    },
+    {
+      "command": [
+        "fallocate",
+        "-l",
+        "64M",
+        "[local path]"
+      ],
+      "exit": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "mkswap",
+        "--label",
+        "rh-capability",
+        "[local path]"
+      ],
+      "exit": 0,
+      "output": "Setting up swapspace version 1, size = 64 MiB (67104768 bytes)\nLABEL=rh-capability, UUID=299db0f1-7a47-4b46-ba3c-bc6e6e74a5c2"
+    },
+    {
+      "allocated_bytes": 67108864,
+      "ext4_device": "[local path] ext4"
+    },
+    {
+      "command": [
+        "swapon",
+        "--priority",
+        "0",
+        "[local path]"
+      ],
+      "exit": 0,
+      "output": ""
+    },
+    {
+      "active": true,
+      "during": "FilenameTypeSizeUsedPriority\n[local path]                                partition167772160-2\n[local path] file6553200"
+    },
+    {
+      "command": [
+        "swapoff",
+        "[local path]"
+      ],
+      "exit": 0,
+      "output": ""
+    },
+    {
+      "after": "FilenameTypeSizeUsedPriority\n[local path]                                partition167772160-2",
+      "owned_file_removed": true
+    }
+  ]
+}

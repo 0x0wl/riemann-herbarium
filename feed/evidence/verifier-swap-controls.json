@@ -1,0 +1,215 @@
+{
+  "ts": "2026-11-20T18:01:53Z",
+  "policy": [
+    [
+      "48G",
+      "6G",
+      "1200%"
+    ],
+    [
+      "54G",
+      "8G",
+      "1200%"
+    ],
+    [
+      "54G",
+      "112G",
+      "600%"
+    ],
+    [
+      "54G",
+      "224G",
+      "600%"
+    ]
+  ],
+  "host": {
+    "host_available": 80773021696,
+    "host_free_disk": 3843516547072,
+    "guest_free_disk": 2031627493376,
+    "sample_age": 2.2,
+    "host_cpu": 54.8
+  },
+  "active_build_gate": "Waiting for the source build to release its resources",
+  "measured_oom": "Kernel recorded an OOM kill in synthetic-oom.log (RAM 32M, swap 0)",
+  "cgroup_oom": {
+    "command": [
+      "systemd-run",
+      "--quiet",
+      "--wait",
+      "--pipe",
+      "--service-type=exec",
+      "--unit",
+      "rh-verifier-ef99b4d478bf",
+      "-p",
+      "OOMPolicy=kill",
+      "-p",
+      "KillMode=control-group",
+      "-p",
+      "CPUQuota=100%",
+      "-p",
+      "MemoryMax=32M",
+      "-p",
+      "MemorySwapMax=0",
+      "-p",
+      "LimitNOFILE=1048576",
+      "--",
+      "[local path]",
+      "-c",
+      "import time\ndata=[]\nwhile True:\n data.append(bytearray(1024*1024))\n time.sleep(0.005)"
+    ],
+    "started": "2026-11-20T18:01:53Z",
+    "log": "[local path]",
+    "attempt": 1,
+    "exit": 1,
+    "ended": "2026-11-20T18:01:53Z",
+    "duration_seconds": 0.22,
+    "memory_monitor": {},
+    "systemd": {
+      "Result": "oom-kill",
+      "ExecMainCode": "2",
+      "ExecMainStatus": "9",
+      "MemoryPeak": "3964928",
+      "MemorySwapPeak": "0"
+    }
+  },
+  "unmeasured_kill": "synthetic-sigkill.log received SIGKILL without a confirmed cgroup OOM",
+  "cgroup_unmeasured": {
+    "command": [
+      "systemd-run",
+      "--quiet",
+      "--wait",
+      "--pipe",
+      "--service-type=exec",
+      "--unit",
+      "rh-verifier-471016ab5ceb",
+      "-p",
+      "OOMPolicy=kill",
+      "-p",
+      "KillMode=control-group",
+      "-p",
+      "CPUQuota=100%",
+      "-p",
+      "MemoryMax=32M",
+      "-p",
+      "MemorySwapMax=0",
+      "-p",
+      "LimitNOFILE=1048576",
+      "--",
+      "[local path]",
+      "-c",
+      "exit 137"
+    ],
+    "started": "2026-11-20T18:01:53Z",
+    "log": "[local path]",
+    "attempt": 1,
+    "exit": 137,
+    "ended": "2026-11-20T18:01:53Z",
+    "duration_seconds": 0.05,
+    "memory_monitor": {},
+    "systemd": {
+      "Result": "exit-code",
+      "ExecMainCode": "1",
+      "ExecMainStatus": "137",
+      "MemoryPeak": "303104",
+      "MemorySwapPeak": "0"
+    }
+  },
+  "policy_cases": {
+    "ordinary_success": {
+      "attempts": [
+        1
+      ],
+      "requested_swap_gib_simulated": [],
+      "succeeded": true
+    },
+    "single_oom_then_success": {
+      "attempts": [
+        1,
+        2
+      ],
+      "requested_swap_gib_simulated": [],
+      "succeeded": true
+    },
+    "confirmed_second_oom": {
+      "attempts": [
+        1,
+        2,
+        3
+      ],
+      "requested_swap_gib_simulated": [
+        128
+      ],
+      "succeeded": true
+    },
+    "confirmed_third_oom": {
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "requested_swap_gib_simulated": [
+        128,
+        256
+      ],
+      "succeeded": true
+    },
+    "exhausted": {
+      "attempts": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "requested_swap_gib_simulated": [
+        128,
+        256
+      ],
+      "succeeded": false
+    },
+    "unmeasured_kill": {
+      "attempts": [
+        1,
+        2
+      ],
+      "requested_swap_gib_simulated": [],
+      "succeeded": false
+    },
+    "low_disk": {
+      "attempts": [
+        1
+      ],
+      "requested_swap_gib_simulated": [],
+      "succeeded": false
+    }
+  },
+  "owned_cleanup": {
+    "bytes": 67108864,
+    "result": "removed",
+    "journal": {
+      "ts": "2026-11-20T18:02:30.990036+00:00",
+      "action": "removed",
+      "file": "capability-cleanup.swap",
+      "bytes": 67108864
+    }
+  },
+  "tests_completed": "2026-11-20T18:02:31Z",
+  "source_sha256": {
+    "verify.py": "b7702505f7bffc62c84a17eae530b94434b55413ac96c8f1135d8c9ef3dd5f38",
+    "replay_swap.py": "c4b32def4412e8f2397bc0e8e98383273f6f931f58c38ad5c5fd52846e7a92fe",
+    "swap-cleanup.service": "91cb4de8eae0b6cebd657e355a8d0d1a46ab0e122485d9e20091e005b7f773ef",
+    "swap-cleanup.timer": "3f734e1fde7d75d8accf9aaa6b5c9c4f9f50cca944a2c6b46e593daef632eedf"
+  },
+  "production_limits": {
+    "ext4_swap_file_bytes": [
+      137438953472,
+      137438953472
+    ],
+    "free_disk_floor_bytes": 103079215104,
+    "available_host_memory_floor_bytes": 17179869184,
+    "cpu_saturation_threshold_pct": 97,
+    "fallback_cpu_quota": "600%",
+    "fallback_io_weight": 25,
+    "fallback_cpu_nice": 10
+  }
+}

@@ -1,0 +1,2969 @@
+/* ==========================================================================
+   desk.css · the herbarium proof desk (the public page and the keeper's bench)
+   ==========================================================================
+
+   Layout only: the plates, the frontispiece composition, the critical-line
+   rail, the specimen label, the pipeline stems and every instrument of
+   chapters VII–IX and the appendices. Inks, type and components come from
+   ink.css (tokens --ground … --vermilion, .plate, .slip, .stamp, .chip, .tag,
+   .toggle, progress); the masthead is masthead.css. Every colour below is a
+   token from ink.css or a color-mix of tokens.
+
+   Contents
+     1  The page ........... rail offset, plates, rule lines, figures
+     2  The rail ........... the critical line, fixed left or a strip on top
+     3  Frontispiece ....... copy, the ζ landscape, label, pipeline stems
+     4  Plates ............. heads, glosses, pull-lines, notes, formulas
+     5  Instruments ........ shared: titles, captions, buds
+     6  VII ................ growth chart, compiler record
+     7  VIII ............... the press gauge, the memory trace
+     8  IX ................. replay record, kernel head, trays, slips
+     9  Appendix A ......... manifest, provenance, rosette pairs, check it yourself
+    10  Appendix B ......... field notes, vitals, the bench drawers
+    11  Colophon and foot
+    12  Narrow screens
+    13  Motion and forced colours                                             */
+
+
+/* 1 · The page =============================================================== */
+
+.herbarium-desk {
+  --rail-w: 76px;
+  --strip-h: 34px;
+  --instrument-max: var(--figure-max, 1080px);
+}
+
+main:focus {
+  outline: none;
+}
+
+@media (min-width: 1100px) {
+  .herbarium-desk main,
+  .herbarium-desk .site-foot {
+    margin-inline-start: var(--rail-w);
+  }
+}
+
+/* A plate is a centred column of the content width; prose, figures and
+   instruments keep the left edge of that column. */
+.herbarium-desk .plate {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, var(--content-max)) minmax(0, 1fr);
+  align-content: start;
+  row-gap: clamp(28px, 4.5vh, 52px);
+}
+
+.herbarium-desk .plate > * {
+  grid-column: 2;
+  min-inline-size: 0;
+}
+
+.herbarium-desk .plate > .plate-head {
+  margin-block-end: clamp(0px, 1vh, 12px);
+}
+
+.herbarium-desk .plate > :is(.figure, .instrument, details, section, aside, .structure-mount) {
+  inline-size: 100%;
+  max-inline-size: var(--instrument-max);
+  justify-self: start;
+}
+
+.herbarium-desk .rule-line {
+  margin-block: 0;
+}
+
+/* A figure before its module arrives: its text alternative, in a dashed frame. */
+figure .figure-stage:not(.fig-live, .is-drawn) {
+  display: grid;
+  place-items: center;
+  min-block-size: 12rem;
+  padding: clamp(18px, 4vw, 40px);
+  border: 1px dashed var(--hair);
+  color: var(--print-3);
+  font-size: var(--fs-caption);
+  font-style: italic;
+  line-height: var(--lh-caption);
+  text-align: center;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+/* Headers set in small capitals keep code and digests in their own case. */
+th :is(code, .mono) {
+  font-variant-caps: normal;
+  letter-spacing: 0;
+}
+
+/* Readouts in Mono stack their figures. */
+:is(.det-date, .node-word, .track-detail, .rail-readout, .rail-end, .readout, .export-attempt, #export-bytes, #export-percent,
+  #export-sampled, .export-estimates dd, #kernel-percent, #kernel-count, #kernel-eta, #kernel-pace, #checker-resources,
+  .search-state, .event, .chart > b, .chart > small, .manifest-state, .run-meta, .printed-from, .links-chain time,
+  .library-count, .part-state, .forecast-axis, #transfer-size, .section-head .quiet, .sample-range, .label-rosette figcaption,
+  .pair-flowers figcaption, .receipt-label, #guest, .local-grid, .checkin-overview-stat) {
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.figure-note,
+.numbers-note {
+  max-inline-size: var(--prose-max);
+  margin: 0;
+  color: var(--print-3);
+  font-family: var(--font-text);
+  font-size: .875rem;
+  line-height: 1.5;
+}
+
+details.numbers table {
+  min-inline-size: min(100%, 32rem);
+}
+
+details.numbers .numbers-note + .numbers-note {
+  margin-block-start: var(--space-2);
+}
+
+.quiet {
+  color: var(--ink-3);
+}
+
+.live-sentence:empty {
+  display: none;
+}
+
+
+/* 2 · The rail ================================================================
+   Wide screens: fixed at the left under the masthead, t rising from the foot
+   (t = 0) to the top (t = 60). Narrow screens: a strip under the masthead, t
+   running left to right. story.js draws the line, the vine and the ticks. */
+
+.rail {
+  position: fixed;
+  inset-block: var(--masthead-h) 0;
+  inset-inline-start: 0;
+  z-index: 30;
+  inline-size: var(--rail-w);
+  border-inline-end: 1px solid var(--hair);
+  background-image: linear-gradient(90deg, color-mix(in srgb, var(--ground-deep) 72%, transparent), color-mix(in srgb, var(--ground-deep) 18%, transparent));
+}
+
+.rail-art {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: visible;
+}
+
+.rail-line {
+  stroke: var(--gold);
+  stroke-width: 1;
+}
+
+.rail-vine-ghost {
+  fill: none;
+  stroke: var(--print-3);
+  stroke-opacity: .26;
+  stroke-width: .75;
+}
+
+.rail-vine {
+  fill: none;
+  stroke: var(--print-2);
+  stroke-linejoin: round;
+  stroke-width: 1;
+}
+
+.rail-leaves {
+  fill: color-mix(in srgb, var(--print-2) 22%, transparent);
+  stroke: var(--print-2);
+  stroke-width: .6;
+}
+
+.rail-zeros line {
+  stroke: var(--gold);
+  stroke-width: 1;
+}
+
+.rail-zeros line.is-current {
+  stroke-width: 2;
+}
+
+.rail-zeros circle {
+  fill: var(--gold);
+}
+
+.rail-ticks {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rail-tick {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: var(--at, 0);
+  display: block;
+  block-size: 18px;
+  translate: 0 -50%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.rail-tick::before {
+  content: "";
+  position: absolute;
+  inset-block-start: calc(50% - 6px);
+  inset-inline-start: calc(50% - 6px);
+  inline-size: 12px;
+  block-size: 12px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  transition: border-color var(--quick) ease;
+}
+
+.rail-tick:is(:hover, :focus-visible)::before,
+.rail-tick[aria-current="location"]::before {
+  border-color: var(--gold-dim);
+}
+
+.rail-tick:focus-visible {
+  outline-offset: 0;
+}
+
+.rail-label {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: calc(100% + 8px);
+  z-index: 2;
+  display: none;
+  padding: .36em .7em .4em;
+  background-color: var(--paper);
+  box-shadow: var(--shadow-slip);
+  color: var(--paper-ink);
+  font-family: var(--font-text);
+  font-size: .9375rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  translate: 0 -50%;
+  pointer-events: none;
+}
+
+.rail-label .rail-rho {
+  color: var(--paper-ink-2);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  font-weight: 400;
+}
+
+.rail-tick:is(:hover, :focus-visible) .rail-label {
+  display: block;
+}
+
+.rail-marker {
+  position: absolute;
+  inset-block-start: var(--y, 0);
+  inset-inline-start: var(--x, 50%);
+  inline-size: 11px;
+  block-size: 11px;
+  border: 1.25px solid var(--gold);
+  border-radius: 50%;
+  background-color: var(--ground);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 20%, transparent);
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+.rail-readout,
+.rail-end {
+  position: absolute;
+  color: var(--print-3);
+  font-family: var(--font-mono);
+  font-size: .65625rem;
+  line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.rail-readout {
+  inset-block-start: 10px;
+  inset-inline: 0;
+  color: var(--print-2);
+  text-align: center;
+}
+
+.rail-end {
+  inset-inline: 0;
+  inset-block-start: var(--at, 0);
+  text-align: center;
+}
+
+.rail-start {
+  translate: 0 9px;
+}
+
+.rail-stop {
+  translate: 0 calc(-100% - 9px);
+}
+
+@media (max-width: 1099.98px) {
+  .rail {
+    position: sticky;
+    inset-block: var(--masthead-h) auto;
+    z-index: 45;
+    inline-size: auto;
+    block-size: var(--strip-h);
+    overflow-x: clip;
+    border-inline-end: 0;
+    border-block-end: 1px solid var(--hair);
+    background-color: color-mix(in srgb, var(--ground) 88%, transparent);
+    background-image: none;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+
+  .rail-tick {
+    inset-block: 0;
+    inset-inline: auto;
+    inset-inline-start: var(--at, 0);
+    inline-size: 14px;
+    block-size: auto;
+    translate: -50% 0;
+  }
+
+  .rail-label {
+    inset-block-start: calc(100% + 6px);
+    inset-inline-start: -2px;
+    translate: none;
+  }
+
+  .rail-tick[data-side="end"] .rail-label {
+    inset-inline-start: auto;
+    inset-inline-end: -2px;
+  }
+
+  .rail-readout {
+    inset-block-start: 50%;
+    inset-inline: auto 10px;
+    translate: 0 -50%;
+  }
+
+  .rail-start {
+    inset-block-start: 50%;
+    inset-inline: 10px auto;
+    translate: 0 -50%;
+  }
+
+  .rail-stop {
+    display: none;
+  }
+
+  .herbarium-desk .plate {
+    scroll-margin-block-start: calc(var(--masthead-h) + var(--strip-h) + 12px);
+  }
+}
+
+
+/* 3 · Frontispiece ============================================================
+   Wide: the copy on the left seven twelfths, the ζ landscape on the right as a
+   tall sheet beside the copy and the label, the pipeline stems underneath.  */
+
+.frontispiece {
+  min-block-size: calc(100vh - var(--masthead-h));
+  min-block-size: calc(100svh - var(--masthead-h));
+  padding-block-start: clamp(28px, 6vh, 72px);
+}
+
+.front-sheet {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  grid-template-areas:
+    "copy     figure"
+    "label    figure"
+    "pipeline pipeline";
+  align-items: start;
+  gap: clamp(28px, 4vh, 48px) clamp(28px, 4vw, 64px);
+}
+
+.front-copy {
+  grid-area: copy;
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+  min-inline-size: 0;
+}
+
+.front-copy h1 {
+  margin-block: .08em .12em;
+}
+
+.statement {
+  max-inline-size: 30ch;
+  margin: 0;
+  color: var(--print);
+  font-family: var(--font-text);
+  font-size: clamp(1.35rem, 1.05rem + 1vw, 1.75rem);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.statement-math {
+  margin: 0;
+  color: var(--print-2);
+  font-family: var(--font-text);
+  font-size: clamp(1.15rem, 1rem + .6vw, 1.4rem);
+  line-height: 1.3;
+  white-space: normal;
+}
+
+.hero-source {
+  display: grid;
+  gap: 6px;
+  max-inline-size: 100%;
+  padding: 12px 16px 11px;
+  border: 1px solid var(--line);
+  border-inline-start: 1px solid var(--gold-dim);
+  border-radius: var(--radius);
+  background-color: color-mix(in srgb, var(--ground-deep) 58%, transparent);
+  color: var(--print);
+  text-decoration: none;
+  transition: border-color var(--quick) ease, background-color var(--quick) ease;
+}
+
+.hero-source:hover {
+  border-color: var(--print-3);
+  background-color: var(--hover-wash);
+}
+
+.hero-source code {
+  font-size: clamp(.8125rem, .76rem + .25vw, .9375rem);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.source-locus {
+  color: var(--print-3);
+  font-family: var(--font-text);
+  font-size: var(--fs-tag);
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .08em;
+}
+
+.standfirst {
+  max-inline-size: 56ch;
+  margin: 0;
+  color: var(--print-2);
+  font-family: var(--font-text);
+  font-size: 1.125rem;
+  line-height: 1.55;
+}
+
+.front-figure {
+  grid-area: figure;
+  align-self: stretch;
+  align-content: start;
+}
+
+.front-figure .figure-stage {
+  block-size: clamp(520px, 80vh, 860px);
+}
+
+/* The specimen label: a paper slip. */
+.specimen-label {
+  grid-area: label;
+  display: grid;
+  gap: var(--space-4);
+  max-inline-size: 760px;
+}
+
+.specimen-label .label-head {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+.label-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--space-5);
+}
+
+.specimen-label dd {
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.label-det [data-state] {
+  color: var(--state);
+  font-weight: 500;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+}
+
+.det-date {
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  white-space: nowrap;
+}
+
+.label-pressed {
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.label-rosette {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--ink);
+}
+
+.label-rosette figcaption {
+  max-inline-size: 9rem;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: .6875rem;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.label-links {
+  margin: 0;
+  font-size: .9375rem;
+}
+
+.label-links:not(:has(a:not([hidden]))) {
+  display: none;
+}
+
+/* The check-in line (local mode; check-ins.js renders into #checkin-overview). */
+#checkin-overview {
+  display: grid;
+  gap: 4px;
+  padding-block-start: var(--space-3);
+  border-block-start: 1px solid var(--line);
+  font-size: .9375rem;
+}
+
+#checkin-overview[hidden] {
+  display: none;
+}
+
+.checkin-overview-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .2em .45em;
+  margin: 0;
+  color: var(--ink-2);
+}
+
+.checkin-overview-late {
+  color: var(--state-inconclusive);
+}
+
+.checkin-overview-stat {
+  font-family: var(--font-mono);
+  font-size: .78rem;
+}
+
+.checkin-overview-link {
+  justify-self: start;
+  font-weight: 500;
+}
+
+/* The pipeline stems: buds and blooms on two engraved stems. */
+.pipeline {
+  grid-area: pipeline;
+  display: grid;
+  gap: var(--space-4);
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--hair);
+}
+
+.pipeline .pipeline-title {
+  margin: 0;
+  color: var(--print-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  line-height: 1.3;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .09em;
+}
+
+.stem-row {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-4);
+}
+
+.stem-row .stem-label {
+  margin: 0;
+  padding-block-start: 5px;
+  color: var(--print-2);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.stem,
+.track {
+  position: relative;
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The stem: a hairline from each bud to the next, stopping short of both. */
+:is(.stem, .track) > li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 14px;
+  inset-inline: 36px 6px;
+  border-block-start: 1px solid color-mix(in srgb, var(--print) 34%, transparent);
+  pointer-events: none;
+}
+
+.stem > li,
+.track > li {
+  position: relative;
+  min-inline-size: 0;
+  color: var(--state, var(--state-pending));
+}
+
+.stem a {
+  display: grid;
+  justify-items: start;
+  gap: 3px;
+  padding-inline-end: 8px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.stem a:hover .node-name {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-underline-offset: .2em;
+}
+
+.node-name,
+.track-name {
+  color: var(--print);
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  line-height: 1.25;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+
+.node-word,
+.track-detail {
+  color: var(--state, var(--print-3));
+  font-family: var(--font-mono);
+  font-size: .71875rem;
+  font-weight: 400;
+  line-height: 1.35;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* Buds: drawn in the state's ink; the shape says the state too. */
+.bud {
+  display: block;
+  inline-size: 28px;
+  block-size: 28px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.1;
+}
+
+.bud .petals ellipse {
+  fill: color-mix(in srgb, currentColor 24%, transparent);
+}
+
+.bud .heart {
+  fill: currentColor;
+  stroke: none;
+}
+
+.bud .halo {
+  stroke-opacity: .32;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.bud .bud-body.dashed {
+  stroke-dasharray: 2.2 2.2;
+}
+
+.bud .bar {
+  stroke-width: 1.5;
+}
+
+.bud .sepal {
+  stroke-opacity: .8;
+}
+
+
+/* 4 · Plates ================================================================= */
+
+.herbarium-desk .plate-head {
+  grid-template-areas:
+    "numeral zero"
+    "numeral title"
+    ".       gloss"
+    ".       dek";
+}
+
+.plate-head > .gloss {
+  grid-area: gloss;
+  margin: 0;
+  color: var(--print-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  line-height: 1.4;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.plate-head > .gloss.math {
+  font-family: var(--font-text);
+  font-size: 1.125rem;
+}
+
+.plate-head > .gloss code {
+  color: var(--print-2);
+  font-size: inherit;
+}
+
+.colophon .plate-head > .zero-tag {
+  grid-column: 2;
+}
+
+/* Pull-lines: a sentence lifted into the margin on wide screens. */
+.prose .pull-line {
+  margin-block: 1.4em;
+  padding: .1em 0 .1em 1.1em;
+  border-inline-start: 1px solid var(--gold-dim);
+  color: var(--print-2);
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 1.15rem + .9vw, 1.85rem);
+  font-style: italic;
+  line-height: 1.22;
+  text-wrap: balance;
+}
+
+.prose .pull-line p {
+  margin: 0;
+}
+
+.prose .pull-line .pull-source {
+  margin-block-start: .55em;
+  color: var(--print-3);
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-style: normal;
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+
+@media (min-width: 1280px) {
+  .herbarium-desk .prose {
+    position: relative;
+  }
+
+  .herbarium-desk .prose > .pull-line {
+    position: absolute;
+    inset-inline-start: calc(100% + clamp(48px, 5vw, 96px));
+    inline-size: min(340px, calc(min(var(--content-max), 100vw - var(--rail-w) - 2 * var(--gutter)) - 100% - 110px));
+    margin: 0;
+  }
+}
+
+.structure-mount {
+  min-inline-size: 0;
+}
+
+/* Formulas. The TeX in every .math element is typeset by KaTeX (math.js,
+   katex.css): inline in the line, or .display on a line of its own. A formula
+   takes the colour of the text around it (--print on the sheet, ink on paper)
+   at a size matched to the Garamond; the ½ that names the critical line is
+   gold (\crit), except on paper, where gold does not read. Until KaTeX
+   arrives a formula shows its TeX, in Mono, free to wrap. */
+.math:not([data-tex]) {
+  font-family: var(--font-mono);
+  font-size: .86em;
+  font-variant-numeric: lining-nums tabular-nums;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* In the line, KaTeX at the text's own size: its x-height then sits close to
+   the Garamond's. Displayed formulas stand a little larger. */
+.math .katex {
+  font-size: 1em;
+}
+
+.katex .crit {
+  color: var(--gold);
+}
+
+.slip .katex .crit {
+  color: inherit;
+}
+
+/* A displayed formula sits centred between two hairlines that fade at their
+   ends. math.js sets it from its narrow form, or scales it (--math-scale),
+   when the column is narrower than the formula; it scrolls only as a last
+   resort. */
+.math.display {
+  display: block;
+  margin-block: 1.4em;
+  padding-block: .9em .95em;
+  overflow-x: auto;
+  overflow-y: hidden;
+  text-align: center;
+  background:
+    linear-gradient(90deg, transparent, var(--hair) 18%, var(--hair) 82%, transparent) top / 100% 1px no-repeat,
+    linear-gradient(90deg, transparent, var(--hair) 18%, var(--hair) 82%, transparent) bottom / 100% 1px no-repeat;
+}
+
+.math.display > .katex-display {
+  margin: 0;
+}
+
+.math.display .katex {
+  font-size: calc(1.05em * var(--math-scale, 1));
+}
+
+@media (forced-colors: active) {
+  .math.display {
+    border-block: 1px solid CanvasText;
+    background: none;
+  }
+}
+
+
+/* 5 · Instruments, shared ===================================================== */
+
+.instrument {
+  display: grid;
+  gap: var(--space-5);
+  min-inline-size: 0;
+}
+
+.herbarium-desk .instrument-title {
+  margin: 0;
+  color: var(--print);
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 1.1rem + .6vw, 1.6rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.instrument-caption {
+  max-inline-size: var(--prose-max);
+  margin: 0;
+  color: var(--print-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-caption);
+  font-style: italic;
+  line-height: var(--lh-caption);
+}
+
+.instrument-caption .tag {
+  margin-inline-end: .55em;
+}
+
+.instrument-note {
+  max-inline-size: var(--prose-max);
+  margin: 0;
+  color: var(--print-3);
+  font-size: .875rem;
+  line-height: 1.5;
+}
+
+.readout {
+  margin: 0;
+  color: var(--print);
+  font-family: var(--font-mono);
+  font-size: .9375rem;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-5);
+}
+
+.section-head .quiet {
+  font-family: var(--font-mono);
+  font-size: .8125rem;
+}
+
+/* Drawers: details that open onto an instrument. */
+.herbarium-desk :is(details.vitals, details.bench-drawer, details.memory-trace, #source-acquisition, #forecast-history) > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .3em .8em;
+  padding-block: var(--space-3);
+  border-block-start: 1px solid var(--hair);
+  color: var(--print);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.2;
+  list-style: none;
+}
+
+.herbarium-desk :is(details.vitals, details.bench-drawer, details.memory-trace, #source-acquisition, #forecast-history) > summary::-webkit-details-marker {
+  display: none;
+}
+
+.herbarium-desk :is(details.vitals, details.bench-drawer, details.memory-trace, #source-acquisition, #forecast-history) > summary::before {
+  content: "";
+  align-self: center;
+  inline-size: .42em;
+  block-size: .42em;
+  border-block-end: 1px solid var(--print-2);
+  border-inline-end: 1px solid var(--print-2);
+  rotate: -45deg;
+  transition: rotate var(--quick) var(--ease);
+}
+
+.herbarium-desk :is(details.vitals, details.bench-drawer, details.memory-trace, #source-acquisition, #forecast-history)[open] > summary::before {
+  rotate: 45deg;
+}
+
+.herbarium-desk :is(details.vitals, details.bench-drawer, details.memory-trace, #source-acquisition) > summary small,
+.sample-range {
+  color: var(--print-3);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  font-style: normal;
+}
+
+
+/* 6 · VII · Sixty-four hours on one desk ======================================= */
+
+.growth .figure-stage.fig-live,
+.growth .figure-stage:has(> svg) {
+  display: block;
+  min-block-size: 0;
+  padding: 0;
+  border: 0;
+}
+
+.growth-chart {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  overflow: visible;
+}
+
+.growth-chart .g-ground {
+  stroke: var(--print-2);
+  stroke-width: 1;
+}
+
+.growth-chart .g-stakes {
+  stroke: color-mix(in srgb, var(--print) 26%, transparent);
+  stroke-width: .75;
+}
+
+.growth-chart .g-curve {
+  fill: none;
+  stroke: var(--print);
+  stroke-linejoin: round;
+  stroke-width: 1.25;
+}
+
+.growth-chart .g-top {
+  stroke: var(--gold-dim);
+  stroke-dasharray: 2 4;
+  stroke-width: 1;
+}
+
+.growth-chart .g-tick {
+  stroke: var(--print-3);
+  stroke-width: 1;
+}
+
+.growth-chart .g-dawn {
+  stroke: var(--print-3);
+  stroke-dasharray: 1 3;
+  stroke-width: 1;
+}
+
+.growth-chart .g-scar {
+  fill: none;
+  stroke: var(--heather);
+  stroke-linecap: round;
+  stroke-width: 1.2;
+}
+
+.growth-chart .g-main {
+  fill: var(--gold);
+  stroke: var(--ground);
+  stroke-width: 1.5;
+}
+
+.growth-chart text {
+  fill: var(--print-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.growth-chart .g-axis {
+  fill: var(--print-2);
+  font-family: var(--font-text);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.growth-chart .g-gold,
+.growth-chart .g-main-label {
+  fill: var(--gold);
+}
+
+.growth-chart .g-scar-label {
+  fill: var(--heather);
+}
+
+.compiler-desk {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-areas:
+    "readouts readouts"
+    "links    record"
+    "links    active"
+    "budget   names"
+    "source   source";
+  gap: clamp(28px, 4vh, 44px) clamp(28px, 4vw, 56px);
+}
+
+.compiler-readouts { grid-area: readouts; }
+.last-links { grid-area: links; }
+.compiler-desk > .forecast { grid-area: record; }
+.compiling-now { grid-area: active; }
+.lean-resources { grid-area: budget; }
+.by-name { grid-area: names; }
+#source-acquisition { grid-area: source; }
+
+.compiler-readouts {
+  display: grid;
+  gap: var(--space-2);
+}
+
+#lake {
+  color: var(--print-2);
+}
+
+.readout-overall {
+  display: grid;
+  gap: var(--space-2);
+  max-inline-size: 760px;
+}
+
+.readout-overall progress {
+  block-size: 4px;
+}
+
+.overall-count {
+  color: var(--print);
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.4rem);
+  font-weight: 500;
+  line-height: 1.1;
+  font-variant-numeric: lining-nums proportional-nums;
+}
+
+.readout-note {
+  margin: 0;
+  color: var(--print-3);
+  font-size: .9375rem;
+}
+
+.last-links,
+.forecast,
+.lean-resources,
+.compiling-now,
+.by-name {
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+  min-inline-size: 0;
+}
+
+.links-chain {
+  position: relative;
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.links-chain::before {
+  content: "";
+  position: absolute;
+  inset-block: 10px 10px;
+  inset-inline-start: 4px;
+  border-inline-start: 1px solid color-mix(in srgb, var(--print) 30%, transparent);
+}
+
+.links-chain li {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 var(--space-4);
+  padding: 3px 0 3px 22px;
+  font-size: .9375rem;
+}
+
+.links-chain li::before {
+  content: "";
+  position: absolute;
+  inset-block-start: calc(.5em + 3px);
+  inset-inline-start: 0;
+  inline-size: 9px;
+  block-size: 9px;
+  border: 1px solid var(--print-2);
+  border-radius: 50%;
+  background-color: var(--ground);
+}
+
+.links-chain li.links-main::before {
+  border-color: var(--gold);
+  background-color: var(--gold);
+}
+
+.links-chain code {
+  color: var(--print);
+  font-size: .875rem;
+}
+
+.links-chain time {
+  color: var(--print-3);
+  font-family: var(--font-mono);
+  font-size: .78rem;
+}
+
+.forecast-finish {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .3em 1em;
+}
+
+#forecast-finish {
+  color: var(--state-passed);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.forecast-link {
+  color: var(--print-3);
+  font-size: .875rem;
+}
+
+#forecast-trend {
+  margin: 0;
+}
+
+#forecast-trend svg {
+  inline-size: 100%;
+  block-size: 54px;
+}
+
+#forecast-line {
+  fill: none;
+  stroke: var(--print-2);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.forecast-axis {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  color: var(--print-3);
+  font-family: var(--font-mono);
+  font-size: .71875rem;
+}
+
+.lean-resources dl {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.lean-resources dl > div,
+.replay-facts > div,
+.provenance-rows > div,
+.export-estimates > div {
+  min-inline-size: 0;
+}
+
+.lean-resources dl > div {
+  display: grid;
+  grid-template-columns: minmax(8rem, 40%) minmax(0, 1fr);
+  gap: var(--space-3);
+  padding-block: 6px;
+  border-block-end: 1px solid var(--hair);
+}
+
+.herbarium-desk :is(.lean-resources, .replay-facts, .export-estimates, .provenance-rows) dt {
+  color: var(--print-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+
+.herbarium-desk :is(.lean-resources, .replay-facts) dd {
+  margin: 0;
+  color: var(--print);
+  font-family: var(--font-mono);
+  font-size: .84375rem;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.handoff-note {
+  color: var(--print-2);
+  font-family: var(--font-text);
+  font-size: .9375rem;
+}
+
+.active-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 var(--space-3);
+  padding-block: 4px;
+  border-block-end: 1px solid var(--hair);
+  font-size: .875rem;
+}
+
+.active-row small {
+  color: var(--print-3);
+  font-family: var(--font-mono);
+}
+
+#libs {
+  display: grid;
+  gap: 5px;
+}
+
+.library {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.library-name {
+  overflow: hidden;
+  color: var(--print);
+  font-size: .8125rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.library-bar {
+  display: block;
+  min-inline-size: 0;
+}
+
+/* An engraved bar: a top hairline over hatching, in the state's ink. */
+.library-stem {
+  display: block;
+  block-size: 9px;
+  min-inline-size: 2px;
+  border-block-start: 1px solid color-mix(in srgb, var(--state) 70%, transparent);
+  background-image: repeating-linear-gradient(-60deg, color-mix(in srgb, var(--print) 22%, transparent) 0 1px, transparent 1px 4px);
+}
+
+.library-done {
+  display: block;
+  block-size: 100%;
+  background-image: repeating-linear-gradient(-60deg, color-mix(in srgb, var(--state) 60%, transparent) 0 1px, transparent 1px 3.5px);
+}
+
+.library-count {
+  color: var(--print-2);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  text-align: end;
+  white-space: nowrap;
+}
+
+.archive-head {
+  margin: 0 0 var(--space-3);
+  color: var(--print-3);
+  font-size: .9375rem;
+}
+
+#downloads {
+  display: grid;
+  gap: 0;
+}
+
+.part {
+  display: grid;
+  grid-template-columns: 30px 4.5rem 5.5rem 4.6rem minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-3);
+  padding-block: 5px;
+  border-block-end: 1px solid var(--hair);
+  font-size: .8125rem;
+}
+
+.part-rosette {
+  inline-size: 30px;
+  block-size: 30px;
+  color: var(--print-2);
+}
+
+.part[data-state="passed"] .part-rosette {
+  color: var(--print);
+}
+
+.part-name {
+  color: var(--print);
+  font-family: var(--font-text);
+  font-weight: 500;
+}
+
+.part-state,
+.part-label {
+  color: var(--print-3);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+}
+
+.part code {
+  color: var(--print-2);
+  font-size: .75rem;
+  overflow-wrap: anywhere;
+}
+
+
+/* 7 · VIII · Pressing the specimen ============================================ */
+
+.press {
+  gap: var(--space-4);
+}
+
+.export-progress {
+  display: grid;
+  gap: var(--space-4);
+  min-inline-size: 0;
+  padding: clamp(16px, 3vw, 28px);
+  border: 1px solid var(--line);
+  border-inline-start: 1px solid var(--gold-dim);
+  background-color: color-mix(in srgb, var(--ground-deep) 56%, transparent);
+}
+
+.press-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+}
+
+.export-attempt {
+  color: var(--print-3);
+  font-family: var(--font-mono);
+  font-size: .78rem;
+}
+
+#export-phase:empty {
+  display: none;
+}
+
+.export-measure {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-5);
+}
+
+#export-count {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .2em .7em;
+  min-inline-size: 0;
+}
+
+#export-size {
+  color: var(--print);
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 1.6rem + 2.6vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1;
+  font-variant-numeric: lining-nums proportional-nums;
+}
+
+#export-bytes,
+#export-percent {
+  color: var(--print-2);
+  font-family: var(--font-mono);
+  font-size: .8125rem;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.press-gauge {
+  display: grid;
+  gap: 4px;
+}
+
+.press-gauge progress {
+  block-size: 16px;
+}
+
+/* The scale under the gauge: decimal gigabytes of the published size. */
+.press-scale {
+  position: relative;
+  block-size: 18px;
+  margin-inline: 0 2px;
+  color: var(--print-3);
+  font-family: var(--font-mono);
+  font-size: .6875rem;
+  line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.press-scale span {
+  position: absolute;
+  inset-block-start: 6px;
+  translate: -50% 0;
+  white-space: nowrap;
+}
+
+.press-scale span::before {
+  content: "";
+  position: absolute;
+  inset-block-start: -6px;
+  inset-inline-start: 50%;
+  block-size: 4px;
+  border-inline-start: 1px solid var(--print-3);
+}
+
+.press-scale span:first-child {
+  translate: 0 0;
+}
+
+.press-scale span:first-child::before {
+  inset-inline-start: 0;
+}
+
+.press-scale .press-end {
+  translate: -100% 0;
+}
+
+.press-scale .press-end::before {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+
+.export-scale {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  color: var(--print-3);
+  font-size: .875rem;
+}
+
+#export-sampled {
+  font-family: var(--font-mono);
+  font-size: .75rem;
+}
+
+.export-estimates {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+}
+
+.export-estimates dd {
+  margin: 4px 0 0;
+  color: var(--print);
+  font-family: var(--font-mono);
+  font-size: .9375rem;
+  overflow-wrap: anywhere;
+}
+
+.export-estimates small {
+  color: var(--print-3);
+  font-size: .75rem;
+}
+
+#export-forecast-note {
+  margin: 0;
+  color: var(--print-3);
+  font-size: .875rem;
+  font-style: italic;
+}
+
+.export-elsewhere {
+  margin: 0;
+  color: var(--print-2);
+}
+
+.memory-trace .trace-figure {
+  margin-block-start: var(--space-4);
+}
+
+.trace-mount {
+  padding: var(--space-3);
+}
+
+.trace-mount img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+
+/* 8 · IX · The second reader ================================================== */
+
+.replay-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+}
+
+#replay-verdict {
+  font-size: 1rem;
+}
+
+.track {
+  padding-block-end: var(--space-2);
+}
+
+.track > li {
+  display: grid;
+  justify-items: start;
+  gap: 3px;
+  padding-inline-end: 8px;
+}
+
+.track-detail {
+  font-weight: 400;
+}
+
+.operation {
+  max-inline-size: var(--prose-max);
+  margin: 0;
+  color: var(--print);
+  font-family: var(--font-text);
+  font-size: 1.125rem;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.replay-transfer {
+  display: grid;
+  gap: 6px;
+}
+
+.transfer-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: .9375rem;
+}
+
+#transfer-size {
+  color: var(--print-2);
+  font-family: var(--font-mono);
+  font-size: .8125rem;
+}
+
+.kernel-progress {
+  display: grid;
+  gap: var(--space-4);
+  min-inline-size: 0;
+  padding: clamp(16px, 3vw, 24px);
+  border: 1px solid var(--line);
+  background-color: color-mix(in srgb, var(--ground-deep) 50%, transparent);
+}
+
+.kernel-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+}
+
+#kernel-percent {
+  color: var(--print);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+
+.kernel-body {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.kernel-head {
+  inline-size: 112px;
+  block-size: 112px;
+  color: var(--state-running);
+}
+
+.kernel-head[data-state="passed"] {
+  color: var(--gold);
+}
+
+.kernel-head .head-rim {
+  fill: none;
+  stroke: var(--hair);
+  stroke-width: .8;
+}
+
+.kernel-head .florets-open circle {
+  fill: none;
+  stroke: var(--print-3);
+  stroke-opacity: .5;
+  stroke-width: .35;
+}
+
+.kernel-head .florets-filled circle {
+  fill: currentColor;
+}
+
+.kernel-readings {
+  display: grid;
+  gap: 6px;
+  min-inline-size: 0;
+}
+
+#kernel-count,
+#kernel-eta,
+#kernel-pace {
+  margin: 0;
+  color: var(--print-2);
+  font-family: var(--font-mono);
+  font-size: .8125rem;
+  overflow-wrap: anywhere;
+}
+
+.kernel-caption {
+  margin: 0;
+  color: var(--print-2);
+  font-size: var(--fs-caption);
+  font-style: italic;
+  line-height: var(--lh-caption);
+}
+
+.kernel-caption .tag {
+  margin-inline-end: .5em;
+}
+
+#checker-resources {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: .8125rem;
+}
+
+.replay-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3) var(--space-5);
+  margin: 0;
+}
+
+.replay-facts > div {
+  display: grid;
+  gap: 2px;
+  padding-block: 6px;
+  border-block-end: 1px solid var(--hair);
+}
+
+.replay-source,
+#export-observation {
+  margin: 0;
+  color: var(--print-2);
+  font-size: .9375rem;
+}
+
+.receipt-label {
+  display: block;
+  color: var(--print-3);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+}
+
+/* The five controls: seed trays, one accepted, four refused. */
+.controls-record,
+.theorem-record {
+  display: grid;
+  gap: var(--space-4);
+  min-inline-size: 0;
+}
+
+.controls-trays {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.trays-head {
+  margin: 0;
+  color: var(--print-2);
+  font-size: .9375rem;
+}
+
+.trays {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 12.5rem), 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tray.slip {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: var(--space-4);
+  font-size: .9375rem;
+  line-height: 1.4;
+}
+
+.tray-art {
+  inline-size: 72px;
+  block-size: auto;
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.1;
+}
+
+.tray-art .soil-hatch {
+  stroke: var(--ink-3);
+  stroke-width: .8;
+}
+
+.tray-art .seed {
+  fill: color-mix(in srgb, var(--ink) 12%, transparent);
+  stroke: var(--ink);
+}
+
+.tray-art .seed.dotted {
+  stroke-dasharray: 1.5 2;
+  fill: none;
+}
+
+.tray-art .shoot,
+.tray-art .leaf {
+  stroke: var(--state);
+}
+
+.tray-art .leaf {
+  fill: color-mix(in srgb, var(--state) 22%, transparent);
+}
+
+.tray-art .closed {
+  stroke: var(--state);
+}
+
+.tray-art .odd {
+  stroke: var(--state-inconclusive);
+}
+
+.tray-name {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.tray-fixture {
+  color: var(--ink-2);
+  font-size: .75rem;
+}
+
+.tray-fixture.is-prose {
+  font-family: var(--font-text);
+  font-size: .875rem;
+  font-style: italic;
+}
+
+.tray-expect {
+  color: var(--ink-2);
+  font-size: .875rem;
+}
+
+.tray-seen {
+  color: var(--state);
+  font-weight: 500;
+}
+
+.tray-shows {
+  color: var(--ink-2);
+  font-size: .875rem;
+  font-style: italic;
+}
+
+/* Determination slips. */
+.slips {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.theorem.slip {
+  padding: 0;
+}
+
+.theorem > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .25em .4em;
+  padding: var(--space-4) var(--space-5);
+  list-style: none;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.theorem > summary::-webkit-details-marker {
+  display: none;
+}
+
+.theorem > summary::before {
+  content: "";
+  align-self: center;
+  inline-size: .38em;
+  block-size: .38em;
+  margin-inline-end: .35em;
+  border-block-end: 1px solid var(--ink-2);
+  border-inline-end: 1px solid var(--ink-2);
+  rotate: -45deg;
+  transition: rotate var(--quick) var(--ease);
+}
+
+.theorem[open] > summary::before {
+  rotate: 45deg;
+}
+
+.slip-label {
+  font-style: italic;
+}
+
+.slip-sep {
+  color: var(--ink-3);
+}
+
+.slip-state {
+  color: var(--state);
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .08em;
+}
+
+.slip-fields {
+  margin: 0;
+  padding: 0 var(--space-5) var(--space-5);
+}
+
+.theorem .slip-fields {
+  row-gap: .55em;
+}
+
+.slip-fields pre.lean {
+  padding: var(--space-3) var(--space-4);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.slip-fields code {
+  font-size: .8125rem;
+}
+
+.gates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slip-stamp {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+
+.slip-stamp .det-line {
+  margin: 0;
+}
+
+.pencil {
+  color: var(--ink-2);
+  font-family: var(--font-text);
+  font-style: italic;
+  text-decoration: underline dotted color-mix(in srgb, var(--ink-2) 55%, transparent);
+  text-underline-offset: .3em;
+}
+
+.replay-receipts,
+.run-meta {
+  margin: 0;
+}
+
+.replay-receipts:not(:has(a:not([hidden]))) {
+  display: none;
+}
+
+.run-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  color: var(--print-3);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+}
+
+/* An empty reading (no attempt duration for an input without a receipt) takes no room. */
+.run-meta > :empty {
+  display: none;
+}
+
+/* The press scale: a label that would crowd the end label gives way; its tick stays. */
+.press-scale span.is-muted {
+  color: transparent;
+}
+
+/* Margin specimens: a quiet plant printed beside each plate head on wide screens only,
+   never behind text (the head keeps a right margin free for it). fig-margin-specimen.js
+   draws them; they are decoration (aria-hidden) and stay empty if the module is absent. */
+.margin-specimen {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .herbarium-desk .plate-head:has(> .margin-specimen) {
+    position: relative;
+    padding-inline-end: calc(260px + clamp(20px, 3vw, 48px));
+  }
+
+  .margin-specimen {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    display: block;
+    inline-size: 260px;
+    block-size: 340px;
+    pointer-events: none;
+  }
+
+  .margin-specimen > .figure-stage {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  .margin-specimen.mirrored {
+    transform: scaleX(-1);
+  }
+}
+
+
+/* 9 · Appendix A · the label ================================================== */
+
+.manifest,
+.provenance,
+.pairs {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.manifest-state {
+  margin: 0;
+  color: var(--print-2);
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  overflow-wrap: anywhere;
+}
+
+.manifest-table {
+  inline-size: 100%;
+}
+
+.manifest-table th[scope="row"] code {
+  color: var(--print);
+  font-size: .8125rem;
+  white-space: nowrap;
+}
+
+.record-digest code {
+  color: var(--print-2);
+  font-size: .75rem;
+  word-break: break-all;
+}
+
+.record-rosette {
+  inline-size: 52px;
+  color: var(--print);
+}
+
+.sanitized {
+  max-inline-size: var(--prose-max);
+  margin: 0;
+  color: var(--print-2);
+  font-size: .9375rem;
+  line-height: 1.55;
+}
+
+.provenance-rows {
+  display: grid;
+  margin: 0;
+}
+
+.provenance-rows > div {
+  display: grid;
+  grid-template-columns: minmax(10rem, 15rem) minmax(0, 1fr);
+  gap: var(--space-4);
+  padding-block: 7px;
+  border-block-end: 1px solid var(--hair);
+}
+
+.provenance-rows dd {
+  margin: 0;
+  color: var(--print-2);
+  font-size: .78rem;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.provenance-rows dd a {
+  font-size: inherit;
+}
+
+.provenance-rows .quiet {
+  font-family: var(--font-text);
+  font-size: .8125rem;
+}
+
+.prov-flower {
+  display: inline-block;
+  vertical-align: middle;
+  margin-inline-end: .5em;
+  color: var(--print);
+}
+
+.digest-pairs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--space-4);
+}
+
+.digest-pair {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--hair);
+}
+
+.pair-label {
+  margin: 0;
+  color: var(--print);
+  font-size: .9375rem;
+  font-weight: 500;
+}
+
+.pair-flowers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.pair-flowers figure {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--print);
+}
+
+.pair-flowers figcaption {
+  color: var(--print-3);
+  font-family: var(--font-mono);
+  font-size: .6875rem;
+  text-align: center;
+}
+
+.pair-verdict {
+  margin: 0;
+  color: var(--state);
+  font-size: .875rem;
+  font-style: italic;
+}
+
+.check-yourself {
+  display: grid;
+  gap: var(--space-3);
+  max-inline-size: 900px;
+}
+
+.check-links {
+  margin: 0;
+  padding-inline-start: 1.1em;
+}
+
+.check-commands {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--line);
+  background-color: var(--field);
+  font-size: .75rem;
+  line-height: 1.55;
+}
+
+.check-footnote {
+  color: var(--ink-2);
+  font-size: .875rem;
+}
+
+
+/* 10 · Appendix B · field notes =============================================== */
+
+.ledger-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--space-3) var(--space-4);
+}
+
+.ledger-find {
+  flex: 1 1 18rem;
+}
+
+.ledger-type {
+  flex: 0 1 12rem;
+}
+
+.search-state {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: .78rem;
+}
+
+.rows-head,
+.event {
+  display: grid;
+  grid-template-columns: 6.6rem 7rem minmax(0, 1fr);
+  gap: 0 var(--space-3);
+}
+
+.rows-head {
+  padding-block-end: 4px;
+  border-block-end: 1px solid var(--line-strong);
+  color: var(--print-3);
+  font-family: var(--font-text);
+  font-size: var(--fs-tag);
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .08em;
+}
+
+.rows {
+  max-block-size: min(70vh, 720px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.event {
+  padding-block: 4px;
+  border-block-end: 1px solid var(--hair);
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  line-height: 1.45;
+}
+
+.event time {
+  color: var(--print-3);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.event .kind {
+  color: var(--print-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-variant-caps: all-small-caps;
+  letter-spacing: .06em;
+  line-height: 1.35;
+}
+
+.event[data-kind="warning"] .kind {
+  color: var(--heather);
+}
+
+.event:is([data-kind="error"], [data-kind$="_fail"]) .kind {
+  color: var(--vermilion);
+}
+
+.event[data-kind="progress"] .kind {
+  color: var(--live);
+}
+
+.event .message {
+  min-inline-size: 0;
+  color: var(--print);
+  overflow-wrap: anywhere;
+}
+
+.ev-bytes,
+.repeat {
+  color: var(--print-3);
+}
+
+button.unfold {
+  margin-inline-start: .4em;
+  padding: 0 .4em;
+  border: 0;
+  border-block-end: 1px dotted var(--print-3);
+  background: none;
+  color: var(--print-2);
+  font-family: var(--font-text);
+  font-size: .8125rem;
+  cursor: pointer;
+}
+
+button.unfold:hover {
+  color: var(--print);
+}
+
+.event-run {
+  margin-inline-start: 5.4rem;
+  padding-inline-start: var(--space-3);
+  border-inline-start: 1px solid var(--hair);
+}
+
+.event-run .event {
+  grid-template-columns: 5.4rem minmax(0, 1fr);
+}
+
+.event-run .event .kind {
+  display: none;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.archive-note {
+  margin: 0;
+  font-size: .875rem;
+}
+
+:root[data-mode="local"] .public-only {
+  display: none;
+}
+
+.vital-strips {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+  padding-block: var(--space-3);
+}
+
+.chart {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "name  value"
+    "trace trace"
+    "note  note";
+  align-items: baseline;
+  gap: 4px var(--space-3);
+  min-inline-size: 0;
+}
+
+.chart > span {
+  grid-area: name;
+  color: var(--print-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+
+.chart > b {
+  grid-area: value;
+  justify-self: end;
+  color: var(--print);
+  font-family: var(--font-mono);
+  font-size: .8125rem;
+  font-weight: 400;
+}
+
+.chart > small {
+  grid-area: note;
+  color: var(--print-3);
+  font-family: var(--font-mono);
+  font-size: .71875rem;
+}
+
+.chart > svg {
+  grid-area: trace;
+  display: block;
+  inline-size: 100%;
+  block-size: 52px;
+  border-block-end: 1px solid var(--print-3);
+  background-image: repeating-linear-gradient(0deg, transparent 0 12px, var(--hair) 12px 13px);
+}
+
+.vital-trace {
+  fill: none;
+  stroke: var(--live);
+  stroke-linejoin: round;
+  stroke-width: 1;
+}
+
+.vital-area {
+  fill: color-mix(in srgb, var(--live) 12%, transparent);
+  stroke: none;
+}
+
+.vital-ticks {
+  stroke: var(--print-3);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.bench-drawer {
+  display: grid;
+  gap: var(--space-3);
+}
+
+#local-info h4 {
+  margin: var(--space-4) 0 var(--space-2);
+  color: var(--print-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+
+.local-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  gap: 2px var(--space-4);
+  color: var(--print-2);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+}
+
+.local-grid span {
+  overflow-wrap: anywhere;
+}
+
+#guest {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: .78rem;
+}
+
+.raw-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--space-3);
+}
+
+.raw-tools .grow {
+  flex: 1 1 14rem;
+}
+
+.raw-text {
+  max-block-size: 60vh;
+  padding: var(--space-3);
+  overflow: auto;
+  border: 1px solid var(--line);
+  background-color: var(--field);
+  font-size: .71875rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+
+/* 11 · Colophon and foot ======================================================= */
+
+.herbarium-desk .colophon-head {
+  margin: 0 0 .5em;
+  color: var(--print);
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.colophon-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 64px);
+  max-inline-size: var(--instrument-max);
+}
+
+.credits ul {
+  display: grid;
+  gap: .45em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--print-2);
+  font-size: .9375rem;
+  line-height: 1.45;
+}
+
+.method dl {
+  display: grid;
+  gap: .3em;
+  margin: 0;
+}
+
+.method dt {
+  color: var(--print);
+  font-style: italic;
+}
+
+.method dd {
+  margin: 0 0 .7em;
+  color: var(--print-2);
+  font-size: .9375rem;
+  line-height: 1.5;
+}
+
+.printed-from {
+  margin: 0;
+  color: var(--print-3);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+}
+
+.signature {
+  margin: 0;
+  color: var(--print);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-style: italic;
+}
+
+.site-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3) var(--space-6);
+  padding: var(--space-6) var(--gutter) var(--space-7);
+  border-block-start: 1px solid var(--hair);
+  font-size: .9375rem;
+}
+
+.site-foot a {
+  color: var(--print-2);
+}
+
+
+/* 12 · Narrow screens ============================================================ */
+
+@media (max-width: 1099.98px) {
+  .front-sheet {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "copy"
+      "figure"
+      "label"
+      "pipeline";
+  }
+
+  .front-figure .figure-stage {
+    block-size: clamp(320px, 48vw, 500px);
+  }
+
+  .specimen-label {
+    max-inline-size: none;
+  }
+}
+
+@media (max-width: 899.98px) {
+  .compiler-desk,
+  .colophon-columns,
+  .vital-strips {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .compiler-desk {
+    grid-template-areas: "readouts" "links" "record" "active" "budget" "names" "source";
+  }
+}
+
+@media (max-width: 699.98px) {
+  .front-figure .figure-stage {
+    block-size: clamp(460px, 135vw, 680px);
+  }
+
+  /* Stems and the track stand upright: one node per row. */
+  .stem-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+  }
+
+  .stem,
+  .track {
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    gap: 6px;
+  }
+
+  :is(.stem, .track) > li:not(:last-child)::after {
+    inset-block: 22px -12px;
+    inset-inline: 13.5px auto;
+    border-block-start: 0;
+    border-inline-start: 1px solid color-mix(in srgb, var(--print) 34%, transparent);
+  }
+
+  .stem a,
+  .track > li {
+    grid-template-columns: 28px auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: var(--space-3);
+    justify-items: start;
+  }
+
+  .export-estimates,
+  .replay-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .label-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .label-rosette {
+    justify-items: start;
+  }
+
+  .label-rosette figcaption {
+    max-inline-size: none;
+    text-align: start;
+  }
+
+  .kernel-body {
+    grid-template-columns: 84px minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  .kernel-head {
+    inline-size: 84px;
+    block-size: 84px;
+  }
+
+  .part {
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+    row-gap: 2px;
+  }
+
+  .part .part-label {
+    display: none;
+  }
+
+  .part code {
+    grid-column: 2 / -1;
+  }
+
+  .provenance-rows > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+
+  .library {
+    grid-template-columns: minmax(0, 7.5rem) minmax(0, 1fr) auto;
+  }
+}
+
+@media (max-width: 599.98px) {
+  .rows-head {
+    display: none;
+  }
+
+  .event {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0 var(--space-3);
+  }
+
+  .event .message {
+    grid-column: 1 / -1;
+  }
+
+  .event-run {
+    margin-inline-start: var(--space-3);
+  }
+
+  .event-run .event {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .theorem > summary {
+    padding: var(--space-3) var(--space-4);
+    font-size: 1.15rem;
+  }
+
+  .slip-fields {
+    padding: 0 var(--space-4) var(--space-4);
+  }
+
+  .manifest-table th[scope="row"] code {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .record-rosette {
+    inline-size: 44px;
+  }
+}
+
+
+/* 13 · Motion and forced colours ================================================= */
+
+/* The active node breathes on the heartbeat; nothing else on the stems moves. */
+@keyframes bud-breathe {
+  0%,
+  100% {
+    opacity: .25;
+    scale: .82;
+  }
+
+  50% {
+    opacity: .9;
+    scale: 1;
+  }
+}
+
+:is(.stem, .track) > li[data-state="running"] .halo {
+  animation: bud-breathe var(--heartbeat) ease-in-out infinite;
+}
+
+@media (forced-colors: active) {
+  .rail,
+  .export-progress,
+  .kernel-progress,
+  .digest-pair {
+    border-color: CanvasText;
+  }
+
+  .rail-art,
+  .bud,
+  .tray-art,
+  .growth-chart,
+  .kernel-head,
+  .chart > svg {
+    forced-color-adjust: none;
+    color: CanvasText;
+  }
+
+  .rail-line,
+  .rail-zeros line,
+  .rail-vine,
+  .growth-chart :is(.g-curve, .g-ground, .g-tick, .g-stakes, .g-dawn, .g-scar, .g-top),
+  .vital-trace,
+  .vital-ticks,
+  .kernel-head .florets-open circle {
+    stroke: CanvasText;
+  }
+
+  .rail-zeros circle,
+  .growth-chart .g-main,
+  .growth-chart text,
+  .kernel-head .florets-filled circle {
+    fill: CanvasText;
+  }
+
+  .rail-vine-ghost,
+  .rail-leaves,
+  .vital-area {
+    display: none;
+  }
+
+  .bud,
+  .rail-marker {
+    background-color: Canvas;
+  }
+
+  .rail-marker {
+    forced-color-adjust: none;
+    border-color: Highlight;
+  }
+
+  .library-stem,
+  .library-done {
+    forced-color-adjust: none;
+    border-block-start-color: CanvasText;
+    background-image: none;
+    background-color: GrayText;
+  }
+
+  .library-done {
+    background-color: CanvasText;
+  }
+}
+
+
+/* 14 · Now pressing ==============================================================
+   The headline of the frontispiece: Euler's own export, then its kernel replay. A
+   cyanotype instrument with a gold stem (the reader asked for gold here: it marks the
+   specimen in the press, the one thing on the page still being made). */
+
+.front-sheet {
+  grid-template-areas:
+    "now      now"
+    "copy     figure"
+    "label    figure"
+    "pipeline pipeline";
+}
+
+.now-pressing {
+  grid-area: now;
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  align-items: start;
+  gap: var(--space-5) clamp(24px, 4vw, 56px);
+  padding: clamp(18px, 3vw, 34px);
+  border: 1px solid var(--gold-dim);
+  border-inline-start: 2px solid var(--gold);
+  background-image: linear-gradient(120deg, color-mix(in srgb, var(--ground-deep) 78%, transparent), color-mix(in srgb, var(--ground-lift) 46%, transparent));
+  box-shadow: inset 0 0 0 5px color-mix(in srgb, var(--ground-deep) 55%, transparent);
+}
+
+.now-head,
+.now-body {
+  display: grid;
+  gap: var(--space-3);
+  min-inline-size: 0;
+}
+
+.herbarium-desk .now-title {
+  display: flex;
+  align-items: center;
+  gap: .45em;
+  margin: 0;
+  color: var(--print);
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 1.25rem + 1.5vw, 2.5rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.now-dot {
+  flex: none;
+  inline-size: .32em;
+  block-size: .32em;
+  border: 1px solid var(--state, var(--print-3));
+  border-radius: 50%;
+  background-color: var(--state-dot, transparent);
+  color: var(--state, var(--print-3));
+}
+
+.now-pressing[data-state="running"] .now-dot {
+  animation: heartbeat var(--heartbeat) ease-in-out infinite;
+}
+
+.now-what {
+  margin: 0;
+  color: var(--print-2);
+  font-size: 1rem;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.now-phase {
+  margin: 0;
+  color: var(--print);
+  font-size: 1.0625rem;
+  line-height: 1.45;
+}
+
+.now-links {
+  margin: 0;
+  color: var(--print-3);
+  font-size: .875rem;
+}
+
+.now-reading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .15em .7em;
+  margin: 0;
+}
+
+.now-big {
+  color: var(--print);
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 1.7rem + 4.2vw, 5rem);
+  font-weight: 500;
+  line-height: .95;
+  font-variant-numeric: lining-nums proportional-nums;
+  overflow-wrap: anywhere;
+}
+
+.now-of,
+.now-percent {
+  color: var(--print-2);
+  font-family: var(--font-mono);
+  font-size: .875rem;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.now-percent {
+  color: var(--gold);
+  font-size: 1.125rem;
+}
+
+.now-gauge {
+  display: grid;
+  gap: 4px;
+}
+
+#now-bar {
+  --progress: var(--gold);
+  block-size: 14px;
+  border-color: var(--gold-dim);
+}
+
+.now-facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3) var(--space-4);
+  margin: 0;
+}
+
+.now-facts > div {
+  min-inline-size: 0;
+}
+
+.now-facts dt {
+  color: var(--print-2);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+
+.now-facts dd {
+  margin: 3px 0 0;
+  color: var(--print);
+  font-family: var(--font-mono);
+  font-size: .84375rem;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.now-stamp {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+}
+
+.now-stamp .det-line {
+  margin: 0;
+}
+
+.now-note:empty {
+  display: none;
+}
+
+@media (max-width: 1099.98px) {
+  .front-sheet {
+    grid-template-areas:
+      "now"
+      "copy"
+      "figure"
+      "label"
+      "pipeline";
+  }
+}
+
+@media (max-width: 899.98px) {
+  .now-pressing {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .now-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 479.98px) {
+  .now-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (forced-colors: active) {
+  .now-pressing {
+    border-color: CanvasText;
+  }
+}

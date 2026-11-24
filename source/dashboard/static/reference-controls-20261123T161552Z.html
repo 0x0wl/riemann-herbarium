@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en" data-theme="herbarium">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0c2544">
+  <meta name="color-scheme" content="dark">
+  <link rel="icon" href="data:,">
+  <title>Reference replay controls · 23 November 2026 · Lark</title>
+  <link rel="stylesheet" href="/ink.css">
+  <link rel="stylesheet" href="/masthead.css">
+  <link rel="stylesheet" href="/receipt.css">
+</head>
+<body class="desk-folio archive-page">
+  <a class="skip-link" href="#record">Skip to the control record</a>
+  <header class="masthead">
+    <div class="masthead-bar">
+      <a class="brand" href="/" aria-label="Lark herbarium, home"><span class="brand-mark" aria-hidden="true">ζ</span><span class="brand-name">Lark</span><span class="brand-sep" aria-hidden="true">/</span><span class="brand-place">Herbarium</span></a>
+      <nav class="masthead-nav" aria-label="Herbarium"><a href="/#replay">Current replay</a><a href="/feed/evidence/manifest.json">Evidence manifest</a></nav>
+      <span class="link-state" data-state="archived">Archived</span>
+    </div>
+  </header>
+  <main class="archive" id="record" tabindex="-1">
+    <article class="slip archive-slip" aria-labelledby="archive-title">
+      <header class="archive-head">
+        <p class="eyebrow">Herbarium Lark · Accession rh-20261120 · archived workstation receipt</p>
+        <h1 id="archive-title">Reference replay <em>controls</em></h1>
+        <p class="archive-date"><time datetime="2026-11-23T16:15:52Z">23 November 2026 · 11:13:30–11:15:52 a.m. EST</time></p>
+        <p class="archive-stamp"><span class="stamp inconclusive">Stopped in its controls</span><span class="det-line">no determination · 23 Nov 2026</span></p>
+      </header>
+      <p class="archive-intro">The first attempt on the published input, 11:13:30–11:15:52 a.m. EST on 23 November 2026. Four controls matched. The ill-typed control was refused with exit 1, a form the harness did not yet recognise, so the attempt stopped before the real input was opened. No verdict was reached on the real input; the next attempt re-ran all five controls and continued.</p>
+      <section class="archive-section" aria-labelledby="controls-title">
+        <h2 id="controls-title">Kernel controls</h2>
+        <p class="archive-count">4 of 5 matched</p>
+        <table class="archive-fixtures"><thead><tr><th scope="col">Control</th><th scope="col">Response</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Valid proof</th><td>Matched</td></tr>
+            <tr><th scope="row">Wrong statement</th><td>Matched</td></tr>
+            <tr><th scope="row">Extra axiom</th><td>Matched</td></tr>
+            <tr><th scope="row">Placeholder</th><td>Matched</td></tr>
+            <tr class="archive-mismatch"><th scope="row">Ill-typed proof term</th><td>Unexpected response <code>exit 1</code></td></tr>
+          </tbody>
+        </table>
+        <p class="archive-outcome">The attempt ended during its controls, before the full comparison. Nothing was rejected.</p>
+      </section>
+      <section class="archive-section" aria-labelledby="identity-title">
+        <h2 id="identity-title">Receipt identity</h2>
+        <dl class="archive-identity">
+          <dt>Kernel</dt><dd><code>con-leche --compare</code></dd>
+          <dt>Checker commit</dt><dd><code>5dc36dc15b7bee891a02406b78a8ac816a47baad</code></dd>
+          <dt>Attempt</dt><dd><code>aacbf76973d749e6bd552220da563d22</code></dd>
+          <dt>Receipt SHA-256</dt><dd><code>f78df247d341a9e6a94ef240554226940c89e9377be0d993e06afeaac51ef046</code></dd>
+        </dl>
+        <p class="archive-note">The receipt itself is embedded in this page’s source, verbatim, as JSON; the digest above is the SHA-256 of that text. The desk reads it from here and checks the digest before showing it.</p>
+      </section>
+    </article>
+  </main>
+<script type="application/json" id="archived-receipt">{
+  "run_id": "rh-20261120",
+  "kernel": "con-leche",
+  "artifact_origin": "published_reference",
+  "input": "reference_export",
+  "targets": [
+    "riemannHypothesis",
+    "riemannZeta_eq_zero_re",
+    "LFunction_ne_zero_of_half_lt_re",
+    "LFunction_eq_zero_re",
+    "LFunction_eq_zero_re_of_isPrimitive"
+  ],
+  "stage": "controls",
+  "result": "inconclusive",
+  "attempt_id": "aacbf76973d749e6bd552220da563d22",
+  "started": "2026-11-23T16:13:30Z",
+  "ended": "2026-11-23T16:15:52Z",
+  "updated": "2026-11-23T16:15:52Z",
+  "kernel_commit": "5dc36dc15b7bee891a02406b78a8ac816a47baad",
+  "kernel_sha256": "588c0b86a3cb5e9fbee489ec1d609435599d82b155df1bb4f5e6886d43e3a12e",
+  "challenge_sha256": "cf9cb6e4cf734322f1bb23d70a7ff8c041bbb907e7498dca7b7d53e759072842",
+  "challenge_source_sha256": "031f4f2ca55a03f720deb562c6c2451d251acc8412b122288af52ad89ae03e32",
+  "build_record_sha256": "b0b6a182bc61acc88ac8182a405f9ccad4cc251a470116ee5740d9adfc1b65bb",
+  "archive_sha256": "9631b4f020199e580ba86178cb56c6e9b09f690c2369a80dc4334aa93f49c7fc",
+  "elapsed_seconds": 142,
+  "jobs": 6,
+  "controls": {
+    "valid": true,
+    "wrong_statement": true,
+    "extra_axiom": true,
+    "placeholder": true,
+    "ill_typed": false
+  },
+  "main_replay_started": false,
+  "control_mismatch": {
+    "control": "ill_typed",
+    "exit_code": 1
+  },
+  "theorems": {
+    "riemannHypothesis": {
+      "statement": {
+        "result": "inconclusive"
+      },
+      "axioms": {
+        "result": "inconclusive"
+      },
+      "con-leche": {
+        "result": "inconclusive"
+      }
+    },
+    "riemannZeta_eq_zero_re": {
+      "statement": {
+        "result": "inconclusive"
+      },
+      "axioms": {
+        "result": "inconclusive"
+      },
+      "con-leche": {
+        "result": "inconclusive"
+      }
+    },
+    "LFunction_ne_zero_of_half_lt_re": {
+      "statement": {
+        "result": "inconclusive"
+      },
+      "axioms": {
+        "result": "inconclusive"
+      },
+      "con-leche": {
+        "result": "inconclusive"
+      }
+    },
+    "LFunction_eq_zero_re": {
+      "statement": {
+        "result": "inconclusive"
+      },
+      "axioms": {
+        "result": "inconclusive"
+      },
+      "con-leche": {
+        "result": "inconclusive"
+      }
+    },
+    "LFunction_eq_zero_re_of_isPrimitive": {
+      "statement": {
+        "result": "inconclusive"
+      },
+      "axioms": {
+        "result": "inconclusive"
+      },
+      "con-leche": {
+        "result": "inconclusive"
+      }
+    }
+  }
+}</script></body></html>

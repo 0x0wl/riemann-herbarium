@@ -1,0 +1,24 @@
+{
+  "scope": "Positive-control setup before reading submitted proofs",
+  "evidence_source": "Diagnostics observed in the first two local runner logs; original logs were overwritten by smoke retries. The append-only verifier journal preserves timestamps and statuses.",
+  "attempts": [
+    {
+      "ts": "2026-11-20T17:42:04Z",
+      "result": "inconclusive",
+      "control": "valid",
+      "observed": "error: `lake comparator` needs `bwrap` to sandbox the code it checks, and it was not found.",
+      "cause": "The minimal outer sandbox omitted [local path], preventing the judge from invoking the distribution's which utility.",
+      "fix": "Expose the runtime alternatives links read-only."
+    },
+    {
+      "ts": "2026-11-20T17:42:43Z",
+      "result": "inconclusive",
+      "control": "valid",
+      "observed": "bwrap: Can't mkdir [local path]: Read-only file system",
+      "cause": "The nested checker sandbox expected empty system directories to exist in its read-only parent.",
+      "fix": "Add empty [local path], [local path], [local path] and [local path] mountpoints to the outer judge namespace."
+    }
+  ],
+  "resolved_at": "2026-11-20T17:43:04Z",
+  "resolved_evidence": "verifier-smoke.json"
+}

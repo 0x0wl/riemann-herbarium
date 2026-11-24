@@ -1,0 +1,42 @@
+{
+  "synthetic": true,
+  "verified_at": "2026-11-20T17:53:00Z",
+  "fixtures": {
+    "valid": {
+      "cli_exit": 0,
+      "result": "passed",
+      "gates": {
+        "build": "passed",
+        "statement": "passed",
+        "axioms": "passed",
+        "lean": "passed",
+        "nanoda": "passed"
+      },
+      "commands": 3
+    },
+    "wrong_statement": {
+      "cli_exit": 1,
+      "result": "failed",
+      "gates": {
+        "build": "passed",
+        "statement": "failed",
+        "axioms": "passed",
+        "lean": "pending",
+        "nanoda": "pending"
+      },
+      "commands": 3
+    },
+    "extra_axiom": {
+      "cli_exit": 1,
+      "result": "failed",
+      "gates": {
+        "build": "passed",
+        "statement": "passed",
+        "axioms": "failed",
+        "lean": "pending",
+        "nanoda": "pending"
+      },
+      "commands": 3
+    }
+  }
+}

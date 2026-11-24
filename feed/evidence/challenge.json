@@ -1,0 +1,7 @@
+{
+  "module": "Challenge",
+  "bytes": 350794865,
+  "sha256": "cf9cb6e4cf734322f1bb23d70a7ff8c041bbb907e7498dca7b7d53e759072842",
+  "source_sha256": "031f4f2ca55a03f720deb562c6c2451d251acc8412b122288af52ad89ae03e32",
+  "mathlib_commit": "0df444a360eaa60ab8c11dca51a86af692955474"
+}

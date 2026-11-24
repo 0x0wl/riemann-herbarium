@@ -1,0 +1,2059 @@
+/* ==========================================================================
+   ink.css · the shared ink of Lark's two places
+   ==========================================================================
+
+   One sheet colours, sets and prints both of Lark's places:
+
+     html[data-theme="herbarium"]  the herbarium page and the keeper's bench.
+                                   A cyanotype sheet in Prussian blue. A proof
+                                   of the Riemann Hypothesis is pressed into it
+                                   as a specimen and examined by a kernel.
+     html[data-theme="forest"]     the home page. The night clearing in moss and
+                                   gold, where the pressed plants still grow.
+
+   Both places share paper, line, type and one accent. Gold means checked: a
+   receipt passed, a kernel accepted. The only gold that has not been checked
+   is the critical line itself, Re s = ½.
+
+   House rules
+     · Valid under style-src 'self': no @import, nothing from elsewhere.
+     · Fonts load from /fonts/ (both sites serve the same names). The grain
+       tile is resolved next to this file (ground-grain.png), so the sheet
+       works at /ink.css and at /ui/ink.css alike.
+     · No page layout lives here. Pages arrange the plates; this sheet only
+       says what a plate, a slip, a stamp or a chip looks like.
+     · [data-theme] may also sit on any element. Inks and ground follow it,
+       so the two places can be shown side by side.
+     · Components draw with surface inks (--ink, --line, --state-…), not
+       with the palette directly. Inside a .slip the surface inks turn to
+       paper inks, so a chip, a tag or a form on paper needs no extra class.
+
+   Contents
+      1  Faces .......... Lark Display, Lark Text, Lark Mono
+      2  Inks ........... palettes, constants, surfaces, paper, scale
+      3  The sheet ...... the cyanotype ground and the night ground
+      4  Type ........... elements, numerals, prose and math
+      5  Access ......... focus ring, skip link, .sr-only, [hidden]
+      6  Plates ......... .plate .plate-head .numeral .zero-tag .dek .rule-line
+      7  Figures ........ .figure figcaption .drawn-by .tag .tagged details.numbers
+      8  Paper .......... .slip .slip-title .stamp .det-line
+      9  States ......... [data-state] .chip .live-dot
+     10  Lean ........... .lean .kw .nm .op .cm .ty
+     11  Utilities ...... .mono .num .small-caps .eyebrow .big-num .math .scroll-x
+     12  Instruments .... .button .toggle .toggles .field, fields, range, progress
+     13  Rosettes ....... svg.rosette, drawn by rosette.js
+     14  Motion ......... heartbeat, landing, drift, reduced motion, [data-motion]
+     15  Forced colours
+   ========================================================================== */
+
+
+/* 1 · Faces ================================================================
+
+   Three families, self-hosted under the SIL Open Font Licence (the licences
+   sit beside the fonts as OFL-*.txt):
+
+     Lark Display   Cormorant Garamond 500, 500 italic, 600
+                    titles, the h1, plate numerals, large numerals in prose
+     Lark Text      EB Garamond 400, 400 italic, 500, 600
+                    prose, captions, small-caps labels, mathematics in prose
+     Lark Mono      JuliaMono 400, 500
+                    Lean, hashes, data, readouts, the ledger
+
+   Coverage is uneven, and the stacks in § 2 chain the families in order.
+   Cormorant has no Greek and few mathematical signs, so ζ, ρ and σ in a
+   title come from EB Garamond. EB Garamond lacks ℂ ℝ ∀ ∃ ↦ ∈ ⊆ ∧ ∨ ∘ and the
+   marks ● ○ ◌ ▪, and those come from JuliaMono, which has every one. The
+   provenance marks are drawn in CSS (§ 7) rather than set as type. Thin
+   spaces widen noticeably in EB Garamond 500 and 600; avoid them in medium
+   and semibold text.                                                         */
+
+@font-face {
+  font-family: "Lark Display";
+  src: url("./fonts/display-roman.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lark Display";
+  src: url("./fonts/display-semibold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lark Display";
+  src: url("./fonts/display-italic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lark Text";
+  src: url("./fonts/text-roman.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lark Text";
+  src: url("./fonts/text-medium.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lark Text";
+  src: url("./fonts/text-semibold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lark Text";
+  src: url("./fonts/text-italic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lark Mono";
+  src: url("./fonts/mono-regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lark Mono";
+  src: url("./fonts/mono-medium.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+
+/* 2 · Inks =================================================================== */
+
+/* 2.1 · Constants: one gold, one red, one paper, the same in both places. --- */
+
+:root {
+  --gold: #e0b862;                    /* checked · accepted · passed · the critical line */
+  --gold-dim: rgb(224 184 98 / .38);  /* gold hairlines and halos */
+  --heather: #c6a9e0;                 /* inconclusive · stopped · paused */
+  --vermilion: #e8603f;               /* rejected · failed · alert; red stamps only */
+  --seal-gold: #b98a2e;               /* stamp pad on paper: passed */
+  --seal-red: #b8452a;                /* stamp pad on paper: rejected */
+
+  --paper: #efe8d6;                   /* slips and labels glued onto the sheet */
+  --paper-2: #e2d8c0;                 /* slip shading, ruled lines on paper */
+  --paper-ink: #1c2632;               /* text on paper */
+  --paper-ink-2: #57606d;             /* secondary text on paper */
+
+  /* Lettering inks for paper. The seal colours are the stamp pads; letters
+     need more weight to read. Each is at least 5:1 on --paper. */
+  --seal-gold-ink: #76592a;
+  --seal-red-ink: #a1402b;
+  --seal-live: #1f5a78;               /* blue-black: in the press, running */
+  --seal-heather: #5f4a8a;
+
+  /* Families (§ 1). */
+  --font-display: "Lark Display", "Lark Text", "Lark Mono", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-text: "Lark Text", "Lark Mono", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-mono: "Lark Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  /* Type scale. Desktop values; § 2.6 changes three of them on phones. */
+  --fs-h1: clamp(3.5rem, 9vw, 8rem);                   /* 56–128px Display 500 / .9 */
+  --fs-plate: clamp(2.25rem, 5.2vw, 4rem);             /* 36–64px plate titles and numerals / 1 */
+  --fs-h3: clamp(1.375rem, 1.1rem + 1vw, 1.75rem);     /* 22–28px Display 600 */
+  --fs-dek: clamp(1.125rem, 1rem + .6vw, 1.375rem);    /* 18–22px Text italic */
+  --fs-body: 1.1875rem;                                /* 19px Text */
+  --lh-body: 1.62;
+  --fs-caption: .9375rem;                              /* 15px Text italic */
+  --lh-caption: 1.45;
+  --fs-label: .875rem;                                 /* 14px all small caps */
+  --fs-tag: .75rem;                                    /* 12px provenance tags */
+  --fs-mono: .8125rem;                                 /* 13px data */
+  --lh-mono: 1.5;
+  --fs-axis: .71875rem;                                /* 11.5px chart and axis labels */
+
+  /* Measures and rhythm. */
+  --content-max: 1240px;
+  --prose-max: 680px;
+  --figure-max: 1080px;
+  --measure: 66ch;
+  --gutter: clamp(16px, 4vw, 48px);
+  --masthead-h: 56px;
+  --plate-gap: 18vh;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+  --space-9: 112px;
+
+  /* Line, paper and time. Everything drawn is engraved: 0.75–1.25px. */
+  --stroke-fine: .75px;
+  --stroke: 1px;
+  --stroke-bold: 1.25px;
+  --radius: 2px;
+  --shadow-slip: 0 1px 0 rgb(0 0 0 / .25), 0 8px 24px rgb(0 0 0 / .25);
+  --heartbeat: 2.4s;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  --quick: 140ms;
+  --settle: 260ms;
+}
+
+/* 2.2 · The herbarium: a cyanotype. Unexposed paper prints light on blue. --- */
+
+:root,
+[data-theme="herbarium"] {
+  --ground: #0c2544;                  /* the page: Prussian blue */
+  --ground-deep: #071a31;             /* recesses, vignette, behind figures */
+  --ground-lift: #123359;             /* a rare raised wash */
+  --wash: #1b406e;                    /* lighter exposure, mottling, hover */
+  --print: #eaf0f4;                   /* text and lines: unexposed paper */
+  --print-2: #b6c7d8;                 /* secondary text */
+  --print-3: #809ab6;                 /* tertiary text, labels, ticks */
+  --hair: rgb(234 240 244 / .16);     /* hairlines and grids */
+  --live: #93d9e6;                    /* running, active, the live heartbeat */
+  --title-accent: color-mix(in srgb, var(--gold) 90%, var(--print));
+}
+
+/* 2.3 · The forest: night under the canopy. -------------------------------- */
+
+[data-theme="forest"] {
+  --ground: #0e1a15;
+  --ground-deep: #08110d;
+  --ground-lift: #15261f;
+  --wash: #24382d;
+  --print: #ece6d0;
+  --print-2: #c4c6ae;
+  --print-3: #8f9b86;
+  --hair: rgb(236 230 208 / .16);
+  --live: #a9dcc4;
+  --title-accent: color-mix(in srgb, var(--gold) 80%, var(--print));
+}
+
+/* 2.4 · Surface inks: what every component draws with. On the ground they
+   are the print inks; § 2.5 turns them to paper inks inside a slip. They are
+   declared wherever a theme is, so a themed panel resolves its own. -------- */
+
+:root,
+[data-theme] {
+  --muted-state: var(--print-3);      /* pending · awaiting · not run */
+  --ink: var(--print);
+  --ink-2: var(--print-2);
+  --ink-3: var(--print-3);
+  --line: var(--hair);
+  --line-strong: color-mix(in srgb, var(--print) 45%, transparent);  /* control edges, ≥ 3:1 */
+  --surface: var(--ground);
+  --surface-deep: var(--ground-deep);
+  --hover-wash: color-mix(in srgb, var(--wash) 80%, transparent);
+  --field: color-mix(in srgb, var(--ground-deep) 60%, transparent);
+  --gold-ink: var(--gold);            /* gold that has to read as a mark or a line */
+  --gold-hair: var(--gold-dim);       /* gold that only has to be there */
+  --ring: var(--gold);                /* the focus ring */
+
+  /* State inks (§ 9). One mapping for badges, stems, stamps and chips. */
+  --state-passed: var(--gold);
+  --state-running: var(--live);
+  --state-pending: var(--muted-state);
+  --state-inconclusive: var(--heather);
+  --state-failed: var(--vermilion);
+  --seal-passed: var(--gold);         /* stamp frames: the pad colour */
+  --seal-failed: var(--vermilion);
+
+  color-scheme: dark;
+  accent-color: var(--print-2);
+}
+
+/* 2.5 · Paper: slips, labels, receipts, the letterbox. ----------------------- */
+
+.slip {
+  --ink: var(--paper-ink);
+  --ink-2: var(--paper-ink-2);
+  --ink-3: var(--paper-ink-2);
+  --line: rgb(28 38 50 / .16);
+  --line-strong: color-mix(in srgb, var(--paper-ink) 58%, transparent);
+  --surface: var(--paper);
+  --surface-deep: var(--paper-2);
+  --hover-wash: color-mix(in srgb, var(--paper-2) 90%, transparent);
+  --field: rgb(255 255 255 / .45);
+  --gold-ink: var(--seal-gold-ink);
+  --gold-hair: color-mix(in srgb, var(--seal-gold) 70%, transparent);
+  --ring: var(--seal-gold-ink);
+  --state-passed: var(--seal-gold-ink);
+  --state-running: var(--seal-live);
+  --state-pending: var(--paper-ink-2);
+  --state-inconclusive: var(--seal-heather);
+  --state-failed: var(--seal-red-ink);
+  --seal-passed: var(--seal-gold);
+  --seal-failed: var(--seal-red);
+
+  color-scheme: light;
+  accent-color: var(--paper-ink);
+}
+
+/* 2.6 · Phones: body 17/1.58, data 12.5px. ---------------------------------- */
+
+@media (max-width: 599.98px) {
+  :root {
+    --fs-body: 1.0625rem;
+    --lh-body: 1.58;
+    --fs-mono: .78125rem;
+  }
+}
+
+
+/* 3 · The sheet ===============================================================
+
+   The page is the sheet.
+
+   On the herbarium it is a cyanotype: Prussian blue with the uneven exposure
+   of a hand-coated print. Large soft clouds of lighter and deeper exposure
+   sit in tiles of co-prime sizes, so their pattern never visibly repeats. A
+   fine paper grain lies over them, and the edges of the view fall into the
+   shade of a contact frame.
+
+   On the forest it is night under the canopy: moss-dark clouds, a faint
+   moonlit gap overhead, the same grain.
+
+   ground-grain.png (256 × 256 px, tiles seamlessly, a 4-bit palette with
+   alpha, about 20 KB) holds paper fibres, a fine grain, dark clumps of
+   sensitizer and pale pinholes. All of it is white or black at 2–17 %
+   alpha, so the one tile serves both grounds and the paper. The stamps (§ 8)
+   use it as their ink-noise mask. It is grown from the seed 18590000 (the
+   year of Riemann's paper): Gaussian grain blurred at σ 0.65px, 240 curved
+   fibres, 80 dark clumps and 34 pinholes, quantised to six white and five
+   black alpha levels.
+
+   The root element carries the ground: it paints the whole canvas and
+   scrolls with the page. body::before holds the fixed shade, behind every
+   other box. Pages should not paint body. For the flat colour alone, set
+   data-ground="plain" on <html>.                                             */
+
+:root,
+[data-theme] {
+  background-color: var(--ground);
+  color: var(--ink);
+}
+
+:root,
+[data-theme="herbarium"] {
+  background-image:
+    url("ground-grain.png"),
+    radial-gradient(ellipse 34% 30% at 30% 40%, color-mix(in srgb, var(--wash) 52%, transparent), transparent 70%),
+    radial-gradient(ellipse 30% 36% at 70% 64%, color-mix(in srgb, var(--ground-deep) 58%, transparent), transparent 70%),
+    radial-gradient(ellipse 26% 22% at 56% 24%, color-mix(in srgb, var(--ground-lift) 80%, transparent), transparent 70%),
+    radial-gradient(ellipse 40% 26% at 32% 76%, color-mix(in srgb, var(--wash) 34%, transparent), transparent 70%);
+  background-size: 256px 256px, 1310px 1170px, 1730px 1490px, 970px 1630px, 2190px 1910px;
+}
+
+[data-theme="forest"] {
+  background-image:
+    url("ground-grain.png"),
+    radial-gradient(ellipse 30% 34% at 36% 42%, color-mix(in srgb, var(--wash) 46%, transparent), transparent 70%),
+    radial-gradient(ellipse 32% 28% at 66% 66%, color-mix(in srgb, var(--ground-deep) 62%, transparent), transparent 70%),
+    radial-gradient(ellipse 24% 30% at 58% 26%, color-mix(in srgb, var(--ground-lift) 85%, transparent), transparent 70%);
+  background-size: 256px 256px, 1170px 1390px, 1610px 1270px, 890px 1510px;
+}
+
+/* The shade of the frame: fixed to the view, under every box. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(ellipse 125% 100% at 50% 38%, transparent 52%, color-mix(in srgb, var(--ground-deep) 80%, transparent));
+}
+
+/* The forest adds a moonlit gap in the canopy overhead. */
+:root[data-theme="forest"] body::before {
+  background-image:
+    radial-gradient(ellipse 72% 52% at 54% -8%, color-mix(in srgb, var(--wash) 70%, transparent), transparent 72%),
+    radial-gradient(ellipse 125% 100% at 50% 38%, transparent 50%, color-mix(in srgb, var(--ground-deep) 86%, transparent));
+}
+
+:root[data-ground="plain"] {
+  background-image: none;
+}
+
+:root[data-ground="plain"] body::before {
+  content: none;
+}
+
+/* Brushed coating edges, where the sensitizer ends: optional (.coated on a
+   plate or figure), decorative, and only on wide views, where the plate's
+   edges are margin and never text. Each pseudo-element is a wash seen through
+   three masks: bristle streaks, a fade from the edge inwards, and a slow
+   swell along the edge, so that the strokes start and stop like a brush. */
+@media (min-width: 1100px) {
+  .coated {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .coated::before,
+  .coated::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-color: var(--wash);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+
+  .coated::before {
+    opacity: .42;
+    -webkit-mask-image:
+      repeating-linear-gradient(180deg, #000 0 2px, rgb(0 0 0 / .3) 2px 5px, rgb(0 0 0 / .85) 5px 8px, transparent 8px 11px, rgb(0 0 0 / .55) 11px 13px, transparent 13px 21px),
+      linear-gradient(90deg, #000, rgb(0 0 0 / .35) 22px, transparent 52px, transparent calc(100% - 52px), rgb(0 0 0 / .35) calc(100% - 22px), #000),
+      repeating-linear-gradient(180deg, #000 0 80px, rgb(0 0 0 / .3) 170px, #000 260px, rgb(0 0 0 / .12) 380px, rgb(0 0 0 / .8) 470px, #000 560px, rgb(0 0 0 / .4) 650px, #000 730px);
+    mask-image:
+      repeating-linear-gradient(180deg, #000 0 2px, rgb(0 0 0 / .3) 2px 5px, rgb(0 0 0 / .85) 5px 8px, transparent 8px 11px, rgb(0 0 0 / .55) 11px 13px, transparent 13px 21px),
+      linear-gradient(90deg, #000, rgb(0 0 0 / .35) 22px, transparent 52px, transparent calc(100% - 52px), rgb(0 0 0 / .35) calc(100% - 22px), #000),
+      repeating-linear-gradient(180deg, #000 0 80px, rgb(0 0 0 / .3) 170px, #000 260px, rgb(0 0 0 / .12) 380px, rgb(0 0 0 / .8) 470px, #000 560px, rgb(0 0 0 / .4) 650px, #000 730px);
+  }
+
+  .coated::after {
+    opacity: .26;
+    -webkit-mask-image:
+      repeating-linear-gradient(180deg, transparent 0 3px, rgb(0 0 0 / .7) 3px 4px, transparent 4px 9px, #000 9px 11px, rgb(0 0 0 / .35) 11px 15px, transparent 15px 19px),
+      linear-gradient(90deg, #000, rgb(0 0 0 / .4) 40px, transparent 96px, transparent calc(100% - 96px), rgb(0 0 0 / .4) calc(100% - 40px), #000),
+      repeating-linear-gradient(180deg, rgb(0 0 0 / .2) 0, #000 120px, rgb(0 0 0 / .5) 230px, #000 310px, rgb(0 0 0 / .1) 420px, rgb(0 0 0 / .2) 530px);
+    mask-image:
+      repeating-linear-gradient(180deg, transparent 0 3px, rgb(0 0 0 / .7) 3px 4px, transparent 4px 9px, #000 9px 11px, rgb(0 0 0 / .35) 11px 15px, transparent 15px 19px),
+      linear-gradient(90deg, #000, rgb(0 0 0 / .4) 40px, transparent 96px, transparent calc(100% - 96px), rgb(0 0 0 / .4) calc(100% - 40px), #000),
+      repeating-linear-gradient(180deg, rgb(0 0 0 / .2) 0, #000 120px, rgb(0 0 0 / .5) 230px, #000 310px, rgb(0 0 0 / .1) 420px, rgb(0 0 0 / .2) 530px);
+  }
+}
+
+
+/* 4 · Type =====================================================================
+
+   Numerals: oldstyle and proportional in prose (they sit in the line like
+   lower-case letters); lining and tabular in data, tables, mono and controls
+   (they stack in columns). Write a true minus (−), times (×), arrows (→) and
+   the vulgar fractions ½ ⅓ ⅔; group thousands with commas, as the feed does.
+   Mathematics in prose: variables in Text italic (<var> or <i class="m">),
+   ζ ρ σ upright in Text, a formula kept on one line with .math.
+
+   Body text inherits oldstyle figures, and JuliaMono has oldstyle figures
+   too. So Mono never sets type without lining-nums tabular-nums: every rule
+   here that uses Lark Mono says so, and so should any rule of yours (or give
+   the element .mono or .num).                                                */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scrollbar-color: color-mix(in srgb, var(--print-3) 70%, transparent) transparent;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0;
+  font-family: var(--font-text);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  line-height: var(--lh-body);
+  font-kerning: normal;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-variant-numeric: lining-nums proportional-nums;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--fs-h1);
+  line-height: .9;
+  letter-spacing: -.015em;
+}
+
+/* "Riemann Hypothesis": the italic word is printed in gold-tinted ink. */
+h1 :is(em, i) {
+  color: var(--title-accent);
+  font-style: italic;
+}
+
+h2 {
+  font-size: var(--fs-plate);
+  line-height: 1;
+  letter-spacing: -.01em;
+}
+
+h3 {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+:where(p) {
+  margin-block: 0 .9em;
+}
+
+:where(p:last-child) {
+  margin-block-end: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, currentColor 42%, transparent);
+  text-underline-offset: .2em;
+  transition: text-decoration-color var(--quick) ease, color var(--quick) ease;
+}
+
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+var,
+i.m {
+  font-family: var(--font-text);
+  font-style: italic;
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+code,
+samp {
+  font-size: .82em;
+  overflow-wrap: anywhere;
+}
+
+kbd {
+  padding: .06em .42em .1em;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 var(--line);
+  font-size: .78em;
+  white-space: nowrap;
+}
+
+pre {
+  max-inline-size: 100%;
+  margin: 0;
+  overflow-x: auto;
+  font-size: var(--fs-mono);
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+pre :is(code, samp) {
+  font-size: inherit;
+  overflow-wrap: normal;
+}
+
+table {
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  line-height: var(--lh-mono);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+caption {
+  padding-block-end: var(--space-2);
+  color: var(--ink-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-caption);
+  font-style: italic;
+  line-height: var(--lh-caption);
+  text-align: start;
+}
+
+th,
+td {
+  padding: .4em 1.1em .4em 0;
+  border-block-end: 1px solid var(--line);
+  text-align: start;
+  vertical-align: baseline;
+}
+
+:where(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+th {
+  color: var(--ink-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+
+thead th {
+  border-block-end-color: var(--line-strong);
+}
+
+:where(th, td):is(.num, [data-num]) {
+  text-align: end;
+}
+
+summary {
+  cursor: pointer;
+}
+
+summary::marker {
+  color: var(--ink-3);
+}
+
+hr {
+  block-size: 0;
+  margin: var(--space-6) 0;
+  border: 0;
+  border-block-start: 1px solid var(--line);
+}
+
+img,
+svg,
+canvas,
+video {
+  max-inline-size: 100%;
+}
+
+img,
+video {
+  block-size: auto;
+}
+
+::selection {
+  background-color: var(--ink);
+  color: var(--surface);
+}
+
+/* Prose: the 680px column, set like a book. */
+.prose {
+  max-inline-size: min(var(--prose-max), var(--measure));
+  font-family: var(--font-text);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  hanging-punctuation: first allow-end last;
+  text-wrap: pretty;
+}
+
+.prose > * {
+  margin-block: 0;
+}
+
+.prose > * + * {
+  margin-block-start: .9em;
+}
+
+.prose :is(strong, b) {
+  font-weight: 600;
+}
+
+.prose abbr {
+  font-variant-caps: all-small-caps;
+  letter-spacing: .05em;
+  text-decoration: none;
+}
+
+.prose :is(sup, sub) {
+  font-size: .72em;
+  line-height: 0;
+}
+
+.prose blockquote {
+  margin-inline: 0;
+  padding-inline-start: 1.1em;
+  border-inline-start: 1px solid var(--line-strong);
+  color: var(--ink-2);
+  font-style: italic;
+}
+
+.prose :is(ul, ol) {
+  padding-inline-start: 1.25em;
+}
+
+.prose li + li {
+  margin-block-start: .3em;
+}
+
+.prose li::marker {
+  color: var(--ink-3);
+}
+
+
+/* 5 · Access =================================================================== */
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+[hidden]:not([hidden="until-found"]) {
+  display: none !important;
+}
+
+/* The skip link waits above the view and drops in, on paper, when focused. */
+.skip-link {
+  position: fixed;
+  inset-block-start: var(--space-3);
+  inset-inline-start: var(--space-3);
+  z-index: 1000;
+  padding: .55em .95em;
+  background-color: var(--paper);
+  box-shadow: var(--shadow-slip);
+  color: var(--paper-ink);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transform: translateY(calc(-100% - 2 * var(--space-3)));
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+.sr-only:not(:focus):not(:active) {
+  position: absolute !important;
+  inline-size: 1px !important;
+  block-size: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+
+
+/* 6 · Plates =====================================================================
+
+   A plate is a chapter, pinned to a zero of ζ. Its head:
+
+     <header class="plate-head">
+       <span class="numeral">IV</span>
+       <p class="zero-tag">ρ₄ · ½ + 30.4249i</p>
+       <h2>The specimen</h2>
+       <p class="dek">One line, in italic.</p>
+     </header>
+
+   The numeral hangs to the left of the title; the zero tag stands above the
+   title, marked by a gold node on the critical line. On phones the numeral
+   and the tag share a line above the title. Plates are separated by
+   <hr class="rule-line" data-from="t = 14.134725" data-to="t = 21.022040">,
+   a vertical segment of the critical line between two zeros.                 */
+
+.plate {
+  position: relative;
+  padding-block: clamp(48px, 9vh, 112px);
+  padding-inline: var(--gutter);
+  background-image: radial-gradient(ellipse 62% 56% at 50% 46%, color-mix(in srgb, var(--wash) 30%, transparent), transparent 74%);
+  background-repeat: no-repeat;
+  scroll-margin-block-start: calc(var(--masthead-h) + var(--space-3));
+}
+
+.plate-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "numeral zero"
+    "numeral title"
+    ".       dek";
+  align-items: end;
+  column-gap: clamp(14px, 2.4vw, 32px);
+  row-gap: var(--space-2);
+  max-inline-size: var(--content-max);
+  margin-block-end: clamp(28px, 6vh, 64px);
+}
+
+.plate-head > .numeral {
+  grid-area: numeral;
+  display: block;
+  min-inline-size: 1.75em;
+  font-size: var(--fs-plate);
+  line-height: 1;
+  text-align: end;
+}
+
+.plate-head > .zero-tag {
+  grid-area: zero;
+}
+
+.plate-head > :is(h1, h2, h3, .plate-title) {
+  grid-area: title;
+}
+
+.plate-head > .dek {
+  grid-area: dek;
+}
+
+.plate-title {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--fs-plate);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.01em;
+  font-variant-numeric: lining-nums proportional-nums;
+  text-wrap: balance;
+}
+
+/* The plate's Roman numeral: Display italic, quiet ink. */
+.numeral {
+  margin: 0;
+  color: var(--ink-3);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-variant-numeric: lining-nums;
+}
+
+/* The zero the plate is pinned to: ρₙ · ½ + tₙi, in Mono. */
+.zero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: .65em;
+  margin: 0;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  font-style: normal;
+  line-height: 1.4;
+  font-variant-numeric: lining-nums tabular-nums;
+  white-space: nowrap;
+}
+
+.zero-tag::before {
+  content: "";
+  flex: none;
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background-color: var(--gold-ink);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold-ink) 18%, transparent);
+}
+
+/* The dek: one line under the title. */
+.dek {
+  max-inline-size: 60ch;
+  margin: 0;
+  color: var(--ink-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-dek);
+  font-style: italic;
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+@media (max-width: 599.98px) {
+  .plate-head {
+    grid-template-areas:
+      "numeral zero"
+      "title   title"
+      "dek     dek";
+    align-items: center;
+  }
+
+  .plate-head > .numeral {
+    min-inline-size: 0;
+    font-size: 1.75rem;
+    text-align: start;
+  }
+}
+
+/* The critical line between two plates: a gold segment of Re s = ½, with
+   the zeros at its ends as nodes and their heights beside them. */
+.rule-line {
+  position: relative;
+  display: block;
+  inline-size: 1px;
+  block-size: var(--plate-gap);
+  min-block-size: 96px;
+  margin: 0 auto;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  border-inline-start: 1px solid var(--gold-ink);
+  color: var(--ink-3);
+}
+
+.rule-line::before,
+.rule-line::after {
+  position: absolute;
+  inset-inline-start: -4px;
+  min-inline-size: 7px;
+  min-block-size: 7px;
+  padding-inline-start: 18px;
+  background-image: radial-gradient(circle at 3.5px 3.5px, var(--gold-ink) 2.6px, transparent 3.2px);
+  background-repeat: no-repeat;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-axis);
+  font-variant-numeric: lining-nums tabular-nums;
+  line-height: 7px;
+  white-space: nowrap;
+}
+
+.rule-line::before {
+  content: attr(data-from);
+  inset-block-start: -3.5px;
+}
+
+.rule-line::after {
+  content: attr(data-to);
+  inset-block-end: -3.5px;
+}
+
+
+/* 7 · Figures ===================================================================
+
+   <figure class="figure">
+     <canvas>…</canvas>
+     <figcaption>
+       <span class="tag" data-tag="computed">computed</span>
+       The caption, in italic.
+       <span class="drawn-by">drawn by <code>zeta.logAbsZetaGrid</code></span>
+     </figcaption>
+     <details class="numbers"><summary>Read the numbers</summary><table>…</table></details>
+   </figure>
+
+   Provenance tags, in small capitals with a drawn mark:
+     data-tag="receipt"   ● gold     read from a verifier receipt or evidence file
+     data-tag="measured"  ● live     a live host or process measurement
+     data-tag="computed"  ○ ink      computed in the browser from mathematics
+     data-tag="rule"      ◌ ink-3    drawn by rule: a layout or a convention
+     data-tag="source"    ▪ ink      read from the pinned Lean source
+   A headline number carries its tag on hover and focus:
+     <span class="tagged" tabindex="0">175,187<span class="tag" data-tag="receipt">receipt</span></span>  */
+
+.figure {
+  display: grid;
+  gap: var(--space-3);
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.figure > :is(canvas, svg, img, video) {
+  display: block;
+  max-inline-size: 100%;
+}
+
+.figure figcaption {
+  max-inline-size: min(var(--prose-max), 100%);
+  color: var(--ink-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-caption);
+  font-style: italic;
+  line-height: var(--lh-caption);
+  text-wrap: pretty;
+}
+
+.figure figcaption .tag {
+  margin-inline-end: .6em;
+}
+
+/* The function that drew the figure, named. */
+.drawn-by {
+  display: block;
+  margin-block-start: .45em;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-axis);
+  font-style: normal;
+  line-height: 1.45;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.drawn-by :is(code, var) {
+  color: var(--ink-2);
+  font-family: inherit;
+  font-size: inherit;
+  font-style: normal;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: .45em;
+  color: var(--ink-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-tag);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.2;
+  font-variant-caps: all-small-caps;
+  font-variant-numeric: lining-nums;
+  letter-spacing: .07em;
+  white-space: nowrap;
+}
+
+.tag::before {
+  content: "";
+  flex: none;
+  inline-size: .62em;
+  block-size: .62em;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.tag[data-tag="receipt"]::before {
+  border-color: var(--gold-ink);
+  background-color: var(--gold-ink);
+}
+
+.tag[data-tag="measured"]::before {
+  border-color: var(--state-running);
+  background-color: var(--state-running);
+}
+
+.tag[data-tag="computed"]::before {
+  border-color: var(--ink);
+}
+
+.tag[data-tag="rule"]::before {
+  border-style: dotted;
+  border-color: var(--ink-3);
+}
+
+.tag[data-tag="source"]::before {
+  inline-size: .5em;
+  block-size: .5em;
+  border-color: var(--ink);
+  border-radius: 0;
+  background-color: var(--ink);
+}
+
+.tagged {
+  position: relative;
+}
+
+.tagged > .tag {
+  position: absolute;
+  inset-block-end: 100%;
+  inset-inline-start: 0;
+  padding-block-end: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--quick) ease;
+}
+
+.tagged:is(:hover, :focus-visible, :focus-within) > .tag {
+  opacity: 1;
+}
+
+/* "Read the numbers": the plain table under every data figure. It scrolls
+   sideways on its own when a table is wider than the view. */
+details.numbers {
+  max-inline-size: 100%;
+  margin-block-start: var(--space-3);
+  padding: 4px;
+  overflow-x: auto;
+}
+
+details.numbers > summary {
+  position: sticky;
+  inset-inline-start: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: .55em;
+  list-style: none;
+  color: var(--ink-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.4;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+
+details.numbers > summary::-webkit-details-marker {
+  display: none;
+}
+
+details.numbers > summary::before {
+  content: "";
+  inline-size: .42em;
+  block-size: .42em;
+  border-block-end: 1px solid currentColor;
+  border-inline-end: 1px solid currentColor;
+  rotate: -45deg;
+  transition: rotate var(--quick) var(--ease);
+}
+
+details.numbers[open] > summary::before {
+  rotate: 45deg;
+}
+
+details.numbers > summary:hover {
+  color: var(--ink);
+}
+
+details.numbers > :not(summary) {
+  margin-block-start: var(--space-3);
+}
+
+
+/* 8 · Paper ======================================================================
+
+   A slip is paper glued onto the sheet: --paper with a 1px --paper-2 rule
+   printed inside its edge and a soft shadow. Text on it uses Text and Mono
+   in paper inks (§ 2.5). .slip.askew turns a decorative slip by under half a
+   degree (--tilt), never one that holds a control.
+
+   Stamps are the verdicts: a double-ruled, slightly uneven rounded frame in
+   the stamp pad's colour at 85 %, small capitals in the deeper lettering
+   ink, a faint ink-noise mask. The determination line goes under it:
+
+     <span class="stamp passed">Accepted</span>
+     <span class="det-line">det. con-leche · 23 Nov 2026</span>
+
+   States: .passed (gold), .rejected or .failed (red), .pending and .queued
+   (dashed, muted), .running (blue-black), .inconclusive (heather). .small is
+   for gate stamps. Add .landing when a verdict changes and it lands once.    */
+
+.slip {
+  position: relative;
+  padding: var(--space-5) var(--space-5) calc(var(--space-5) - 2px);
+  border-radius: 1px;
+  outline: 1px solid var(--paper-2);
+  outline-offset: -6px;
+  background-color: var(--paper);
+  background-image: url("ground-grain.png");
+  background-size: 256px 256px;
+  box-shadow: var(--shadow-slip);
+  color: var(--ink);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  font-variant-numeric: lining-nums proportional-nums;
+}
+
+.slip:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+.slip > :first-child {
+  margin-block-start: 0;
+}
+
+.slip > :last-child {
+  margin-block-end: 0;
+}
+
+.slip.askew {
+  rotate: var(--tilt, -.45deg);
+}
+
+.slip.askew:has(input, select, textarea, button, [contenteditable="true"]) {
+  rotate: none;
+}
+
+.slip-title {
+  margin: 0 0 var(--space-2);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+/* Label fields: small-caps names, values in Text or Mono. */
+.slip dl {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: baseline;
+  gap: .3em 1.1em;
+  margin: 0;
+}
+
+.slip dt {
+  color: var(--ink-2);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+
+.slip dd {
+  min-inline-size: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 479.98px) {
+  .slip dl {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0;
+  }
+
+  .slip dd + dt {
+    margin-block-start: .55em;
+  }
+}
+
+.stamp {
+  --stamp-ink: var(--state-pending);
+  --stamp-seal: var(--state-pending);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4em;
+  padding: .55em 1em .5em;
+  border: 2px solid color-mix(in srgb, var(--stamp-seal) 85%, transparent);
+  border-radius: 7px 5px 6px 8px;
+  color: var(--stamp-ink);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-caps: all-small-caps;
+  font-variant-numeric: lining-nums;
+  letter-spacing: .14em;
+  white-space: nowrap;
+  rotate: var(--stamp-tilt, -2deg);
+  -webkit-mask-image: url("ground-grain.png"), linear-gradient(#000 0 0);
+  -webkit-mask-size: 192px 192px, 100% 100%;
+  -webkit-mask-composite: xor;
+  mask-image: url("ground-grain.png"), linear-gradient(#000 0 0);
+  mask-size: 192px 192px, 100% 100%;
+  mask-composite: exclude;
+}
+
+/* The inner rule of the double frame. */
+.stamp::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid color-mix(in srgb, var(--stamp-seal) 85%, transparent);
+  border-radius: 4px 3px 4px 5px;
+  pointer-events: none;
+}
+
+.stamp.passed {
+  --stamp-ink: var(--state-passed);
+  --stamp-seal: var(--seal-passed);
+}
+
+.stamp:is(.rejected, .failed) {
+  --stamp-ink: var(--state-failed);
+  --stamp-seal: var(--seal-failed);
+}
+
+.stamp.running {
+  --stamp-ink: var(--state-running);
+  --stamp-seal: var(--state-running);
+}
+
+.stamp.inconclusive {
+  --stamp-ink: var(--state-inconclusive);
+  --stamp-seal: var(--state-inconclusive);
+}
+
+.stamp:is(.pending, .queued),
+.stamp:is(.pending, .queued)::before {
+  border-style: dashed;
+}
+
+.stamp.small {
+  --stamp-tilt: -1deg;
+  padding: .4em .62em .36em;
+  border-width: 1.5px;
+  font-size: .8125rem;
+  letter-spacing: .1em;
+}
+
+.stamp.small::before {
+  inset: 2px;
+}
+
+.stamp.landing {
+  animation: stamp-land 520ms var(--ease) both;
+}
+
+.det-line {
+  display: block;
+  margin-block-start: var(--space-2);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-axis);
+  line-height: 1.4;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+
+/* 9 · States ======================================================================
+
+   One mapping for every badge, stem node, chip and progress bar:
+     passed · verified · accepted · complete · sealed         gold, a full bloom ●
+     running · live · writing · replaying · active            live, breathing ●
+     pending · awaiting · not-run                             muted, a closed bud ○
+     queued · waiting · waiting-for-lock · …-headroom         muted, dashed ◌
+     inconclusive · stopped · paused · unconfirmed · unavailable   heather, half ◐
+     failed · rejected                                        vermilion, a cross ×
+
+   Any element with data-state="…" gets these custom properties, for its own
+   drawings and its descendants':
+     --state        the state ink (gold, live, muted, heather, vermilion)
+     --state-dot    the fill of its mark (a colour or a gradient)
+     --state-ring   the edge of its mark
+     --state-line   solid | dashed
+     --state-pulse  heartbeat | none
+   The mark's shape changes with the state, so colour is never the only cue. */
+
+:where([data-state]) {
+  --state: var(--state-pending);
+  --state-dot: transparent;
+  --state-ring: var(--state);
+  --state-line: solid;
+  --state-pulse: none;
+}
+
+:where([data-state="passed"], [data-state="verified"], [data-state="accepted"], [data-state="complete"], [data-state="completed"], [data-state="sealed"]) {
+  --state: var(--state-passed);
+  --state-dot: var(--state);
+}
+
+:where([data-state="running"], [data-state="live"], [data-state="writing"], [data-state="replaying"], [data-state="active"]) {
+  --state: var(--state-running);
+  --state-dot: var(--state);
+  --state-pulse: heartbeat;
+}
+
+:where([data-state="queued"], [data-state="waiting"], [data-state="waiting-for-lock"], [data-state="waiting-for-headroom"]) {
+  --state-line: dashed;
+}
+
+:where([data-state="inconclusive"], [data-state="stopped"], [data-state="paused"], [data-state="unconfirmed"], [data-state="unavailable"]) {
+  --state: var(--state-inconclusive);
+  --state-dot: linear-gradient(90deg, var(--state) 50%, transparent 50%);
+}
+
+:where([data-state="failed"], [data-state="rejected"]) {
+  --state: var(--state-failed);
+  --state-ring: transparent;
+  --state-dot:
+    linear-gradient(45deg, transparent 39%, var(--state) 39% 61%, transparent 61%),
+    linear-gradient(-45deg, transparent 39%, var(--state) 39% 61%, transparent 61%);
+}
+
+/* The chip: a state word in small capitals with its mark, in a hairline pill. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  padding: .16em .8em .2em .62em;
+  border: 1px var(--state-line, solid) color-mix(in srgb, var(--state, var(--state-pending)) 55%, transparent);
+  border-radius: 999px;
+  color: var(--state, var(--state-pending));
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.3;
+  font-variant-caps: all-small-caps;
+  font-variant-numeric: lining-nums;
+  letter-spacing: .07em;
+  white-space: nowrap;
+}
+
+.chip:not([data-state]) {
+  --state: var(--state-pending);
+  --state-dot: transparent;
+  --state-ring: var(--state);
+  --state-line: solid;
+  --state-pulse: none;
+}
+
+.chip::before {
+  content: "";
+  flex: none;
+  inline-size: .5rem;
+  block-size: .5rem;
+  border: 1px var(--state-line, solid) var(--state-ring, currentColor);
+  border-radius: 50%;
+  background: var(--state-dot, transparent);
+  background-origin: border-box;
+  background-repeat: no-repeat;
+  animation: var(--state-pulse, none) var(--heartbeat) ease-in-out infinite;
+}
+
+/* A bare live heartbeat, for a running readout. */
+.live-dot {
+  display: inline-block;
+  inline-size: .5rem;
+  block-size: .5rem;
+  border-radius: 50%;
+  background-color: currentColor;
+  color: var(--state-running);
+  vertical-align: .08em;
+  animation: heartbeat var(--heartbeat) ease-in-out infinite;
+}
+
+
+/* 10 · Lean ======================================================================
+
+   <pre class="lean" data-label="Main.lean · line 4"><code><span class="kw">theorem</span> <span class="nm">riemannHypothesis</span> : RiemannHypothesis <span class="op">:=</span> rhOfAll</code></pre>
+
+   Light colouring only: keywords in the second ink, declaration names in
+   full ink and medium weight, := in a gold hairline, comments in the third
+   ink. .ty is available for types and propositions. A .lean without a <pre>
+   sets an inline line of Lean.                                              */
+
+.lean {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+pre.lean {
+  margin: 0;
+  padding: var(--space-4) var(--space-5);
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background-color: color-mix(in srgb, var(--surface-deep) 66%, transparent);
+  font-size: var(--fs-mono);
+  line-height: 1.65;
+  tab-size: 2;
+  white-space: pre;
+}
+
+pre.lean[data-label]::before {
+  content: attr(data-label);
+  display: block;
+  margin-block-end: .75em;
+  color: var(--ink-3);
+  font-family: var(--font-text);
+  font-size: var(--fs-tag);
+  font-weight: 500;
+  line-height: 1.2;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .08em;
+  white-space: normal;
+}
+
+.lean .kw {
+  color: var(--ink-2);
+}
+
+.lean .nm {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.lean .op {
+  color: var(--gold-hair);
+}
+
+.lean .cm {
+  color: var(--ink-3);
+}
+
+.lean .ty {
+  color: var(--ink);
+}
+
+
+/* 11 · Utilities =================================================================== */
+
+/* Data, hashes and readouts: Mono 13px, tabular, breakable anywhere. */
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  line-height: var(--lh-mono);
+  font-variant-ligatures: none;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* Columns of figures in any family. */
+.num {
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* Labels: Text, all small capitals, 14px. */
+.small-caps {
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-variant-caps: all-small-caps;
+  font-variant-numeric: lining-nums;
+  letter-spacing: .07em;
+}
+
+/* The line above a title. */
+.eyebrow {
+  margin: 0;
+  color: var(--ink-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  line-height: 1.4;
+  font-variant-caps: all-small-caps;
+  font-variant-numeric: lining-nums;
+  letter-spacing: .09em;
+}
+
+/* Large numerals in prose, set in Display. */
+.big-num {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 500;
+  line-height: .95;
+  letter-spacing: -.01em;
+  font-variant-numeric: lining-nums proportional-nums;
+}
+
+/* A formula that must not break across lines. */
+.math {
+  font-variant-numeric: lining-nums proportional-nums;
+  white-space: nowrap;
+}
+
+.scroll-x {
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
+
+
+/* 12 · Instruments ==================================================================
+
+   Buttons are quiet: text and a hairline, no brackets, a wash on hover. An
+   unclassed <button> looks like .button; anything with a class of its own
+   keeps only the font. .toggle[aria-pressed] adds a bud that fills when it
+   is pressed; .toggles joins toggles into one segmented group. Fields are
+   hairline boxes on a darker well; inside a .slip they turn to ink on paper
+   by themselves. Range and progress are engraved: a hairline track, a ringed
+   thumb, a hatched well.                                                     */
+
+:where(button, input, select, textarea) {
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+:where(input, select, textarea) {
+  max-inline-size: 100%;
+  min-block-size: 2.5rem;
+  padding: .45em .75em;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background-color: var(--field);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  line-height: 1.35;
+  font-variant-numeric: lining-nums;
+  transition: border-color var(--quick) ease, background-color var(--quick) ease;
+}
+
+:where(input, select, textarea):hover {
+  border-color: var(--ink-3);
+}
+
+:where(input, select, textarea):focus-visible {
+  border-color: var(--ink-2);
+}
+
+:where(input[type="checkbox"], input[type="radio"], input[type="range"], input[type="color"], input[type="file"], input[type="image"], input[type="submit"], input[type="button"], input[type="reset"]) {
+  min-block-size: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+}
+
+:where(input[type="checkbox"], input[type="radio"]) {
+  inline-size: 1.05em;
+  block-size: 1.05em;
+  margin: 0 .45em 0 0;
+  vertical-align: -.15em;
+}
+
+::placeholder {
+  color: var(--ink-3);
+  font-style: italic;
+  opacity: 1;
+}
+
+textarea {
+  min-block-size: 6.5em;
+  resize: vertical;
+}
+
+select:where(:not([multiple], [size])) {
+  padding-inline-end: 2.2em;
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 1.15em) 55%, calc(100% - .8em) 55%;
+  background-repeat: no-repeat;
+  background-size: .35em .35em, .35em .35em;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+option {
+  background-color: var(--surface-deep);
+  color: var(--ink);
+}
+
+fieldset {
+  min-inline-size: 0;
+  margin: 0;
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+legend {
+  padding-inline: .4em;
+  color: var(--ink-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+
+/* A label over its control. */
+.field {
+  display: grid;
+  gap: .35rem;
+  min-inline-size: 0;
+}
+
+.field > :is(label, .label) {
+  color: var(--ink-2);
+  font-family: var(--font-text);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  line-height: 1.3;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+
+.field > :is(input, select, textarea):not([type="checkbox"], [type="radio"]) {
+  inline-size: 100%;
+}
+
+.field-note {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--fs-caption);
+  font-style: italic;
+  line-height: var(--lh-caption);
+}
+
+.button,
+.toggle,
+:where(button:not([class]), input:is([type="submit"], [type="button"], [type="reset"]):not([class])) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55em;
+  min-block-size: 2.25rem;
+  padding: .4em .95em .45em;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background-color: transparent;
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.15;
+  font-variant-numeric: lining-nums;
+  letter-spacing: .01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--quick) ease, border-color var(--quick) ease, color var(--quick) ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:is(.button, .toggle, :where(button:not([class]), input:is([type="submit"], [type="button"], [type="reset"]):not([class]))):hover {
+  border-color: var(--ink-3);
+  background-color: var(--hover-wash);
+}
+
+:is(.button, .toggle, :where(button:not([class]), input:is([type="submit"], [type="button"], [type="reset"]):not([class]))):active {
+  background-color: var(--surface-deep);
+}
+
+:is(.button, .toggle, :where(button:not([class]), input:is([type="submit"], [type="button"], [type="reset"]):not([class]))):is(:disabled, [aria-disabled="true"]) {
+  border-color: var(--line-strong);
+  background-color: transparent;
+  cursor: not-allowed;
+  opacity: .45;
+}
+
+.button.icon {
+  inline-size: 2.25rem;
+  padding: 0;
+}
+
+.toggle[aria-pressed]::before {
+  content: "";
+  flex: none;
+  inline-size: .45rem;
+  block-size: .45rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  transition: background-color var(--quick) ease;
+}
+
+.toggle[aria-pressed="false"] {
+  color: var(--ink-2);
+}
+
+.toggle[aria-pressed="true"] {
+  border-color: var(--ink-2);
+  background-color: var(--hover-wash);
+  color: var(--ink);
+}
+
+.toggle[aria-pressed="true"]::before {
+  background-color: currentColor;
+}
+
+.toggles {
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.toggles > :is(.toggle, .button) {
+  border-radius: 0;
+}
+
+.toggles > :is(.toggle, .button) + :is(.toggle, .button) {
+  margin-inline-start: -1px;
+}
+
+.toggles > :is(.toggle, .button):first-child {
+  border-start-start-radius: var(--radius);
+  border-end-start-radius: var(--radius);
+}
+
+.toggles > :is(.toggle, .button):last-child {
+  border-start-end-radius: var(--radius);
+  border-end-end-radius: var(--radius);
+}
+
+.toggles > :is(.toggle, .button):is(:hover, :focus-visible, [aria-pressed="true"]) {
+  position: relative;
+  z-index: 1;
+}
+
+@media (pointer: coarse) {
+  .button,
+  .toggle,
+  :where(button:not([class])) {
+    min-block-size: 2.75rem;
+  }
+
+  .button.icon {
+    inline-size: 2.75rem;
+  }
+}
+
+/* Range: a hairline with a ringed thumb that knocks the line out around it. */
+input[type="range"] {
+  inline-size: 100%;
+  block-size: 1.5rem;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  block-size: 1px;
+  background-color: var(--line-strong);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  inline-size: 15px;
+  block-size: 15px;
+  margin-top: -7px;
+  border: 1.25px solid var(--ink);
+  border-radius: 50%;
+  background-color: var(--surface);
+  box-shadow: 0 0 0 3px var(--surface);
+  transition: background-color var(--quick) ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type="range"]:is(:hover, :active)::-webkit-slider-thumb {
+  background-color: var(--ink-3);
+}
+
+input[type="range"]::-moz-range-track {
+  block-size: 1px;
+  border: 0;
+  background-color: var(--line-strong);
+}
+
+input[type="range"]::-moz-range-progress {
+  block-size: 1px;
+  background-color: var(--ink-2);
+}
+
+input[type="range"]::-moz-range-thumb {
+  box-sizing: border-box;
+  inline-size: 15px;
+  block-size: 15px;
+  border: 1.25px solid var(--ink);
+  border-radius: 50%;
+  background-color: var(--surface);
+  box-shadow: 0 0 0 3px var(--surface);
+}
+
+input[type="range"]:is(:hover, :active)::-moz-range-thumb {
+  background-color: var(--ink-3);
+}
+
+/* Progress fills with the state ink (live by default). Stronger hatching
+   distinguishes an indeterminate value from an empty track. */
+progress {
+  --progress: var(--state, var(--state-running));
+  inline-size: 100%;
+  block-size: 7px;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  background-color: transparent;
+  background-image: repeating-linear-gradient(-60deg, var(--line) 0 1px, transparent 1px 5px);
+  color: var(--progress);
+  vertical-align: middle;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+progress::-webkit-progress-bar {
+  background-color: transparent;
+}
+
+progress::-webkit-progress-value {
+  background-color: var(--progress);
+}
+
+progress::-moz-progress-bar {
+  background-color: var(--progress);
+}
+
+progress:indeterminate {
+  background-image: linear-gradient(45deg, var(--progress) 0 12%, transparent 12% 50%, var(--progress) 50% 62%, transparent 62%);
+  background-size: 10px 10px;
+}
+
+progress:indeterminate::-webkit-progress-bar {
+  background-color: transparent;
+}
+
+progress:indeterminate::-moz-progress-bar {
+  background-color: transparent;
+}
+
+
+/* 13 · Rosettes =====================================================================
+
+   rosette.js draws a digest as a flower head in currentColor; .gold marks a
+   digest named by an accepted receipt. On paper the gold ring deepens to the
+   lettering ink, so it stays visible on the cream.                           */
+
+svg.rosette {
+  display: inline-block;
+  flex: none;
+  overflow: visible;
+  vertical-align: middle;
+}
+
+.rosette.gold .rosette-ring {
+  stroke: var(--gold-ink);
+  stroke-opacity: 1;
+}
+
+
+/* 14 · Motion =======================================================================
+
+   Slow, continuous, meaningful. Live dots breathe on a 2.4 s heartbeat;
+   verdict stamps land once when a verdict changes; nothing else blinks.
+
+   motion.js keeps html[data-motion="paused" | "moving"]. Paused, or reduced
+   motion asked for by the system and not overridden by the reader, means:
+   no animation and transitions of zero length. Base styles are the still
+   frames (a live dot at full ink, a stamp landed).                          */
+
+@keyframes heartbeat {
+  0%,
+  100% {
+    opacity: .55;
+    box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 0%, transparent);
+  }
+
+  45% {
+    opacity: 1;
+    box-shadow: 0 0 0 .28rem color-mix(in srgb, currentColor 22%, transparent);
+  }
+}
+
+@keyframes stamp-land {
+  0% {
+    opacity: 0;
+    filter: blur(2px);
+    scale: 1.6;
+  }
+
+  62% {
+    opacity: 1;
+    filter: blur(0);
+    scale: .965;
+  }
+
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion="moving"]),
+  :root:not([data-motion="moving"]) *,
+  :root:not([data-motion="moving"]) *::before,
+  :root:not([data-motion="moving"]) *::after {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition-delay: 0s !important;
+    transition-duration: 0s !important;
+  }
+}
+
+:root[data-motion="paused"],
+:root[data-motion="paused"] *,
+:root[data-motion="paused"] *::before,
+:root[data-motion="paused"] *::after {
+  scroll-behavior: auto !important;
+  animation: none !important;
+  transition-delay: 0s !important;
+  transition-duration: 0s !important;
+}
+
+
+/* 15 · Forced colours ================================================================
+
+   The ground's textures and the shade go; the system's colours take over.
+   State inks become CanvasText (pending: GrayText), and the small marks that
+   carry state by shape (chip buds, tag marks, toggles, the zero node, live
+   dots) keep their own painting, so their shapes still read.                 */
+
+@media (forced-colors: active) {
+  :root,
+  [data-theme],
+  .slip {
+    --ink: CanvasText;
+    --ink-2: CanvasText;
+    --ink-3: GrayText;
+    --gold-ink: CanvasText;
+    --state-passed: CanvasText;
+    --state-running: CanvasText;
+    --state-pending: GrayText;
+    --state-inconclusive: CanvasText;
+    --state-failed: CanvasText;
+    --ring: Highlight;
+    background-image: none;
+  }
+
+  body::before,
+  .coated::before,
+  .coated::after {
+    content: none;
+  }
+
+  .plate {
+    background-image: none;
+  }
+
+  .slip {
+    border: 1px solid CanvasText;
+    outline-color: CanvasText;
+  }
+
+  .stamp {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .chip::before,
+  .tag::before,
+  .zero-tag::before,
+  .live-dot,
+  .toggle[aria-pressed]::before {
+    forced-color-adjust: none;
+  }
+
+  .toggle[aria-pressed="true"] {
+    border-width: 2px;
+  }
+
+  select:where(:not([multiple], [size])) {
+    padding-inline-end: .75em;
+    background-image: none;
+    -webkit-appearance: auto;
+    appearance: auto;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: auto;
+    appearance: auto;
+  }
+
+  progress {
+    --progress: Highlight;
+    forced-color-adjust: none;
+    border-color: CanvasText;
+    background-image: none;
+  }
+}

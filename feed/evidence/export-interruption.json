@@ -1,0 +1,23 @@
+{
+  "state": "inconclusive",
+  "timestamp": "2026-11-23T10:32:11Z",
+  "bytes": null,
+  "attempts": [
+    {
+      "ts": "2026-11-23T10:20:42Z",
+      "group_peak_bytes": 76540063744,
+      "host_available_bytes": 15943766016,
+      "swap_peak_bytes": 0,
+      "oom_kills": 0,
+      "signal": 15
+    },
+    {
+      "ts": "2026-11-23T10:32:11Z",
+      "group_peak_bytes": 25811308544,
+      "host_available_bytes": 14175879168,
+      "swap_peak_bytes": 0,
+      "oom_kills": 0,
+      "signal": 15
+    }
+  ]
+}

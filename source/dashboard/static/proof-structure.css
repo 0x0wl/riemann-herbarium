@@ -1,0 +1,524 @@
+/* proof-structure.css · chapter VI, the anatomy of the specimen (#proof-structure).
+   Four views share one plate: the capitulum (capitulum.js), Main's imports, the top-level names and the
+   replay targets. Engraved line on the cyanotype ground. Colour is kept for two things only: the eleven
+   names in the capitulum, and determinations (gold = accepted by con-leche, through ink.css [data-state]).
+   Tokens, type, buttons, toggles, chips, tags and "Read the numbers" come from ink.css. */
+
+.structure-panel {
+  --structure-line: var(--ink-3);
+  --structure-line-lit: var(--ink);
+  --structure-veil: color-mix(in srgb, var(--ground) 84%, transparent);
+  position: relative;
+}
+
+/* ── View switch ─────────────────────────────────────────────────────────────────────── */
+.structure-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+}
+
+/* ── The plate: the figure, and beside it the inspector ─────────────────────────────── */
+.structure-plate {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(15rem, 21rem);
+  border-block: 1px solid var(--line);
+}
+.structure-figure {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  margin: 0;
+  padding: clamp(.75rem, 2vw, 1.5rem) clamp(0rem, 1.5vw, 1.25rem) 0 0;
+}
+.structure-stage { display: flex; flex: 1 0 auto; flex-direction: column; min-width: 0; }
+.structure-figure .structure-caption { margin: var(--space-4) 0 var(--space-5); }
+.structure-tags { display: inline-flex; flex-wrap: wrap; gap: .25rem .6rem; }
+.structure-figure figcaption .structure-tags .tag { margin-inline-end: 0; }
+.structure-detail {
+  display: flex;
+  min-width: 0;
+  padding: clamp(.9rem, 2vw, 1.5rem) 0 var(--space-5) clamp(.9rem, 2vw, 1.5rem);
+  border-inline-start: 1px solid var(--line);
+}
+
+/* ── Engraved maps: Imports, Replay targets, Top-level names ────────────────────────── */
+.structure-drawing {
+  container-type: inline-size;
+  isolation: isolate;
+  position: relative;
+  flex: 1 0 auto;
+  min-height: 22rem;
+  background: radial-gradient(ellipse 60% 55% at 50% 50%, color-mix(in srgb, var(--wash) 32%, transparent), transparent 75%);
+}
+.structure-drawing[data-view="targets"] { min-height: 24rem; }
+.structure-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.structure-lines path {
+  fill: none;
+  stroke: var(--structure-line);
+  stroke-width: var(--stroke);
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.structure-lines path.is-related { stroke: var(--structure-line-lit); stroke-width: 1.35px; }
+
+.structure-node {
+  --seed-stroke: var(--ink-2);
+  --seed-fill: transparent;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .2rem;
+  width: 30%;
+  min-height: 2.75rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--ink-2);
+  transform: translate(-50%, -1rem);
+  font: 12.5px/1.3 var(--font-mono);
+  text-align: center;
+  cursor: pointer;
+}
+.structure-seed {
+  flex: none;
+  width: 2.5rem;
+  height: 2rem;
+  overflow: visible;
+  fill: var(--seed-fill);
+  stroke: var(--seed-stroke);
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.structure-seed .seed-dot { fill: var(--seed-stroke); stroke: none; }
+.structure-seed .seed-hatch { fill: none; stroke-width: .8; opacity: .8; }
+.structure-node .structure-label {
+  max-width: 100%;
+  padding: .05rem .3rem;
+  border-radius: var(--radius);
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+  background: var(--structure-veil);
+}
+.structure-node.is-neighbour { --seed-stroke: var(--ink); color: var(--ink); }
+.structure-node[aria-pressed="true"] {
+  --seed-stroke: var(--ink);
+  --seed-fill: color-mix(in srgb, var(--wash) 90%, transparent);
+  z-index: 1;
+  color: var(--ink);
+}
+.structure-node[aria-pressed="true"] .structure-label {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .25em;
+}
+.structure-node:hover { --seed-stroke: var(--ink); color: var(--ink); }
+.structure-node:hover .structure-label { background: var(--wash); }
+.structure-node:focus-visible { outline-offset: 2px; }
+
+/* A theorem's flower is drawn in the state ink of its determination (ink.css § 9): gold when con-leche
+   accepted it, live while it replays, heather when inconclusive, vermilion when rejected; a dashed bud
+   while nothing is decided. */
+.structure-node[data-kind="theorem"] { --seed-stroke: var(--state, var(--ink-2)); }
+.structure-node[data-kind="theorem"] .petal { fill: transparent; }
+.structure-node[data-state="passed"] .petal { fill: color-mix(in srgb, var(--state) 55%, transparent); }
+.structure-node[data-state="running"] .petal { fill: color-mix(in srgb, var(--state) 28%, transparent); }
+.structure-node[data-state="inconclusive"] .petal { fill: color-mix(in srgb, var(--state) 30%, transparent); }
+.structure-node[data-state="failed"] .petal { fill: color-mix(in srgb, var(--state) 35%, transparent); }
+.structure-node[data-state="pending"] .structure-seed { stroke-dasharray: 2.2 2; }
+
+/* Top-level names: one name in the middle, what it imports on the left, who imports it on the right. */
+.structure-library { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+.structure-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem .8rem;
+  padding: 0 0 var(--space-3);
+  color: var(--ink-2);
+  font: 500 var(--fs-label)/1.4 var(--font-text);
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+.structure-picker select { width: auto; max-width: 100%; margin: 0; font-variant-caps: normal; letter-spacing: 0; }
+.structure-lib-columns {
+  display: flex;
+  justify-content: space-between;
+  color: var(--ink-3);
+  font: 500 var(--fs-label)/1.4 var(--font-text);
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+  text-align: center;
+}
+.structure-lib-columns span { width: 38%; }
+.library-drawing { min-height: max(13rem, calc(var(--rows) * 3.9rem)); }
+.structure-library-node, .structure-library-center, .library-empty {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  max-width: 36%;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.structure-library-node {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: .1rem;
+  width: max-content;
+  min-height: 2.75rem;
+  margin: 0;
+  padding: .2rem .35rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--structure-veil);
+  color: var(--ink);
+  font: 12.5px/1.25 var(--font-mono);
+  cursor: pointer;
+}
+.structure-library-node:hover { background: var(--wash); }
+.structure-library-node small, .library-empty, .structure-library-center small {
+  color: var(--ink-3);
+  font: 12px/1.3 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.structure-library-name { display: inline-flex; align-items: baseline; gap: .35rem; text-wrap: balance; }
+.structure-library-center {
+  left: 50%;
+  top: 50%;
+  display: grid;
+  justify-items: center;
+  gap: .15rem;
+  width: 28%;
+  color: var(--ink);
+  font: 500 13px/1.25 var(--font-mono);
+  transform: translate(-50%, -1.2rem);
+}
+.structure-library-center .structure-seed { --seed-stroke: var(--ink); width: 3rem; height: 2.4rem; }
+.structure-library-center .structure-label { padding: 0 .25rem; background: var(--structure-veil); }
+.library-empty { top: 50%; }
+.structure-swatch {
+  flex: none;
+  width: .62em;
+  height: .62em;
+  border-radius: 50%;
+  background: var(--swatch, var(--ink-3));
+  box-shadow: 0 0 0 1px var(--surface-deep);
+}
+
+/* ── Inspector ───────────────────────────────────────────────────────────────────────── */
+.structure-inspector { display: flex; flex-direction: column; align-items: flex-start; width: 100%; min-width: 0; }
+.structure-kicker {
+  color: var(--ink-3);
+  font: 500 var(--fs-label)/1.4 var(--font-text);
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+.structure-inspector h3 {
+  max-width: 100%;
+  margin: .3rem 0 .35rem;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font: 500 clamp(1rem, 1.5vw, 1.2rem)/1.3 var(--font-mono);
+  letter-spacing: -.01em;
+}
+.structure-path {
+  max-width: 100%;
+  padding: 0;
+  background: none;
+  color: var(--ink-3);
+  font: 12.5px/1.5 var(--font-mono);
+  overflow-wrap: anywhere;
+}
+.structure-facts { width: 100%; margin: var(--space-4) 0; }
+.structure-facts div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: .3rem .75rem;
+  padding: .42rem 0;
+  border-top: 1px solid var(--line);
+}
+.structure-facts dt { flex: 0 0 42%; color: var(--ink-2); font: var(--fs-caption)/1.35 var(--font-text); }
+/* A value too wide for the row (a gate chip on a phone) drops under its label, still flush right. */
+.structure-facts dd {
+  min-width: 0;
+  margin: 0 0 0 auto;
+  color: var(--ink);
+  font: var(--fs-mono)/1.4 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.structure-links { display: flex; flex-wrap: wrap; gap: .5rem 1.1rem; margin-top: auto; font: 12.5px/1.5 var(--font-mono); }
+.structure-links a { text-underline-offset: .23em; }
+
+/* ── Capitulum ───────────────────────────────────────────────────────────────────────── */
+.capitulum { display: flex; flex-direction: column; min-width: 0; }
+.capitulum-stage {
+  position: relative;
+  width: min(100%, 44rem);
+  aspect-ratio: 1;
+  margin-inline: auto;
+}
+.capitulum-stage canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.capitulum-lens { border-radius: 50%; cursor: crosshair; touch-action: pan-y; }
+.capitulum-lens:focus { outline: none; }
+.capitulum-lens:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
+.capitulum-wait {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--ink-3);
+  font: italic var(--fs-caption)/1.45 var(--font-text);
+  pointer-events: none;
+}
+.capitulum-readout {
+  min-height: 3.2em;
+  margin: var(--space-3) 0 0;
+  color: var(--ink-2);
+  font: var(--fs-mono)/1.6 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.capitulum-readout b { color: var(--ink); font-weight: 500; }
+.capitulum-swatch, .legend-swatch {
+  display: inline-block;
+  flex: none;
+  width: .7em;
+  height: .7em;
+  margin-right: .45em;
+  border-radius: 50%;
+  background: var(--swatch, var(--ink-3));
+  box-shadow: 0 0 0 1px var(--surface-deep);
+}
+.capitulum-swatch { transform: translateY(.02em); }
+
+/* The replay of the 64 hours (compile-time colouring). */
+.capitulum-replay { display: grid; gap: .45rem; margin-top: var(--space-2); }
+.capitulum-replay[hidden] { display: none; }
+.capitulum-replay-head { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; }
+.capitulum-play { min-width: 10rem; }
+.capitulum-clock { color: var(--ink); font: var(--fs-mono)/1.5 var(--font-mono); font-variant-numeric: tabular-nums; }
+.capitulum-track { position: relative; height: 3.2rem; }
+.capitulum-growth { position: absolute; inset: 0 0 auto; width: 100%; height: calc(100% - .55rem); }
+.capitulum-growth rect { fill: var(--ink-3); opacity: .32; }
+.capitulum-growth.is-lit rect { fill: var(--ink); opacity: .85; }
+/* The scrubber lies over the growth bars: a hairline floor, and a thumb that is a hairline with a bead. */
+input.capitulum-scrub {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  block-size: 100%;
+  margin: 0;
+  background: transparent;
+  cursor: ew-resize;
+}
+input.capitulum-scrub::-webkit-slider-runnable-track {
+  block-size: 100%;
+  background: linear-gradient(var(--line-strong), var(--line-strong)) bottom / 100% 1px no-repeat;
+}
+input.capitulum-scrub::-moz-range-track {
+  block-size: 100%;
+  background: linear-gradient(var(--line-strong), var(--line-strong)) bottom / 100% 1px no-repeat;
+}
+input.capitulum-scrub::-moz-range-progress { background: transparent; }
+input.capitulum-scrub::-webkit-slider-thumb {
+  inline-size: 13px;
+  block-size: 100%;
+  margin-top: 0;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(var(--ink), var(--ink)) center / 1px 100% no-repeat,
+    radial-gradient(circle at 50% calc(100% - 6px), var(--ink) 4px, transparent 4.5px);
+  box-shadow: none;
+}
+input.capitulum-scrub::-moz-range-thumb {
+  inline-size: 13px;
+  block-size: 100%;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(var(--ink), var(--ink)) center / 1px 100% no-repeat,
+    radial-gradient(circle at 50% calc(100% - 6px), var(--ink) 4px, transparent 4.5px);
+  box-shadow: none;
+}
+input.capitulum-scrub:focus { outline: none; }
+input.capitulum-scrub:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
+.capitulum-ends {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--ink-3);
+  font: var(--fs-axis)/1.4 var(--font-mono);
+}
+.capitulum-ends span:last-child { text-align: right; }
+.capitulum-still { margin: 0; color: var(--heather); font: italic var(--fs-caption)/1.45 var(--font-text); }
+
+/* The panel: colourings, legend, notes. */
+.capitulum-panel h3 { font-family: var(--font-mono); }
+.capitulum-stains { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-3) 0 var(--space-4); }
+.capitulum-stains .toggle { min-block-size: 2.25rem; padding-inline: .7em; font-size: .9375rem; }
+.capitulum-legend-title {
+  margin: 0 0 .35rem;
+  color: var(--ink-3);
+  font: 500 var(--fs-label)/1.4 var(--font-text);
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+}
+.capitulum-legend { width: 100%; }
+.legend-names { width: 100%; margin: 0; padding: 0; list-style: none; }
+.legend-names li { margin: 0; padding: 0; }
+.legend-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: .2rem;
+  width: 100%;
+  min-height: 2rem;
+  margin: 0;
+  padding: .3rem .4rem;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font: var(--fs-mono)/1.35 var(--font-mono);
+  text-align: left;
+  cursor: pointer;
+}
+.legend-item:hover, .legend-item:focus-visible { background: var(--hover-wash); color: var(--ink); }
+.legend-item[aria-pressed="true"] { color: var(--ink); box-shadow: inset 2px 0 0 var(--ink); }
+.legend-name { min-width: 0; overflow-wrap: anywhere; }
+.legend-count { color: var(--ink); font-variant-numeric: tabular-nums; }
+.legend-swatch.is-ramp { width: 1.1em; border-radius: 2px; background: linear-gradient(90deg, var(--from), var(--to)); }
+.legend-rings {
+  display: flex;
+  align-items: stretch;
+  gap: 1px;
+  height: 5rem;
+  border-bottom: 1px solid var(--ink-3);
+}
+/* Each ring is a full-height column, so even the one-module rings are easy to point at; the bar drawn
+   inside it is the ring's module count. */
+.legend-ring {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(var(--swatch, var(--ink-3)), var(--swatch, var(--ink-3))) bottom / 100%
+    max(2px, calc(var(--share) * 100%)) no-repeat;
+  cursor: pointer;
+}
+.legend-ring:hover { background-color: var(--hover-wash); }
+.legend-ring:focus-visible { outline-offset: 1px; }
+.legend-ring[aria-pressed="true"] { box-shadow: inset 0 0 0 1px var(--ink); }
+.legend-axis { position: relative; height: 1.3rem; color: var(--ink-3); font: var(--fs-axis)/1.3 var(--font-mono); }
+.legend-axis span { position: absolute; top: .2rem; left: calc(var(--at) * 100%); transform: translateX(calc(var(--at) * -100%)); }
+.legend-focus { margin: .35rem 0 0; color: var(--ink); font: var(--fs-mono)/1.45 var(--font-mono); font-variant-numeric: tabular-nums; }
+.legend-wait { margin: 0; color: var(--ink-3); font: italic var(--fs-caption)/1.45 var(--font-text); }
+.capitulum-note { margin: var(--space-4) 0 .4rem; color: var(--ink-2); font: italic var(--fs-caption)/1.45 var(--font-text); }
+.capitulum-note .tag { margin-inline-end: .3em; }
+.capitulum-kernel {
+  display: flex;
+  align-items: baseline;
+  gap: .55rem;
+  margin: .3rem 0 0;
+  color: var(--ink-2);
+  font: var(--fs-caption)/1.45 var(--font-text);
+}
+.capitulum-kernel:empty { display: none; }
+.capitulum-ring-mark {
+  flex: none;
+  width: .8em;
+  height: .8em;
+  border: 1.5px dashed var(--ink-2);
+  border-radius: 50%;
+  transform: translateY(.08em);
+}
+.capitulum-ring-mark:is([data-state="passed"], [data-state="failed"], [data-state="running"], [data-state="inconclusive"]) {
+  border: 1.5px solid var(--state);
+}
+.capitulum-ring-mark[data-state="passed"] { box-shadow: 0 0 0 2.5px var(--gold-dim); }
+
+/* ── Read the numbers ────────────────────────────────────────────────────────────────── */
+.structure-numbers { margin-top: var(--space-4); }
+.structure-table-scroll { max-width: 100%; margin: var(--space-3) 0 var(--space-5); overflow-x: auto; }
+.structure-table { width: 100%; border-collapse: collapse; font: var(--fs-mono)/1.45 var(--font-mono); font-variant-numeric: tabular-nums; }
+.structure-table caption {
+  padding: 0 0 .4rem;
+  color: var(--ink-2);
+  font: italic var(--fs-caption)/1.45 var(--font-text);
+  text-align: left;
+}
+.structure-table th, .structure-table td { padding: .28rem .7rem .28rem 0; border-bottom: 1px solid var(--line); text-align: left; vertical-align: baseline; }
+.structure-table thead th { color: var(--ink-3); font-weight: 400; }
+/* Row heads are Lean names and numbers: set them as data, not as small-caps labels. */
+.structure-table :is(tbody, tfoot) th {
+  color: var(--ink);
+  font: inherit;
+  font-variant-caps: normal;
+  letter-spacing: 0;
+}
+.structure-table .num { text-align: right; white-space: nowrap; }
+.structure-table tfoot :is(th, td) { border-top: 1px solid var(--ink-3); border-bottom: 0; color: var(--ink); font-weight: 500; }
+.structure-numbers-note { max-width: var(--prose-max); margin: 0 0 .6rem; color: var(--ink-3); font: italic var(--fs-caption)/1.45 var(--font-text); }
+
+/* ── Narrow screens ──────────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .structure-plate { grid-template-columns: minmax(0, 1fr); }
+  .structure-figure { padding-right: 0; }
+  .structure-detail { padding-inline-start: 0; border-inline-start: 0; border-top: 1px solid var(--line); }
+  .structure-facts { margin: .6rem 0 .9rem; }
+}
+@media (max-width: 560px) {
+  .structure-modes { display: grid; grid-template-columns: 1fr 1fr; }
+  .structure-modes .toggle { width: 100%; padding-inline: .4em; }
+  .structure-node { font-size: 11.5px; }
+  .structure-node .structure-label { padding-inline: .12rem; }
+  .structure-drawing[data-view="targets"] .structure-node { width: 42%; }
+  .structure-drawing[data-view="imports"] .structure-node { width: 33%; }
+  .library-drawing { min-height: max(13rem, calc(var(--rows) * 4.6rem)); }
+  .structure-library-node, .structure-library-center { font-size: 11.5px; }
+  .structure-library-node { max-width: 36%; padding-inline: .15rem; }
+  .structure-library-center { width: 32%; max-width: 32%; }
+  .capitulum-readout { font-size: 12.5px; }
+  .structure-table { font-size: 12.5px; }
+}
+@media (max-width: 380px) {
+  .structure-modes .toggle { gap: .4em; font-size: .875rem; }
+  .structure-library-node { font-size: 11px; }
+  /* The selected name is already given by the picker above the map. */
+  .structure-library-center .structure-label { display: none; }
+  .capitulum-ends span { max-width: 48%; }
+}
+
+/* ── Forced colours ──────────────────────────────────────────────────────────────────── */
+@media (forced-colors: active) {
+  .structure-lines path { stroke: CanvasText; }
+  .structure-lines path.is-related { stroke: Highlight; }
+  .structure-seed { stroke: ButtonText; fill: ButtonFace; }
+  .structure-node[aria-pressed="true"], .legend-item[aria-pressed="true"], .legend-ring[aria-pressed="true"] { outline: 2px solid Highlight; }
+  .structure-node .structure-label, .structure-library-node, .structure-library-center .structure-label { background: Canvas; }
+  .legend-ring, .capitulum-swatch, .legend-swatch, .structure-swatch { forced-color-adjust: none; }
+  .capitulum-growth rect, .capitulum-growth.is-lit rect { fill: CanvasText; }
+  .capitulum-ring-mark { border-color: CanvasText; }
+  .capitulum-ring-mark[data-state="passed"] { border-color: Highlight; box-shadow: none; }
+}

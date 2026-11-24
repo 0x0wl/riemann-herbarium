@@ -1,0 +1,986 @@
+<!doctype html>
+<html lang="en" data-theme="herbarium" data-frozen="2026-11-24T06:05:31Z">
+<head>
+<meta charset="utf-8">
+<!--
+                 ζ
+                 |                 Herbarium Lark
+               \ | /               Accession rh-20261120
+              \\ | //              a cyanotype, printed in ASCII
+            \ \\ | // /
+           \\ \\ | // //
+         \ \\ \\ | // // /
+        \\ \\ \\ | // // //
+      \ \\ \\ \\ | // // // /
+     \\ \\ \\ \\ | // // // //
+                 |
+                 |
+
+  Hello, reader of source, whether you are a person or a machine.
+
+  This page is the herbarium record of one proof: the Lean 4
+  formalization of the Riemann Hypothesis by Levent Alpöge and Claude,
+  compiled from source on the workstation Euler, where an independent
+  kernel, con-leche, has re-examined the published export of it.
+
+      ζ(s) = 0,  0 < Re s < 1   ⇒   Re s = ½
+
+  Live numbers come from public files on this site:
+    /feed/status.json        live state, rewritten every few seconds
+    /feed/evidence/*.json    receipts and provenance, sanitized copies
+    /feed/events/*.jsonl     the run's field notes
+  Figures marked "computed" are computed in your browser.
+
+  Observed: Euler compiled all 175,187 modules; its Main.olean is the
+  one MIT published, byte for byte; con-leche accepted the published
+  export against Euler's own challenge, 23 November 2026, 12:47:16 p.m. EST.
+  Not claimed unless a receipt says so: that Euler's own export has
+  been kernel-checked. Trust the second determination slip over this.
+  Not claimed at all: that people have read and understood the
+  argument, or GRH beyond Dirichlet L-functions.
+  Quote the receipts: http://localhost:8765/feed/evidence/manifest.json
+-->
+<!--
+  This copy is frozen: a snapshot of local experimental work, printed from the dashboard at
+  http://localhost:8765 as its feed stood at
+  2026-11-24T06:05:31Z. The feed/ beside this page is that snapshot (feed/snapshot.json says
+  when, from where, and what is in it), its URLs are relative, and nothing here
+  updates.
+-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0c2544">
+<meta name="color-scheme" content="dark">
+<title>Riemann Hypothesis · a herbarium record · Lark</title>
+<meta name="description" content="A live herbarium record of one Lean 4 proof of the Riemann Hypothesis, by Levent Alpöge and Claude: grown from source on the workstation Euler and re-examined there by an independent kernel.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="./ink.css">
+<link rel="stylesheet" href="./masthead.css">
+<link rel="stylesheet" href="./katex.css">
+<link rel="stylesheet" href="./desk.css">
+<link rel="stylesheet" href="./figures.css">
+<link rel="stylesheet" href="./proof-structure.css">
+<script type="module" src="./desk.js"></script>
+</head>
+<body class="herbarium-desk">
+<a class="skip-link" href="#plates">Skip to the plates</a>
+
+<header class="masthead">
+  <div class="masthead-bar">
+    <a class="brand" href="./" aria-label="Lark herbarium, top of the page"><span class="brand-mark" aria-hidden="true">ζ</span><span class="brand-name">Lark</span><span class="brand-sep" aria-hidden="true">/</span><span class="brand-place">Herbarium</span></a>
+    <span class="masthead-here" aria-hidden="true"></span>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="plates-nav"><span class="nav-toggle-mark" aria-hidden="true"></span>Plates</button>
+    <nav class="masthead-nav plates-nav" id="plates-nav" aria-label="Plates">
+      <a href="#frontispiece" aria-label="Frontispiece: the specimen"><span class="nav-num nav-num-word">Specimen</span></a>
+      <a href="#primes" aria-label="I. The count of primes"><span class="nav-num">I</span><span class="nav-word">The count of primes</span></a>
+      <a href="#music" aria-label="II. Two voices, one curve"><span class="nav-num">II</span><span class="nav-word">Two voices, one curve</span></a>
+      <a href="#window" aria-label="III. A window is enough"><span class="nav-num">III</span><span class="nav-word">A window is enough</span></a>
+      <a href="#mirror" aria-label="IV. The mirror at one half"><span class="nav-num">IV</span><span class="nav-word">The mirror at one half</span></a>
+      <a href="#roots" aria-label="V. Where the weight lives"><span class="nav-num">V</span><span class="nav-word">Where the weight lives</span></a>
+      <a href="#proof-reading" aria-label="VI. A forest of 175,187"><span class="nav-num">VI</span><span class="nav-word">A forest of 175,187</span></a>
+      <a href="#compiler" aria-label="VII. Sixty-four hours on one desk"><span class="nav-num">VII</span><span class="nav-word">Sixty-four hours on one desk</span></a>
+      <a href="#export" aria-label="VIII. Pressing the specimen"><span class="nav-num">VIII</span><span class="nav-word">Pressing the specimen</span></a>
+      <a href="#replay" aria-label="IX. The second reader"><span class="nav-num">IX</span><span class="nav-word">The second reader</span></a>
+      <a href="#settled" aria-label="X. What is settled, and what is not"><span class="nav-num">X</span><span class="nav-word">What is settled, and what is not</span></a>
+      <a href="#evidence" aria-label="Appendix A: the label"><span class="nav-num">A</span><span class="nav-word">Appendix A · The label</span></a>
+      <a href="#ledger" aria-label="Appendix B: field notes"><span class="nav-num">B</span><span class="nav-word">Appendix B · Field notes</span></a>
+      <a href="#colophon" aria-label="Colophon"><span class="nav-num nav-num-word">Colophon</span></a>
+    </nav>
+    <button class="toggle motion-toggle" id="motion-switch" type="button" aria-pressed="false"><span data-motion-label>Pause motion</span></button>
+    <span class="link-state" id="link-state" role="status" title="Reading the feed.">Connecting</span>
+  </div>
+</header>
+
+<main id="plates" tabindex="-1">
+
+<!-- Frontispiece · t = 0 ─────────────────────────────────────────────────────── -->
+<section class="plate frontispiece" id="frontispiece" data-t="0" aria-labelledby="run-title">
+  <div class="front-sheet">
+  <section class="now-pressing" id="now-pressing" aria-labelledby="now-title" data-state="pending">
+    <div class="now-head">
+      <h2 class="now-title" id="now-title"><span class="now-dot" aria-hidden="true"></span>Now pressing</h2>
+      <p class="now-what">Euler’s own export of the proof, the specimen not yet examined.</p>
+      <p class="now-phase" id="now-phase" aria-live="polite">Reading the feed…</p>
+      <p class="now-links"><a href="#export">The press, chapter VIII</a> · <a href="#replay">The second reader, IX</a></p>
+    </div>
+    <div class="now-body">
+      <p class="now-reading"><span class="now-big" id="now-size">—</span> <span class="now-of" id="now-of">of 61.57 GB</span> <span class="now-percent" id="now-percent"></span></p>
+      <div class="now-gauge">
+        <progress id="now-bar" max="1" value="0" aria-label="Euler’s own export: bytes written against the published size"></progress>
+        <div class="press-scale now-scale" id="now-scale" aria-hidden="true">
+          <span style="left:0%">0</span><span style="left:16.24%">10</span><span style="left:32.48%">20</span><span style="left:48.72%">30</span><span style="left:64.97%">40</span><span style="left:81.21%">50</span><span class="press-end" style="left:100%">61.57 GB</span>
+        </div>
+      </div>
+      <dl class="now-facts">
+        <div><dt id="now-pace-label">Recent pace</dt><dd id="now-pace">—</dd></div>
+        <div><dt id="now-first-label">Writing should finish</dt><dd id="now-first">—</dd></div>
+        <div><dt id="now-second-label">Kernel could start</dt><dd id="now-second">—</dd></div>
+        <div><dt>Elapsed</dt><dd id="now-elapsed">—</dd></div>
+      </dl>
+      <p class="now-stamp" id="now-stamp" hidden></p>
+      <p class="now-note" id="now-note"></p>
+    </div>
+  </section>
+  <div class="front-copy">
+    <p class="zero-tag front-zero">t = 0 · the foot of the critical line</p>
+    <p class="eyebrow">Accession <span id="run-id">rh-20261120</span> · Lean 4 · 175,187 modules</p>
+    <h1 id="run-title">Riemann <i>Hypothesis</i></h1>
+    <p class="statement">Every nontrivial zero of the Riemann zeta function has real part ½.</p>
+    <p class="statement-math math">{\zeta(s)=0,\quad 0&lt;\Re s&lt;1}\quad\allowbreak{\Rightarrow\quad\Re s=\crit}</p>
+    <a class="hero-source" href="https://github.com/Deicyde/riemann-hypothesis/blob/a172c464fd4bcfc4f53e394dcba45d742b1409a6/src/Main.lean#L4" aria-label="Main.lean, line 4, at source commit a172c464, on GitHub">
+      <code class="lean"><span class="kw">theorem</span> <span class="nm">riemannHypothesis</span> : <span class="ty">RiemannHypothesis</span> <span class="op">:=</span> rhOfAll</code>
+      <span class="source-locus">Main.lean · line 4 · a172c464</span>
+    </a>
+    <p class="standfirst">This page is the herbarium record of one proof: the Lean 4 formalization of the Riemann Hypothesis by Levent Alpöge and Claude, grown from source on the workstation Euler and re-examined there by an independent kernel. It is live: every line is copied from a receipt, and a line still waiting for its receipt is written in pencil.</p>
+  </div>
+
+  <figure class="figure front-figure" data-figure="zeta-landscape">
+    <div class="figure-stage" data-fit="fill">A blue print of contour lines over a rectangle, with a gold line at real part one half. Along the gold line, nested rings tighten to points at ten heights between 14 and 50. At t = 0, at real part 1, the lines crowd into a bright knot.</div>
+    <figcaption><span class="tag" data-tag="computed">computed</span> Contours of <span class="math">\log\lvert\zeta(\sigma+it)\rvert</span> for <span class="math">\sigma</span> from −0.6 to 1.6 and <span class="math">t</span> from 0 to 50, developed like an exposure. Where rings close to a point, <span class="math">\zeta</span> is zero; every such point here lies on the gold line <span class="math">\Re s=\crit</span>. The bright knot at <span class="math">s=1</span> is the pole. Literal, computed in your browser. Drawn by <code>zeta.js</code> · <code>logAbsZetaGrid()</code>, <code>marchingSquares()</code>.</figcaption>
+    <details class="numbers"><summary>Read the numbers</summary>
+      <p>Zeros in view, <i>t</i> ≤ 50: ten, on Re <i>s</i> = ½ (listed in chapter I) · Pole: <i>s</i> = 1 · Contour grid: σ ∈ [−0.6, 1.6], <i>t</i> ∈ [0, 50], computed in your browser.</p>
+    </details>
+  </figure>
+
+  <aside class="specimen-label slip" aria-labelledby="label-title">
+    <h2 class="label-head" id="label-title">Herbarium Lark · Accession <span class="label-run">rh-20261120</span></h2>
+    <div class="label-body">
+      <dl class="label-rows">
+        <dt>Specimen</dt><dd>a proof of the Riemann Hypothesis (Lean 4.33.1, Mathlib 0df444a3)</dd>
+        <dt>Source</dt><dd><a href="https://github.com/Deicyde/riemann-hypothesis/tree/a172c464fd4bcfc4f53e394dcba45d742b1409a6">Deicyde/riemann-hypothesis @ a172c464</a></dd>
+        <dt>Grown</dt><dd>Euler · 20–23 November 2026 · 175,187 modules</dd>
+        <dt>Pressed</dt><dd class="label-pressed"><span id="export-summary" hidden><span id="export-summary-size"></span> <span id="export-summary-start"></span></span><span id="export-summary-note">reading the feed…</span></dd>
+        <dt>Det. 1</dt><dd class="label-det">con-leche · published input · <a id="reference-readout" href="#replay" data-input="reference_export" data-state="pending">Awaiting receipt</a> <span id="reference-det-date" class="det-date" hidden></span></dd>
+        <dt>Det. 2</dt><dd class="label-det">con-leche · Euler’s own export · <a id="local-readout" href="#replay" data-input="local_export" data-state="pending">not yet examined</a> <span id="local-det-date" class="det-date" hidden></span></dd>
+      </dl>
+      <figure class="label-rosette">
+        <span id="archive-rosette" class="rosette-mount"></span>
+        <figcaption>Source archive<br><span class="nowrap">SHA-256 <span id="archive-digest">9631b4f0…c7fc</span></span></figcaption>
+      </figure>
+    </div>
+    <p class="label-links"><a id="evidence-manifest" hidden href="./feed/evidence/manifest.json">Evidence manifest</a></p>
+    <div id="checkin-overview" hidden></div>
+  </aside>
+
+  <section class="pipeline" aria-labelledby="pipeline-title">
+    <h2 class="pipeline-title" id="pipeline-title">At a glance</h2>
+    <div class="stem-row">
+      <h3 class="stem-label">Workstation input</h3>
+      <ol class="stem" id="stem-local" aria-label="Workstation input">
+        <li data-state="pending"><a href="#proof-reading"><span class="node-name">Source</span></a></li>
+        <li data-state="pending"><a href="#compiler"><span class="node-name">Build</span></a></li>
+        <li data-state="pending"><a href="#export"><span class="node-name">Export</span></a></li>
+        <li data-state="pending"><a href="#replay"><span class="node-name">Controls</span></a></li>
+        <li data-state="pending"><a href="#replay"><span class="node-name">Kernel</span></a></li>
+        <li data-state="pending"><a href="#settled"><span class="node-name">Verdict</span></a></li>
+      </ol>
+    </div>
+    <div class="stem-row">
+      <h3 class="stem-label">Published input</h3>
+      <ol class="stem" id="stem-reference" aria-label="Published input">
+        <li data-state="pending"><a href="#replay"><span class="node-name">Controls</span></a></li>
+        <li data-state="pending"><a href="#replay"><span class="node-name">Download</span></a></li>
+        <li data-state="pending"><a href="#replay"><span class="node-name">Kernel</span></a></li>
+        <li data-state="pending"><a href="#settled"><span class="node-name">Verdict</span></a></li>
+      </ol>
+    </div>
+  </section>
+  </div>
+</section>
+
+<hr class="rule-line" data-from="t = 0" data-to="t = 14.134725">
+
+<!-- I · ρ₁ ─────────────────────────────────────────────────────────────────── -->
+<section class="plate" id="primes" data-zero="1" aria-labelledby="primes-title">
+  <header class="plate-head">
+    <div class="margin-specimen" data-figure="margin-specimen" data-kind="fern" data-text="primes" aria-hidden="true"><div class="figure-stage"></div></div>
+    <span class="numeral">I</span>
+    <p class="zero-tag">ρ₁ · ½ + 14.1347i</p>
+    <h2 class="plate-title" id="primes-title">The count of primes</h2>
+    <p class="gloss math">\zeta(s)=\prod_p\bigl(1-p^{-s}\bigr)^{-1}</p>
+    <p class="dek">In 1859 Riemann showed that the primes are steered by the zeros of a single function.</p>
+  </header>
+  <div class="prose">
+    <p>Our specimen begins with a memoir sent to the Berlin Academy in November 1859. Bernhard Riemann wrote it on “the number of primes less than a given quantity”, and opened it with “the observation of <i>Euler</i>”: for <span class="math">\Re s&gt;1</span>, the sum of <span class="math">n^{-s}</span> over the whole numbers 1, 2, 3, … equals a product with one factor for each prime,</p>
+    <div class="math display">\zeta(s)=\sum_{n=1}^{\infty}\frac{1}{n^{s}}=\prod_{p}\frac{1}{1-p^{-s}}.</div>
+    <p>Riemann extended <span class="math">\zeta</span> to the whole complex plane, proved a symmetry that exchanges <span class="math">s</span> and <span class="math">1-s</span>, and gave an exact formula for counting primes in which every zero of <span class="math">\zeta</span> plays a part. Some zeros are plain: <span class="math">-2,-4,-6</span> and so on, the trivial zeros. All the others lie in the critical strip, <span class="math">0\le\Re s\le1</span>. Riemann wrote that it is “very probable that all roots are real”, which in today’s terms says that every one of them lies on the strip’s centre line, <span class="math">\Re s=\crit</span>. Then he set the question aside “after some fleeting futile attempts”. That sentence is the Riemann Hypothesis.</p>
+    <blockquote class="pull-line"><p>“It is very probable that all roots are real.”</p><p class="pull-source">Riemann, 1859</p></blockquote>
+    <p>The first nontrivial zero lies at <span class="math">\crit+14.1347\ldots\,i</span>, and this plate is pinned to it. By 2020 the zeros had been checked by computer, rigorously, up to height <span class="math">3\cdot10^{12}</span>, and every one was on the line. A computation can confirm as many zeros as it has time for; the hypothesis is about all of them.</p>
+    <p>Mathlib, the library this proof is written against, states the hypothesis as one Lean definition, <code>RiemannHypothesis</code>. Its docstring adds that “constructing a term of this type is worth a million dollars”. The rest of this page is the record of one such term.</p>
+  </div>
+  <figure class="figure" data-figure="critical-strip">
+    <div class="figure-stage">A narrow vertical strip between real parts 0 and 1, crossed by a gold line at one half. Small seeds sit exactly on the gold line at heights 14.13, 21.02, 25.01, 30.42, 32.94 and higher; none sit off it. Faint dots to the left mark −2, −4 and −6, and a knot at real part 1 marks the pole. Beside the strip, a staircase rises in uneven steps alongside a straight diagonal line and stays close to it up to 100.</div>
+    <figcaption><span class="tag" data-tag="computed">computed</span> The critical strip, <span class="math">0&lt;\Re s&lt;1</span>, with the first zeros of <span class="math">\zeta</span> set like seeds in one furrow on the gold line <span class="math">\Re s=\crit</span>. The trivial zeros <span class="math">-2,-4,-6,\dots</span> lie faint to the left; the pole at <span class="math">s=1</span> is a single knot. Beside it, the staircase <span class="math">\psi(x)</span>, which climbs by <span class="math">\log p</span> at every prime power <span class="math">p^{k}</span>, stays close to the line <span class="math">y=x</span> up to <span class="math">x=100</span>. Both pictures are literal, computed in your browser. Drawn by <code>zeta.js</code> · <code>ZEROS</code>, <code>psiSteps()</code>.</figcaption>
+    <details class="numbers"><summary>Read the numbers</summary>
+      <table>
+        <caption>The numbers behind this figure</caption>
+        <thead><tr><th scope="col"><i>n</i></th><th scope="col" class="num">γ<sub><i>n</i></sub></th><th scope="col">ρ<sub><i>n</i></sub></th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1</th><td class="num">14.1347251417</td><td>½ + 14.1347251417<i>i</i></td></tr>
+          <tr><th scope="row">2</th><td class="num">21.0220396388</td><td>½ + 21.0220396388<i>i</i></td></tr>
+          <tr><th scope="row">3</th><td class="num">25.0108575801</td><td>½ + 25.0108575801<i>i</i></td></tr>
+          <tr><th scope="row">4</th><td class="num">30.4248761259</td><td>½ + 30.4248761259<i>i</i></td></tr>
+          <tr><th scope="row">5</th><td class="num">32.9350615877</td><td>½ + 32.9350615877<i>i</i></td></tr>
+          <tr><th scope="row">6</th><td class="num">37.5861781588</td><td>½ + 37.5861781588<i>i</i></td></tr>
+          <tr><th scope="row">7</th><td class="num">40.9187190121</td><td>½ + 40.9187190121<i>i</i></td></tr>
+          <tr><th scope="row">8</th><td class="num">43.3270732809</td><td>½ + 43.3270732809<i>i</i></td></tr>
+          <tr><th scope="row">9</th><td class="num">48.0051508812</td><td>½ + 48.0051508812<i>i</i></td></tr>
+          <tr><th scope="row">10</th><td class="num">49.7738324777</td><td>½ + 49.7738324777<i>i</i></td></tr>
+        </tbody>
+      </table>
+      <p class="numbers-note">Staircase: ψ(<i>x</i>) at <i>x</i> = 10, 20, …, 100, computed in your browser; ψ(100) = 94.0453…. Zeros checked numerically, rigorously, up to height 3·10¹² (Platt and Trudgian, 2020).</p>
+    </details>
+  </figure>
+</section>
+
+<hr class="rule-line" data-from="t = 14.134725" data-to="t = 21.022040">
+
+<!-- II · ρ₂ ────────────────────────────────────────────────────────────────── -->
+<section class="plate" id="music" data-zero="2" aria-labelledby="music-title">
+  <header class="plate-head">
+    <div class="margin-specimen" data-figure="margin-specimen" data-kind="seedhead" data-text="music" aria-hidden="true"><div class="figure-stage"></div></div>
+    <span class="numeral">II</span>
+    <p class="zero-tag">ρ₂ · ½ + 21.0220i</p>
+    <h2 class="plate-title" id="music-title">Two voices, one curve</h2>
+    <p class="gloss"><code>Formalism.Gz</code></p>
+    <p class="dek">Count the primes, or listen to the zeros: the proof’s own statistic, drawn both ways.</p>
+  </header>
+  <div class="prose">
+    <p>Riemann’s exact formula says the primes can be described in two ways. One is to count them. The other is to add up waves, one for each zero of <span class="math">\zeta</span>. A zero <span class="math">\rho</span> contributes a wave whose size grows like <span class="math">x</span> raised to the real part of <span class="math">\rho</span>. If every zero lies on the line, every wave grows like <span class="math">\sqrt{x}</span> and no faster, and the count of primes strays from its smooth estimate by little more than <span class="math">\sqrt{x}</span>.</p>
+    <p>The proof works with its own form of the count, which its source calls <code>Gz</code>. In words: walk along the numbers up to <span class="math">y</span>. At each prime power <span class="math">n=p^{k}</span>, switch on a ramp that starts from zero at <span class="math">y=n</span> and climbs with slope <span class="math">(\log p)/n</span>. Add up all the ramps, then subtract the smooth main part, <span class="math">y\log y-(1+\gamma)\,y</span>, where <span class="math">\gamma=0.5772\ldots</span> is Euler’s constant (not the height of a zero). What remains, <span class="math">G(y)</span>, does not grow. It hovers near <span class="math">\log 2\pi=1.8379</span>.</p>
+    <blockquote class="pull-line"><p>Count the primes, or add up the waves of the zeros: the same curve either way.</p></blockquote>
+    <p>The same curve can be rebuilt from the zeros alone, one wave for each zero <span class="math">\rho</span>:</p>
+    <div class="math display" data-narrow="\begin{aligned} G(y) &amp;= \sum_{n\le y}\Lambda(n)\Bigl(\frac{y}{n}-1\Bigr)\\ &amp;\qquad-y\log y+(1+\gamma)\,y\\[2pt] &amp;= \log 2\pi-\sum_{\rho}\frac{y^{\rho}}{\rho(\rho-1)}\\ &amp;\qquad-\sum_{k\ge1}\frac{y^{-2k}}{2k(2k+1)}.\end{aligned}">\begin{aligned} G(y) &amp;= \sum_{n\le y}\Lambda(n)\Bigl(\frac{y}{n}-1\Bigr)-y\log y+(1+\gamma)\,y\\[2pt] &amp;= \log 2\pi-\sum_{\rho}\frac{y^{\rho}}{\rho(\rho-1)}-\sum_{k\ge1}\frac{y^{-2k}}{2k(2k+1)}.\end{aligned}</div>
+    <p>The first line is the source’s own definition; the second is derived, as the note under the figure explains. We drew it both ways, from the primes up to two million and from the first hundred pairs of zeros, and at every point we compared, from 100 to one million, the two agree to within <span class="math">0.00033\sqrt{y}</span>.</p>
+    <p>The hypothesis puts a fence around this curve. If every zero lies on the line, <span class="math">G(y)</span> can never stray from <span class="math">\log 2\pi</span> by more than <span class="math">0.0462\sqrt{y}</span>; the constant is <span class="math">2+\gamma-\log 4\pi</span>. On every whole number from 10 to two million, the curve uses less than half of that allowance. A zero off the line would add a wave that, sooner or later, breaks through.</p>
+  </div>
+  <figure class="figure" data-figure="two-voices">
+    <div class="figure-stage">Two traces over a horizontal axis of y. A white trace, built from small ramps at the primes, wanders a little above and below a level line near 1.84. A gold trace, built from waves, one pair per zero, follows it; as more zeros are added it settles onto the white trace. Below, the same difference divided by the square root of y stays well inside two horizontal marks at plus and minus 0.0462.</div>
+    <figcaption><span class="tag" data-tag="computed">computed</span> <span class="math">G(y)</span>, the proof’s own prime statistic (<code>Formalism.Gz</code>), drawn twice: in white from the primes, ramp by ramp, and in gold from the first <span class="math">n</span> pairs of zeros. Below, the same curve as <span class="math">(G(y)-\log 2\pi)/\sqrt{y}</span>, between high- and low-water marks at <span class="math">\pm0.0462</span>, the band the Riemann Hypothesis sets. Curves and band are literal, computed in your browser. Reading them as a tide table rebuilt from its harmonic constituents is an analogy for “a sum of waves”, nothing more. Drawn by <code>fig-two-voices.js</code> from <code>primesUpTo()</code> and <code>ZEROS</code>.</figcaption>
+    <p class="figure-note">Of the two formulas above, the first, from the primes, is exactly the Lean source’s <code>Gz</code>. The second, from the zeros, is derived, not taken from the Lean source: it follows from the Mellin transform of one ramp, <span class="math">n^{-s}/(s(s-1))</span>; the reading project’s atlas states the same formula up to a term of size <span class="math">y^{-2}</span>, and we checked it numerically.</p>
+    <details class="numbers"><summary>Read the numbers</summary>
+      <table>
+        <caption>The numbers behind this figure</caption>
+        <thead><tr><th scope="col"><i>y</i></th><th scope="col" class="num"><i>G</i>(<i>y</i>)</th><th scope="col" class="num">(<i>G</i>(<i>y</i>) − log 2π)/√<i>y</i></th></tr></thead>
+        <tbody>
+          <tr><th scope="row">10</th><td class="num">1.8608</td><td class="num">+0.0072</td></tr>
+          <tr><th scope="row">100</th><td class="num">1.7217</td><td class="num">−0.0116</td></tr>
+          <tr><th scope="row">1,000</th><td class="num">1.5309</td><td class="num">−0.0097</td></tr>
+          <tr><th scope="row">10,000</th><td class="num">1.7493</td><td class="num">−0.0009</td></tr>
+          <tr><th scope="row">100,000</th><td class="num">3.6715</td><td class="num">+0.0058</td></tr>
+          <tr><th scope="row">1,000,000</th><td class="num">11.0404</td><td class="num">+0.0092</td></tr>
+          <tr><th scope="row">2,000,000</th><td class="num">−12.2678</td><td class="num">−0.0100</td></tr>
+        </tbody>
+      </table>
+      <p class="numbers-note">log 2π = 1.8378770664 · γ = 0.5772156649 · band 2 + γ − log 4π = 0.0461914179 · on every integer 10 ≤ <i>y</i> ≤ 2,000,000 the normalised value stays between −0.02268 (at <i>y</i> = 319,439) and +0.01867 (at <i>y</i> = 3,100) · primes against the first 100 zero pairs: within 0.00033·√<i>y</i> at <i>y</i> = 100.5, 1,000.5, 10,000.5, 100,000.5 and 1,000,000.5 · a hypothetical zero at 0.62 + 40<i>i</i> would add an oscillation of about 0.00125·<i>y</i><sup>0.62</sup> (the atlas’s example).</p>
+      <p class="numbers-note">G(y) values computed by our research run (mpmath, sieve to 2·10⁶); the last column is computed from them.</p>
+    </details>
+  </figure>
+</section>
+
+<hr class="rule-line" data-from="t = 21.022040" data-to="t = 25.010858">
+
+<!-- III · ρ₃ ───────────────────────────────────────────────────────────────── -->
+<section class="plate" id="window" data-zero="3" aria-labelledby="window-title">
+  <header class="plate-head">
+    <div class="margin-specimen" data-figure="margin-specimen" data-kind="reed" data-text="window" aria-hidden="true"><div class="figure-stage"></div></div>
+    <span class="numeral">III</span>
+    <p class="zero-tag">ρ₃ · ½ + 25.0109i</p>
+    <h2 class="plate-title" id="window-title">A window is enough</h2>
+    <p class="gloss"><code>zeroFree_of_rpow_window</code></p>
+    <p class="dek">The analytic engine: a one-sided bound on ever later windows clears a half-plane of zeros.</p>
+  </header>
+  <div class="prose">
+    <p>The proof never needs to control its prime statistic everywhere. Its analytic engine, the Lean theorem <code>zeroFree_of_rpow_window</code>, asks for much less. Take a family of these sums, each twisted by a character <span class="math">\chi_i</span>, and combine them with weights <span class="math">a_i</span> that are all positive. Suppose the combination stays below a ceiling <span class="math">C\,y^{\theta}</span> on whole windows <span class="math">[Y,\,Y^{1+\delta}]</span>, for windows as far out as you like. Then no L-function in the family has a zero with real part greater than <span class="math">\theta</span>:</p>
+    <div class="math display">\begin{gathered}\sum_i a_i\,\Re G_{\chi_i}(y)\;\le\;C\,y^{\theta}\\ \text{for all } y\in\bigl[Y,\,Y^{1+\delta}\bigr],\\ \text{for arbitrarily large } Y\\[2pt] \Downarrow\\[2pt] L(s,\chi_i)\neq0\ \text{ whenever }\ \Re s&gt;\theta.\end{gathered}</div>
+    <p>The proof uses windows <span class="math">[Y,\,Y^{3/2}]</span>. The bound is one-sided: the sum may fall as low as it likes.</p>
+    <p>Why would a bound on windows notice a zero? Here we follow the reading project’s gloss. A zero <span class="math">\rho</span> would appear as a pole of the statistic’s Mellin transform, with a residue that cannot cancel, because every weight is positive. Derivatives of very high order act as a spotlight trained on a single window. Aimed far enough out, the spotlight finds the pole, and the ceiling cannot hold.</p>
+    <blockquote class="pull-line"><p>Not everywhere. Only on windows, only from above, only far enough out.</p></blockquote>
+    <p>The order of choices is the delicate part. First, suppose a zero <span class="math">\rho</span> with <span class="math">\Re\rho&gt;\crit</span>. Second, choose <span class="math">\theta</span> strictly between <span class="math">\tfrac12</span> and <span class="math">\Re\rho</span>. Third, choose <span class="math">\varepsilon</span> so small that <span class="math">\tfrac12+9\varepsilon\le\theta</span>. The supply beneath the engine provides the ceiling at exponent <span class="math">\tfrac12+9\varepsilon</span> for every small <span class="math">\varepsilon</span>, so the engine applies and the supposed zero cannot exist. No bound “at <span class="math">\varepsilon=0</span>” is ever needed. What comes out is a zero-free half-plane: for every primitive Dirichlet character, no zero with <span class="math">\Re s&gt;\crit</span>.</p>
+  </div>
+  <figure class="figure" data-figure="windows">
+    <div class="figure-stage">A horizontal axis marked in powers of ten. Shaded intervals, each running from Y to Y to the power three halves, repeat further and further to the right. A gently rising ceiling line runs above them. A bell-shaped bump sits over one interval and grows narrower and taller as its order increases. Three small numbered marks read: 1, a zero; 2, theta; 3, epsilon.</div>
+    <figcaption><span class="tag" data-tag="computed">computed</span> <span class="tag" data-tag="rule">drawn by rule</span> A logarithmic axis of <span class="math">y</span>, with windows <span class="math">[Y,\,Y^{3/2}]</span> marching outward without end and a one-sided ceiling <span class="math">C\,y^{\theta}</span> above them. The spotlight is the bump <span class="math">u^{k}e^{-u}/k!</span>, narrowing onto one window as <span class="math">k</span> grows; the reading project’s atlas puts 68.0%, 84.0%, 95.2% and 99.5% of its mass inside the window for its parameter <span class="math">U=20</span>, 40, 80 and 160. The windows and the bump are literal. The three numbered marks for the order of choices are a convention, and a shaft of light falling on ever more distant clearings is a metaphor.</figcaption>
+    <details class="numbers"><summary>Read the numbers</summary>
+      <table>
+        <caption>The numbers behind this figure</caption>
+        <thead><tr><th scope="col">Quantity</th><th scope="col">Value</th><th scope="col">Source</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Window</th><td>[<i>Y</i>, <i>Y</i><sup>3/2</sup>] (hosts of width 3/2)</td><td>source</td></tr>
+          <tr><th scope="row">Ceiling exponent supplied</th><td>½ + (<i>e</i><sub>D</sub> + <i>e</i><sub>L</sub> + 7)·ε with <i>e</i><sub>D</sub> = 2, <i>e</i><sub>L</sub> = 0, so ½ + 9ε</td><td>source</td></tr>
+          <tr><th scope="row">θ as Lean chooses it</th><td>½ + ½·min(Re ρ − ½, ½), then ε</td><td>source (<code>level_of_tiedWin</code>)</td></tr>
+          <tr><th scope="row">Spotlight mass inside the window, <i>U</i> = 20 / 40 / 80 / 160</th><td>68.0% / 84.0% / 95.2% / 99.5%</td><td>reading project’s atlas</td></tr>
+          <tr><th scope="row">“Prime windows ⇒ RH”, checked on its own</th><td>fresh Lean replay over 10,530 modules; nanoda on 61,697 exported declarations</td><td>reading project, status 20 Nov 2026, 6:51 p.m. EST</td></tr>
+        </tbody>
+      </table>
+    </details>
+  </figure>
+</section>
+
+<hr class="rule-line" data-from="t = 25.010858" data-to="t = 30.424876">
+
+<!-- IV · ρ₄ ───────────────────────────────────────────────────────────────── -->
+<section class="plate" id="mirror" data-zero="4" aria-labelledby="mirror-title">
+  <header class="plate-head">
+    <div class="margin-specimen mirrored" data-figure="margin-specimen" data-kind="reed" data-text="mirror" aria-hidden="true"><div class="figure-stage"></div></div>
+    <span class="numeral">IV</span>
+    <p class="zero-tag">ρ₄ · ½ + 30.4249i</p>
+    <h2 class="plate-title" id="mirror-title">The mirror at one half</h2>
+    <p class="gloss math">\rho\mapsto1-\bar\rho</p>
+    <p class="dek">Why a line and not a half-plane: a reflection, and one statement read five ways.</p>
+  </header>
+  <div class="prose">
+    <p>Chapter III clears the half-plane to the right of <span class="math">\tfrac12</span>. Why does that give a line, and not only half of the strip? Because <span class="math">\zeta</span> and its relatives are symmetric. Riemann’s functional equation,</p>
+    <div class="math display" data-narrow="\begin{gathered}\pi^{-s/2}\,\Gamma\Bigl(\frac{s}{2}\Bigr)\,\zeta(s)\\ {}=\pi^{-(1-s)/2}\,\Gamma\Bigl(\frac{1-s}{2}\Bigr)\,\zeta(1-s),\end{gathered}">\pi^{-s/2}\,\Gamma\Bigl(\frac{s}{2}\Bigr)\,\zeta(s)=\pi^{-(1-s)/2}\,\Gamma\Bigl(\frac{1-s}{2}\Bigr)\,\zeta(1-s),</div>
+    <p>sends a zero at <span class="math">s</span> to a zero at <span class="math">1-s</span>, and for <span class="math">\zeta</span> the zeros also come in conjugate pairs, mirrored across the real axis. Together the two symmetries reflect the zeros across the line <span class="math">\Re s=\crit</span>: <span class="math">\rho\mapsto1-\bar\rho</span>. For a Dirichlet L-function the reflected zero belongs to the inverse character, which is in the same family. A zero with real part <span class="math">\tfrac13</span> would have a twin with real part <span class="math">\tfrac23</span>, to the right of <span class="math">\tfrac12</span>, where the engine has shown there are none. So there is no zero at <span class="math">\tfrac13</span>, and by the same argument none anywhere in the strip off the line.</p>
+    <blockquote class="pull-line"><p>A stone at ⅓ shows its image at ⅔.</p></blockquote>
+    <p>One more classical step widens the net. A character that is not primitive differs from the primitive character <span class="math">\chi^{*}</span> behind it by finitely many Euler factors, <span class="math">1-\chi^{*}(p)\,p^{-s}</span>, and none of them can vanish to the right of 0.</p>
+    <p>With these two steps a single statement, <code>allChi</code>, which says that no Dirichlet L-function vanishes for <span class="math">\Re s&gt;\crit</span> except at the pole, becomes the five exported theorems. Two of the five are the very same proof term, <code>rhOfAll</code>, read at two types that Lean accepts as definitionally equal; the archive records the equality as <code>Claim.zeta_iff := Iff.rfl</code>. So there are five targets but four distinct assertions: the Riemann Hypothesis, and the Generalized Riemann Hypothesis for Dirichlet L-functions in three forms.</p>
+    <p>The reflection for <span class="math">\zeta</span> is classical mathematics. The file that carries it, <code>RhOfRight</code>, imports nothing but Mathlib.</p>
+  </div>
+  <figure class="figure" data-figure="mirror">
+    <div class="figure-stage">A vertical strip with a gold centre line at one half; the right half is hatched. A dot at one third, left of the line, is joined by a dashed arc to its mirror image at two thirds, inside the hatching. The mirror image is struck through.</div>
+    <figcaption><span class="tag" data-tag="rule">drawn by rule</span> The strip, with the half-plane <span class="math">\Re s&gt;\crit</span> hatched where chapter III leaves no zeros. A supposed zero at real part <span class="math">\tfrac13</span> shows its reflection at <span class="math">\tfrac23</span> under <span class="math">\rho\mapsto1-\bar\rho</span>, and the reflection lands in the hatched water. The reflection is literal geometry of the zero set; the zero at <span class="math">\tfrac13</span> is a supposition, not a zero, and the reed and its waterline are a picture.</figcaption>
+  </figure>
+  <figure class="figure" data-figure="five-flowers">
+    <div class="figure-stage">One stem labelled allChi divides into four: rhOfAll, allChi itself, claimAll.2.1 and critAll. rhOfAll carries two flowers; the other three carry one each, five in all. Each flower is coloured by its current receipt state.</div>
+    <figcaption><span class="tag" data-tag="receipt">receipt</span> <span class="tag" data-tag="source">source</span> The five exported theorems as flowers on four stems, all rising from one term, <code>allChi</code>. Two flowers share a stem: <code>riemannHypothesis</code> and <code>riemannZeta_eq_zero_re</code> are both <code>rhOfAll</code>. Each flower takes the colour of its live determination for the selected input: gold once accepted, pencil while pending. Focus a flower to read its statement in words and in Lean; each links to its line of <code>Main.lean</code> at commit a172c464.</figcaption>
+    <details class="numbers"><summary>Read the numbers</summary>
+      <table>
+        <caption>The numbers behind this figure</caption>
+        <thead><tr><th scope="col">Theorem</th><th scope="col">Proof term</th><th scope="col"><code>Main.lean</code></th><th scope="col">Plain words</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>riemannHypothesis</code></th><td><code>rhOfAll</code></td><td>line 4</td><td>Every zero of ζ that is not a trivial zero has real part ½.</td></tr>
+          <tr><th scope="row"><code>riemannZeta_eq_zero_re</code></th><td><code>rhOfAll</code> (same term)</td><td>line 6</td><td>The same assertion, written out without Mathlib’s name.</td></tr>
+          <tr><th scope="row"><code>LFunction_ne_zero_of_half_lt_re</code></th><td><code>allChi</code></td><td>line 8</td><td>No Dirichlet L-function has a zero with Re <i>s</i> &gt; ½, except the pole.</td></tr>
+          <tr><th scope="row"><code>LFunction_eq_zero_re</code></th><td><code>claimAll.2.1</code></td><td>line 10</td><td>Every zero of every Dirichlet L-function in the open strip lies on Re <i>s</i> = ½.</td></tr>
+          <tr><th scope="row"><code>LFunction_eq_zero_re_of_isPrimitive</code></th><td><code>critAll</code></td><td>line 12</td><td>The same, for primitive characters.</td></tr>
+        </tbody>
+      </table>
+    </details>
+  </figure>
+</section>
+
+<hr class="rule-line" data-from="t = 30.424876" data-to="t = 32.935062">
+
+<!-- V · ρ₅ ────────────────────────────────────────────────────────────────── -->
+<section class="plate" id="roots" data-zero="5" aria-labelledby="roots-title">
+  <header class="plate-head">
+    <div class="margin-specimen" data-figure="margin-specimen" data-kind="root" data-text="roots" aria-hidden="true"><div class="figure-stage"></div></div>
+    <span class="numeral">V</span>
+    <p class="zero-tag">ρ₅ · ½ + 32.9351i</p>
+    <h2 class="plate-title" id="roots-title">Where the weight lives</h2>
+    <p class="gloss math">199:1</p>
+    <p class="dek">Below the engine lies an arithmetic supply many times larger than the plant it feeds.</p>
+  </header>
+  <div class="prose">
+    <p>Everything so far is the plant above ground. The ceiling the engine needs comes from far below.</p>
+    <p>What follows is a reading, and not ours. An independent reading project has mapped the argument as 14 components and 109 landmarks, most of them pinned to lines of the source. In its reading, the supply is built from chains of about <span class="math">\sqrt{x}</span> theta lifts, Galois representations attached to automorphic forms over CM fields, bounds on Galois cohomology over whole intervals <span class="math">[Y,\,Y^{2}]</span>, carefully chosen auxiliary primes, and a Behrend-type construction. The author’s note calls the argument “incredibly long”, presents only the Lean for now, and calls it “a descendant of Stepanov’s”.</p>
+    <blockquote class="pull-line"><p>One module above ground. One hundred and ninety-nine below.</p></blockquote>
+    <p>The reading project is exact about what it has checked. Of its 109 landmarks, the five exported theorems are checked by two kernels, 18 more are kernel-checked at the source pin, 19 sit inside a checked closure, 65 have been read at their source lines, and 2 are motivation. Two conditional cuts of the upper argument have been machine-checked in isolation. Most of the lower layer has been read, not re-derived. Reading is not checking: the full proof has been accepted by kernels, as chapters IX and X record, and the open questions here are questions of understanding.</p>
+    <p>Names can mislead. Words like <code>Literature</code> in declaration names mark statements proved inside the archive, not assumptions; three independent checks find no axiom declared by the project.</p>
+    <p>The import graph shows the asymmetry without any reading at all. The file that reflects <span class="math">\zeta</span> imports nothing but Mathlib, a chain one module deep. The module that assembles the half-plane theorem stands on a chain 199 modules deep.</p>
+  </div>
+  <figure class="figure" data-figure="root-depth">
+    <div class="figure-stage">A small flowering stem above a ground line, and beneath it a root system many times its height. Labels: RhOfRight, depth 1, just under the surface; MainConclusion, 199, deep below; the deepest root, 203.</div>
+    <figcaption><span class="tag" data-tag="source">source</span> <span class="tag" data-tag="rule">drawn by rule</span> Above ground, the last step of the proof: <code>RhOfRight</code>, the reflection for <span class="math">\zeta</span>, whose import chain is one module long. Below ground, the roots: <code>MainConclusion</code>, where the half-plane theorem is assembled, stands on a chain of 199 modules, and the longest chain ending at <code>Main</code> is 203. Root lengths are real import-chain depths from the pinned source; soil, stem and colour are conventions. The jointed stem for a chain of theta lifts, if drawn, is schematic.</figcaption>
+    <details class="numbers"><summary>Read the numbers</summary>
+      <table>
+        <caption>The numbers behind this figure</caption>
+        <thead><tr><th scope="col">Module</th><th scope="col" class="num">Import distance from <code>Main</code></th><th scope="col" class="num">Longest chain beneath it (modules)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>Main</code></th><td class="num">0</td><td class="num">203</td></tr>
+          <tr><th scope="row"><code>Supplements.Kernels.MainTheoremsAll</code> → <code>…Critical</code> → <code>…MainTheorems</code></th><td class="num">1 → 2 → 3</td><td class="num">202 → 201 → 200</td></tr>
+          <tr><th scope="row"><code>Development.AutomorphicArithmetic.CharacterBoxes.MainConclusion</code> (holds <code>everyCharacter</code>)</th><td class="num">4</td><td class="num">199</td></tr>
+          <tr><th scope="row"><code>Formalism.GammaFactorNonvanishing.CritLine</code></th><td class="num">4</td><td class="num">91</td></tr>
+          <tr><th scope="row"><code>Development.AutomorphicArithmetic.CharacterBoxes.ClaimStrip</code></th><td class="num">4</td><td class="num">2</td></tr>
+          <tr><th scope="row"><code>Formalism.GammaFactorNonvanishing.RhOfRight</code> (reflection for ζ)</th><td class="num">5</td><td class="num">1 (imports only Mathlib)</td></tr>
+          <tr><th scope="row"><code>…DedekindLFunctions.LandauTheorems.ZeroFreeOfRpowWindow</code> (window criterion)</th><td class="num">9</td><td class="num">7</td></tr>
+          <tr><th scope="row"><code>…DedekindLFunctions.CharFamily</code> (the prime sum’s definitions)</th><td class="num">11</td><td class="num">1 (imports only Mathlib)</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <caption>The reading project’s tiers (status 20 Nov 2026, 6:51 p.m. EST)</caption>
+        <thead><tr><th scope="col">Tier</th><th scope="col" class="num">Landmarks</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">checked by two kernels</th><td class="num">5</td></tr>
+          <tr><th scope="row">kernel-checked at the pin</th><td class="num">18</td></tr>
+          <tr><th scope="row">inside a checked closure</th><td class="num">19</td></tr>
+          <tr><th scope="row">source-read</th><td class="num">65</td></tr>
+          <tr><th scope="row">motivation</th><td class="num">2</td></tr>
+          <tr><th scope="row">total</th><td class="num">109</td></tr>
+        </tbody>
+      </table>
+      <p class="numbers-note">In Lean, the chain length of <code>RankVal</code> lies between <span class="math">\sqrt{x\delta_1}</span> and <span class="math">2\sqrt{x\delta_1}</span> (source).</p>
+    </details>
+  </figure>
+</section>
+
+<hr class="rule-line" data-from="t = 32.935062" data-to="t = 37.586178">
+
+<!-- VI · ρ₆ ───────────────────────────────────────────────────────────────── -->
+<section class="plate" id="proof-reading" data-zero="6" aria-labelledby="proof-reading-title">
+  <header class="plate-head">
+    <div class="margin-specimen" data-figure="margin-specimen" data-kind="horsetail" data-text="forest" aria-hidden="true"><div class="figure-stage"></div></div>
+    <span class="numeral">VI</span>
+    <p class="zero-tag">ρ₆ · ½ + 37.5862i</p>
+    <h2 class="plate-title" id="proof-reading-title">A forest of 175,187</h2>
+    <p class="gloss">753,261 imports · 0 comments</p>
+    <p class="dek">The formalization itself: seventeen million lines in eleven top-level names, and not one comment.</p>
+  </header>
+  <div class="prose">
+    <p>The specimen is large. Its source is 175,187 Lean files: 17,374,215 lines and 1,030,531,854 bytes, a little over a gigabyte of text. Not one file contains a comment; the two-character sequences that open a Lean comment occur nowhere. 818,755 lines begin with the word <code>theorem</code> or <code>lemma</code>.</p>
+    <blockquote class="pull-line"><p>Seventeen million lines, and not one comment.</p></blockquote>
+    <p>The files are filed under eleven top-level names. <code>Development</code> alone holds 141,928 modules, 81% of the whole. <code>Formalism</code> holds 18,254 and is the name the others import most. At the far end, <code>Main</code> is one file of 12 lines and <code>Statements</code> one file of 16. A directory name says where its authors filed a result, not what the result is, so we give the names and leave their meaning to the readers.</p>
+    <p>Between the modules run 753,261 direct imports. Every module can be reached from <code>Main</code> in at most 43 import steps. The median is 13, and the widest ring, ten steps out, holds 15,539 modules. The longest unbroken chain of imports is 203 modules long. The eleven names are not layers: the module graph has no cycles, but imports cross between the names in both directions.</p>
+    <p>Going below the source, an independent analysis of the compiled constants, the RIKYU report from RIKEN, finds that about two thirds of the project’s constants lie in the dependency cones of the five theorems, and 640,642 do not.</p>
+  </div>
+  <div class="structure-mount">
+    <div id="proof-structure"><p class="quiet">Reading the Lean structure…</p></div>
+  </div>
+  <details class="numbers structure-numbers"><summary>Read the numbers · the eleven names</summary>
+    <div class="scroll-x">
+      <table>
+        <caption>The numbers behind this figure</caption>
+        <thead><tr><th scope="col">Name</th><th scope="col" class="num">Modules</th><th scope="col" class="num">Lines</th><th scope="col" class="num"><code>theorem</code>/<code>lemma</code> lines</th><th scope="col" class="num">Imports inside itself</th><th scope="col" class="num">Imports of other names</th><th scope="col" class="num">Imported by other names</th><th scope="col" class="num">Euler compile time (sum)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>Development</code></th><td class="num">141,928</td><td class="num">12,232,663</td><td class="num">562,329</td><td class="num">577,034</td><td class="num">90,406</td><td class="num">2,385</td><td class="num">187.08 h</td></tr>
+          <tr><th scope="row"><code>Formalism</code></th><td class="num">18,254</td><td class="num">3,200,748</td><td class="num">162,118</td><td class="num">44,412</td><td class="num">704</td><td class="num">43,538</td><td class="num">25.81 h</td></tr>
+          <tr><th scope="row"><code>GroundTheory</code></th><td class="num">8,507</td><td class="num">1,119,138</td><td class="num">54,211</td><td class="num">20,797</td><td class="num">1,230</td><td class="num">7,709</td><td class="num">12.89 h</td></tr>
+          <tr><th scope="row"><code>ReciprocityTheory</code></th><td class="num">3,845</td><td class="num">563,016</td><td class="num">27,722</td><td class="num">8,711</td><td class="num">334</td><td class="num">39,723</td><td class="num">4.93 h</td></tr>
+          <tr><th scope="row"><code>CompanionTheory</code></th><td class="num">2,027</td><td class="num">194,218</td><td class="num">9,419</td><td class="num">5,034</td><td class="num">2,421</td><td class="num">1,878</td><td class="num">2.44 h</td></tr>
+          <tr><th scope="row"><code>PositivityTheory</code></th><td class="num">449</td><td class="num">55,130</td><td class="num">2,702</td><td class="num">773</td><td class="num">753</td><td class="num">1,057</td><td class="num">0.66 h</td></tr>
+          <tr><th scope="row"><code>Lemmata</code></th><td class="num">167</td><td class="num">9,232</td><td class="num">245</td><td class="num">0</td><td class="num">641</td><td class="num">168</td><td class="num">0.15 h</td></tr>
+          <tr><th scope="row"><code>BuildAid</code></th><td class="num">5</td><td class="num">20</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">38</td><td class="num">0.00 h</td></tr>
+          <tr><th scope="row"><code>Supplements</code></th><td class="num">3</td><td class="num">22</td><td class="num">4</td><td class="num">2</td><td class="num">7</td><td class="num">1</td><td class="num">0.15 h</td></tr>
+          <tr><th scope="row"><code>Main</code></th><td class="num">1</td><td class="num">12</td><td class="num">5</td><td class="num">0</td><td class="num">2</td><td class="num">0</td><td class="num">136.7 s</td></tr>
+          <tr><th scope="row"><code>Statements</code></th><td class="num">1</td><td class="num">16</td><td class="num">0 (4 <code>def</code>)</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">&lt; 0.01 h</td></tr>
+          <tr><th scope="row">Total</th><td class="num">175,187</td><td class="num">17,374,215</td><td class="num">818,755</td><td class="num">656,763</td><td class="num">96,498</td><td class="num">96,498</td><td class="num">234.15 h</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="numbers-note">Modules by import distance from <code>Main</code> (distance: count): 0: 1 · 1: 2 · 2: 2 · 3: 7 · 4: 25 · 5: 277 · 6: 1,639 · 7: 4,861 · 8: 9,956 · 9: 14,262 · 10: 15,539 · 11: 15,237 · 12: 15,095 · 13: 13,274 · 14: 11,747 · 15: 10,397 · 16: 9,108 · 17: 7,930 · 18: 7,025 · 19: 5,915 · 20: 5,167 · 21: 4,551 · 22: 4,190 · 23: 3,740 · 24: 3,417 · 25: 2,718 · 26: 2,198 · 27: 1,742 · 28: 1,387 · 29: 1,078 · 30: 806 · 31: 622 · 32: 378 · 33: 265 · 34: 178 · 35: 122 · 36: 88 · 37: 67 · 38: 39 · 39: 25 · 40: 38 · 41: 23 · 42: 25 · 43: 24 (total 175,187; median 13).</p>
+    <p class="numbers-note">Constant-level figures (RIKYU report, single source, cited only): 66.4% of project constants in the five cones · 640,642 not used.</p>
+  </details>
+</section>
+
+<hr class="rule-line" data-from="t = 37.586178" data-to="t = 40.918719">
+
+<!-- VII · ρ₇ ──────────────────────────────────────────────────────────────── -->
+<section class="plate" id="compiler" data-zero="7" aria-labelledby="compiler-title">
+  <header class="plate-head">
+    <div class="margin-specimen" data-figure="margin-specimen" data-kind="fern" data-text="compiler" aria-hidden="true"><div class="figure-stage"></div></div>
+    <span class="numeral">VII</span>
+    <p class="zero-tag">ρ₇ · ½ + 40.9187i</p>
+    <h2 class="plate-title" id="compiler-title">Sixty-four hours on one desk</h2>
+    <p class="gloss"><code>lake build Main</code></p>
+    <p class="dek">Compilation on Euler, 20–23 November 2026: one workstation, up to eight compilers, exit 0.</p>
+  </header>
+  <div class="prose">
+    <p>Euler is one workstation, not a cluster. It began compiling on 20 November 2026, the day the proof was announced. The first module finished at 12:52:40 p.m. EST, and the run restarted three times that first afternoon. Then it settled to work, up to eight compilers at a time under a memory guard, for two days, sixteen hours and sixteen minutes from that first module.</p>
+    <p>By UTC day it completed 30,193 modules on the 20th, 86,674 on the 21st, 40,130 on the 22nd, and the last 18,190 before dawn on the 23rd. Its busiest hour, from 3:00 a.m. EST on 21 November, finished 6,144. The median module took 3.8 seconds, nine in ten took under 7, and the slowest took 461. Laid end to end, the modules’ compile times come to 234 hours.</p>
+    <blockquote class="pull-line"><p>Two machines, building independently, produced the same bytes.</p></blockquote>
+    <p>The last fifteen minutes were the proof’s last six links, in order: <code>MainConclusion</code> at 4:54:04 a.m. EST, <code>CorGKOf</code> a second later, <code>MainTheorems</code> at 4:58:33, <code>MainTheoremsCritical</code> at 5:02:40, <code>MainTheoremsAll</code> at 5:06:05 and, at 5:09:04, <code>Main</code>, after 136.7 seconds of its own. Lake recorded all 183,893 jobs done and exited 0 at 5:10:11 a.m. EST, before dawn at the workstation.</p>
+    <p>The last file it wrote, <code>Main.olean</code>, has the SHA-256 digest 9146dfb4…96ad. Andrew Sutherland’s page at MIT publishes the same digest for its build. Two machines, building independently, produced the same bytes.</p>
+  </div>
+
+  <figure class="figure growth" id="growth">
+    <div class="figure-stage" id="growth-stage">A rising curve over 64 hours. It begins with three short false starts, climbs steeply through the second day, slows on the third, and reaches 175,187 at the right edge, just before the fourth dawn.</div>
+    <figcaption id="growth-caption"><span class="tag" data-tag="measured">measured</span> Modules completed against hours since the first completion, from Euler’s build log, one tick per hour. The three false starts of the first afternoon show as scars near the base; the dawn of the fourth day is marked. Literal data; the gardener’s chart is only the frame.</figcaption>
+    <details class="numbers"><summary>Read the numbers</summary>
+      <table>
+        <caption>The numbers behind this figure</caption>
+        <thead><tr><th scope="col">UTC day</th><th scope="col" class="num">Modules completed</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">20 November 2026</th><td class="num">30,193</td></tr>
+          <tr><th scope="row">21 November 2026</th><td class="num">86,674</td></tr>
+          <tr><th scope="row">22 November 2026</th><td class="num">40,130</td></tr>
+          <tr><th scope="row">23 November 2026</th><td class="num">18,190</td></tr>
+          <tr><th scope="row">Total</th><td class="num">175,187</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <thead><tr><th scope="col">Module</th><th scope="col">Finished (a.m. EST, 23 November)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>MainConclusion</code></th><td>4:54:04</td></tr>
+          <tr><th scope="row"><code>CorGKOf</code></th><td>4:54:05</td></tr>
+          <tr><th scope="row"><code>MainTheorems</code></th><td>4:58:33</td></tr>
+          <tr><th scope="row"><code>MainTheoremsCritical</code></th><td>5:02:40</td></tr>
+          <tr><th scope="row"><code>MainTheoremsAll</code></th><td>5:06:05</td></tr>
+          <tr><th scope="row"><code>Main</code></th><td>5:09:04 (136.7 s)</td></tr>
+        </tbody>
+      </table>
+      <p class="numbers-note">First module done 20 Nov 2026, 12:52:40 p.m. EST · Main done 23 Nov 2026, 5:09:04 a.m. EST · span 2 d 16 h 16 min (64.3 h, including three early restarts) · Lake exit 0 at 5:10:11 a.m. EST · Lake jobs 183,893 of 183,893 · busiest hour 6,144 modules (from 21 Nov, 3:00 a.m. EST); median active hour 1,600 · per module: mean 4.81 s, median 3.77 s, 90% ≤ 6.9 s, 99% ≤ 20.8 s, slowest 460.9 s · summed 234.15 h · Main.olean SHA-256 9146dfb4148e24d2252e04c50742f3e49dd126dfcc5006d10bf5f873ddf796ad (identical to MIT’s). The restarts are the build starts the ledger records at 12:52:35, 12:57:04 and 4:52:58 p.m. EST on 20 November; dawn is civil dawn at the workstation on 23 November, about 7:09 a.m. EST, computed.</p>
+    </details>
+  </figure>
+
+  <div class="instrument compiler-desk">
+    <div class="compiler-readouts">
+      <p class="readout" id="lake">Lake jobs pending</p>
+      <div class="readout-overall" id="overall"></div>
+      <p class="readout-note" id="transfer"></p>
+    </div>
+    <section class="last-links" aria-labelledby="last-links-title">
+      <h3 class="instrument-title" id="last-links-title">The last six links</h3>
+      <ol class="links-chain">
+        <li><code>MainConclusion</code><time datetime="2026-11-23T09:54:04Z">4:54:04 a.m. EST</time></li>
+        <li><code>CorGKOf</code><time datetime="2026-11-23T09:54:05Z">4:54:05 a.m. EST</time></li>
+        <li><code>MainTheorems</code><time datetime="2026-11-23T09:58:33Z">4:58:33 a.m. EST</time></li>
+        <li><code>MainTheoremsCritical</code><time datetime="2026-11-23T10:02:40Z">5:02:40 a.m. EST</time></li>
+        <li><code>MainTheoremsAll</code><time datetime="2026-11-23T10:06:05Z">5:06:05 a.m. EST</time></li>
+        <li class="links-main"><code>Main</code><time datetime="2026-11-23T10:09:04Z">5:09:04 a.m. EST</time></li>
+      </ol>
+    </section>
+    <section id="compilation-eta" class="forecast" aria-labelledby="forecast-title">
+      <h3 class="instrument-title" id="forecast-title">Compilation record</h3>
+      <p class="forecast-finish"><strong id="forecast-finish">Reading the compilation record…</strong> <a id="forecast-jump" class="forecast-link" href="#compilation-eta">Compilation record</a></p>
+      <p id="forecast-pace" class="quiet"></p>
+      <figure id="forecast-trend" hidden>
+        <figcaption>Projected finish across recent check-ins <span>Earlier finish ↓</span></figcaption>
+        <svg viewBox="0 0 500 54" preserveAspectRatio="none" aria-hidden="true"><path id="forecast-line"></path></svg>
+        <div class="forecast-axis"><span id="forecast-first"></span><span id="forecast-shift"></span><span id="forecast-last"></span></div>
+      </figure>
+      <details id="forecast-history" hidden><summary>Earlier estimates</summary>
+        <table><thead><tr><th scope="col">Check-in</th><th scope="col">Projected finish</th><th scope="col" class="num">Modules/min</th></tr></thead><tbody></tbody></table>
+      </details>
+    </section>
+    <aside class="lean-resources" aria-labelledby="budget-title">
+      <h3 class="instrument-title" id="budget-title">Compiler memory budget</h3>
+      <dl>
+        <div><dt>Compilers in use</dt><dd id="lean-workers">—</dd></div>
+        <div><dt>Memory charged</dt><dd id="lean-memory">—</dd></div>
+        <div><dt>Swap in use</dt><dd id="lean-swap">—</dd></div>
+        <div><dt>Handoff</dt><dd><span id="lean-handoff" class="handoff-note"></span></dd></div>
+      </dl>
+    </aside>
+    <section class="compiling-now" aria-labelledby="active-title">
+      <h3 class="instrument-title" id="active-title">Compiling now</h3>
+      <div id="active"></div>
+    </section>
+    <section class="by-name" aria-labelledby="libs-title">
+      <h3 class="instrument-title" id="libs-title">By top-level name <span class="tag" data-tag="measured">measured</span></h3>
+      <div id="libs"></div>
+      <p class="instrument-note">Bar lengths on a logarithmic scale, so that one module still shows beside 141,928.</p>
+    </section>
+    <details id="source-acquisition"><summary><span>Source acquisition</span> <small id="archive-count">Reading the archive record…</small></summary>
+      <p class="archive-head">Recorded SHA-256 of each part · <a href="./feed/evidence/source-provenance.json">Source provenance</a></p>
+      <div id="downloads"></div>
+    </details>
+  </div>
+</section>
+
+<hr class="rule-line" data-from="t = 40.918719" data-to="t = 43.327073">
+
+<!-- VIII · ρ₈ ─────────────────────────────────────────────────────────────── -->
+<section class="plate" id="export" data-zero="8" aria-labelledby="export-plate-title">
+  <header class="plate-head">
+    <div class="margin-specimen" data-figure="margin-specimen" data-kind="frond-pair" data-text="export" aria-hidden="true"><div class="figure-stage"></div></div>
+    <span class="numeral">VIII</span>
+    <p class="zero-tag">ρ₈ · ½ + 43.3271i</p>
+    <h2 class="plate-title" id="export-plate-title">Pressing the specimen</h2>
+    <p class="gloss"><code>lean4export</code> · NDJSON 3.1.0</p>
+    <p class="dek">The export: the proof written out as inert lines of JSON, so that someone else can examine it.</p>
+  </header>
+  <div class="prose">
+    <p>A compiled proof still lives inside the tool that grew it. To let another reader examine it, the proof terms of the five theorems, and everything they depend on, are written out as an export: plain lines of JSON, one record per line, naming every symbol, every expression node and every declaration. Nothing in it can run. The Lean FRO and the Mathlib Initiative call such a file “an inert export of the proof, out of reach of hypothetical malicious code”.</p>
+    <p>The published export of this proof holds 1,468,418 declarations in 61,570,595,788 bytes, 61.57 GB. Merely stating the five theorems, with every Mathlib definition they read, takes 51,692 declarations.</p>
+    <blockquote class="pull-line"><p>Pressed flat, labelled, inert: a specimen another botanist can examine.</p></blockquote>
+    <p>Writing the export is the heaviest step. Euler’s first two attempts, on the morning of 23 November, were stopped by its own guard when the host’s available memory fell below a 16 GiB reserve; the exporter had reached 71.28 GiB, then 24.04 GiB. No kernel had run, so nothing was concluded: the attempts were stopped, not rejected. The third attempt, held to 64 GiB of memory with swap on disk, began writing at 12:48:47 p.m. EST. <span id="export-sentence" class="live-sentence"></span></p>
+    <p>We expect, but have not yet seen, that Euler’s file will differ in its bytes from the published one, because Euler asks the exporter for records in a different order. Its challenge export already differs this way: 350,794,865 bytes against 350,862,311, with the same 51,692 declarations. The count of declarations is what will compare.</p>
+  </div>
+
+  <figure class="figure press" aria-labelledby="press-caption">
+    <section class="export-progress" id="export-progress" aria-labelledby="export-title" hidden>
+      <div class="press-head"><h3 class="instrument-title" id="export-title">Euler’s own export</h3><span class="export-attempt" id="export-attempt"></span><span class="chip" id="export-phase" data-state="running"></span></div>
+      <div class="export-measure">
+        <div id="export-count"><strong id="export-size">—</strong> <span id="export-bytes"></span></div>
+        <span id="export-percent"></span>
+      </div>
+      <div class="press-gauge">
+        <progress id="export-bar" aria-label="Bytes written, against the published size" aria-describedby="export-count export-basis"></progress>
+        <div class="press-scale" aria-hidden="true">
+          <span style="left:0%">0</span><span style="left:16.24%">10</span><span style="left:32.48%">20</span><span style="left:48.72%">30</span><span style="left:64.97%">40</span><span style="left:81.21%">50</span><span class="press-end" style="left:100%">61.57 GB</span>
+        </div>
+      </div>
+      <div class="export-scale"><span id="export-basis">Measured against <a href="./feed/evidence/reference-replay.json">the published export</a><span id="export-reference-size"></span></span><time id="export-sampled"></time></div>
+      <dl class="export-estimates">
+        <div><dt>Write pace</dt><dd><span id="export-pace">—</span> <small id="export-window"></small></dd></div>
+        <div><dt>Writing should finish</dt><dd id="export-write-eta">—</dd></div>
+        <div><dt>Kernel could start</dt><dd id="export-replay-eta">—</dd></div>
+      </dl>
+      <p id="export-forecast-note" hidden></p>
+    </section>
+    <p class="export-elsewhere" id="export-elsewhere" hidden>The press gauge follows the Workstation input. <a href="#export" data-input="local_export">Show Euler’s own export</a></p>
+    <figcaption id="press-caption"><span class="tag" data-tag="measured">measured</span> Bytes Euler has written to its own export, against the 61,570,595,788 bytes of the published one. The published size is a yardstick, not a target: Euler’s file may end a little larger or smaller. The press and its screw are a metaphor; the bytes are measured.</figcaption>
+  </figure>
+
+  <details class="memory-trace">
+    <summary>The two stopped exports, 23 November</summary>
+    <figure class="figure trace-figure">
+      <div class="trace-mount slip"><img src="./export-memory.svg" loading="lazy" width="720" height="360" alt="A line chart of available host memory between 5:12 and 5:32 a.m. EST. Twice the line falls below a dashed reserve line at 16 GiB, and at each crossing a mark reads “stopped”."></div>
+      <figcaption><span class="tag" data-tag="measured">measured</span> Host memory available during the two stopped exports on 23 November, 5:12–5:32 a.m. EST, from 138 host samples and two final supervisor readings. Each attempt was stopped when the host had less than its 16 GiB reserve available: 14.85 GiB at the first stop, 13.20 GiB at the second. Neither was rejected; no kernel had run. <a href="./export-memory.svg">Open the full trace ↗</a></figcaption>
+      <details class="numbers"><summary>Read the numbers</summary>
+        <div class="scroll-x">
+          <table>
+            <caption>The numbers behind this figure</caption>
+            <thead><tr><th scope="col">Attempt</th><th scope="col">Window (EST, 23 Nov)</th><th scope="col" class="num">Exporter peak</th><th scope="col" class="num">Host available at stop</th><th scope="col" class="num">Last recorded output</th><th scope="col">Outcome</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">1</th><td>5:12:05 → 5:20:42 a.m. (496.7 s)</td><td class="num">71.28 GiB</td><td class="num">14.85 GiB</td><td class="num">5.90 GB</td><td>stopped by the guard (SIGTERM); swap 0; OOM kills 0</td></tr>
+              <tr><th scope="row">2</th><td>5:20:57 → 5:32:11 a.m. (645.2 s)</td><td class="num">24.04 GiB</td><td class="num">13.20 GiB</td><td class="num">11.43 GB</td><td>stopped by the guard; run ended inconclusive</td></tr>
+              <tr><th scope="row">3</th><td>from 12:48:47 p.m.</td><td>limits: memory high 56 GiB, max 64 GiB, swap max 112 GiB, one Lean thread, idle I/O priority</td><td class="num">—</td><td class="num">live</td><td id="attempt-three-state">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="numbers-note">Earlier readings of attempt 3: 3:00:11 p.m. EST · 32,960,110,592 bytes · 5:00:09 p.m. EST · 36,714,491,904 bytes · 7:09:27 p.m. EST · 39,400,267,776 bytes. Latest: <span id="attempt-three-live">—</span></p>
+        <p class="numbers-note">Published export: 1,468,418 declarations · 61,570,595,788 bytes (61.57 GB; 57.34 GiB) · 7,699,933,588 bytes compressed (7.70 GB) · Published challenge export: 51,692 declarations, 350,862,311 bytes · Euler’s challenge export: 51,692 declarations, 350,794,865 bytes.</p>
+      </details>
+    </figure>
+  </details>
+</section>
+
+<hr class="rule-line" data-from="t = 43.327073" data-to="t = 48.005151">
+
+<!-- IX · ρ₉ ──────────────────────────────────────────────────────────────── -->
+<section class="plate" id="replay" data-zero="9" aria-labelledby="replay-title">
+  <header class="plate-head">
+    <div class="margin-specimen" data-figure="margin-specimen" data-kind="seedhead" data-text="replay" aria-hidden="true"><div class="figure-stage"></div></div>
+    <span class="numeral">IX</span>
+    <p class="zero-tag">ρ₉ · ½ + 48.0052i</p>
+    <h2 class="plate-title" id="replay-title">The second reader</h2>
+    <p class="gloss"><code>con-leche --compare</code></p>
+    <p class="dek">An independent kernel, a 24-line challenge, five controls, and two inputs.</p>
+  </header>
+  <div class="prose">
+    <p>Lean separates writing a proof from checking it. Untrusted tactics and notation produce terms in a small core theory, and a small kernel checks the terms. Because the terms are explicit, other programs can check them too. Barendregt and Wiedijk call this the de Bruijn criterion: a proof assistant should allow “independent checking by a small program”.</p>
+    <p>Compiling ran Lean’s own kernel, but inside the process that ran the proof’s code. Lean’s reference manual calls the next step the gold standard: export the terms, compare their statements with a trusted challenge, and check them with independently written kernels. It names “un-reviewed AI-generated proofs and programs” among the inputs that call for it.</p>
+    <blockquote class="pull-line"><p>“Only exit 0 carries the theorem’s guarantee.”</p><p class="pull-source">con-leche’s documentation</p></blockquote>
+    <p>Euler’s second reader is con-leche, a checker written in Lean with a machine-checked theorem that, in its verified mode, it does not accept a proof of False. It admits only Lean’s three standard axioms. It is given the solution and a 24-line challenge that states the five theorems using only Mathlib. First it must pass five controls: accept a true miniature proof, and refuse a proof of a different statement, a proof that leans on an extra axiom, an unfinished proof and a forged, ill-typed record.</p>
+    <p>Euler’s first attempt halted itself when one refusal arrived in a form the harness did not yet recognise; it ended inconclusive, before the real input was opened. At 12:47:16 p.m. EST on 23 November, after 20 minutes 30 seconds of checking with six jobs, con-leche accepted the published export against Euler’s challenge and named all five theorems. <span id="local-sentence" class="live-sentence"></span></p>
+  </div>
+
+  <div class="instrument replay-desk">
+    <div class="replay-head">
+      <div class="replay-paths toggles" role="group" aria-label="Show the record for">
+        <button type="button" class="toggle" data-input="local_export" aria-pressed="true">Workstation input</button>
+        <button type="button" class="toggle" data-input="reference_export" aria-pressed="false">Published input</button>
+      </div>
+      <span id="replay-verdict" class="chip" data-state="pending">Awaiting evidence</span>
+    </div>
+    <ol id="replay-track" class="track" aria-label="Selected input verification stages"></ol>
+    <p id="operation" class="operation">Reading the feed…</p>
+
+    <div class="replay-transfer" id="replay-transfer" hidden>
+      <div class="transfer-head"><label for="input-progress" id="transfer-stage">Input transfer</label><span id="transfer-size"></span></div>
+      <progress id="input-progress" max="1" value="0"></progress>
+    </div>
+
+    <section class="kernel-progress" id="kernel-progress" aria-labelledby="kernel-phase" hidden>
+      <div class="kernel-heading"><h3 class="instrument-title" id="kernel-phase">Kernel progress</h3><span id="kernel-percent"></span></div>
+      <div class="kernel-body">
+        <svg class="kernel-head" id="kernel-head" viewBox="0 0 100 100" aria-hidden="true" focusable="false"></svg>
+        <div class="kernel-readings">
+          <progress id="kernel-bar" aria-label="Solution declarations checked" aria-describedby="kernel-count"></progress>
+          <span id="kernel-count"></span>
+          <span id="kernel-eta"></span>
+          <p id="kernel-pace" hidden></p>
+        </div>
+      </div>
+      <p class="kernel-caption" id="kernel-caption"></p>
+    </section>
+
+    <p class="quiet" id="checker-resources" hidden></p>
+    <dl class="replay-facts">
+      <div><dt>Kernel</dt><dd id="replay-kernel">—</dd></div>
+      <div><dt>Proof input</dt><dd id="replay-input">—</dd></div>
+      <div><dt>Workstation build</dt><dd id="replay-build">—</dd></div>
+      <div><dt id="replay-export-label">Workstation export</dt><dd id="replay-export">—</dd></div>
+    </dl>
+    <p id="replay-source" class="replay-source" hidden></p>
+    <p id="export-observation" class="quiet" hidden></p>
+
+    <section class="controls-record" aria-labelledby="controls-heading">
+      <h3 class="instrument-title" id="controls-heading">The five controls</h3>
+      <div id="replay-controls" class="controls-trays"></div>
+      <p class="instrument-caption"><span class="tag" data-tag="receipt">receipt</span> Five fixture controls, run through the same compile, export and kernel path before the real input is opened: one must be accepted, four must be refused. The outcomes are the receipt’s; the seed trays are a metaphor.</p>
+      <p class="instrument-note">Exit codes: 0 accepted · 1 rejected · 2 declined (a feature the checker does not support) · 3 error. Only exit 0 carries the theorem’s guarantee. Exit codes come from the workstation’s receipt; the public copy records only whether each control behaved as expected.</p>
+    </section>
+
+    <section class="theorem-record" aria-labelledby="verdict-title">
+      <div class="section-head"><h3 class="instrument-title" id="verdict-title">Determination slips</h3><span class="quiet" id="verdict-count"></span></div>
+      <p class="instrument-caption"><span class="tag" data-tag="receipt">receipt</span> One slip per exported theorem, for the selected input: its statement in words and in Lean, its proof term, three gates and the kernel’s stamp. A slip is stamped only when the receipt says so.</p>
+      <div id="theorems" class="slips"></div>
+      <p class="instrument-note">Every “1 / 2” compares with a real number, so it is real division. The strip in the last two statements is open, which excludes the zeros some L-functions have on <span class="math">\Re s=0</span>.</p>
+    </section>
+
+    <p class="replay-receipts"><a id="replay-receipt" hidden>Kernel receipt</a></p>
+    <p class="run-meta"><span id="elapsed"></span><span id="stamp"></span></p>
+
+    <details class="numbers"><summary>Read the numbers · the published input</summary>
+      <div class="scroll-x">
+        <table>
+          <caption>The numbers behind this record</caption>
+          <tbody>
+            <tr><th scope="row">Attempt</th><td><code>7f06f190234b4f298a916848c66ccb24</code> (retry of <code>aacbf76973d749e6bd552220da563d22</code>, which stopped in its controls, 11:13:30–11:15:52 a.m. EST)</td></tr>
+            <tr><th scope="row">Kernel</th><td>con-leche <code>5dc36dc15b7bee891a02406b78a8ac816a47baad</code>, <code>--verified --compare</code>, 6 jobs; binary SHA-256 <code>588c0b86…a12e</code></td></tr>
+            <tr><th scope="row">Timeline (EST, 23 Nov)</th><td>created 11:56:56.27 a.m. · controls finished 11:57:01.56 a.m. · input sealed 12:26:16.57 p.m. · kernel launched 12:26:46.70 p.m. · ended 12:47:16 p.m.</td></tr>
+            <tr><th scope="row">Duration</th><td>attempt 3,020 s (50 min 20 s), of which checking 1,230.13 s (20 min 30 s)</td></tr>
+            <tr><th scope="row">Controls</th><td>5 of 5 behaved as expected; exit codes 0 / 1 / 2 / 2 / 1 (recorded in the workstation’s receipt; the public copy keeps only the outcomes)</td></tr>
+            <tr><th scope="row">Solution</th><td>7,699,933,588 bytes compressed (SHA-256 <code>61a8938a…5381</code>); 61,570,595,788 bytes unpacked (SHA-256 <code>5ea74b91…244e</code>)</td></tr>
+            <tr><th scope="row">Challenge</th><td>Euler’s own export, 350,794,865 bytes (SHA-256 <code>cf9cb6e4…2842</code>), sealed 20 Nov 2026, 12:52:03 p.m. EST</td></tr>
+            <tr><th scope="row">Declarations</th><td>51,692 challenge · 1,468,418 solution</td></tr>
+            <tr><th scope="row">Memory</th><td>peak 58.01 GiB (anonymous 43.81 GiB, file cache 32.02 GiB); swap 0; OOM kills 0</td></tr>
+            <tr><th scope="row">Exit</th><td>0, clean; log SHA-256 <code>b99bb371…ff12</code></td></tr>
+            <tr><th scope="row">Verdict</th><td>passed; for each of the five theorems: statement, axioms, kernel all passed</td></tr>
+          </tbody>
+        </table>
+        <table>
+          <caption>Other machines (context, not a benchmark: the metrics differ)</caption>
+          <tbody>
+            <tr><th scope="row">Euler</th><td>6 jobs · 20 min 30 s · 58.01 GiB peak (cgroup, includes file cache)</td></tr>
+            <tr><th scope="row">Sutherland, MIT</th><td>64 workers · 3 min 22.56 s wall · peak RSS 45.84 GiB</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+</section>
+
+<hr class="rule-line" data-from="t = 48.005151" data-to="t = 49.773832">
+
+<!-- X · ρ₁₀ ─────────────────────────────────────────────────────────────── -->
+<section class="plate" id="settled" data-zero="10" aria-labelledby="settled-title">
+  <header class="plate-head">
+    <div class="margin-specimen" data-figure="margin-specimen" data-kind="horsetail" data-text="settled" aria-hidden="true"><div class="figure-stage"></div></div>
+    <span class="numeral">X</span>
+    <p class="zero-tag">ρ₁₀ · ½ + 49.7738i</p>
+    <h2 class="plate-title" id="settled-title">What is settled, and what is not</h2>
+    <p class="gloss">Collected · Determined · Studied</p>
+    <p class="dek">Three different sentences: checked by kernels, reproduced here, understood by people.</p>
+  </header>
+  <div class="prose">
+    <p>Three sentences are easy to blur, so we keep them apart.</p>
+    <p><b>Kernel-checked, by others.</b> Several kernels have accepted the full export of this proof, among them con-leche, its Rust port con-ron, nanoda, and Lean’s own default and paranoid kernels, in runs reported by Andrew Sutherland at MIT; con-leche and con-ron also compared it with the challenge. On 21 November 2026 the Lean FRO and the Mathlib Initiative wrote: “We hereby certify that both the statement and the proof of the Riemann Hypothesis are correct.” That is their statement, made on their criteria.</p>
+    <p><b>Reproduced on Euler.</b> On this desk, so far: the build of all 175,187 modules, with a <code>Main.olean</code> identical to MIT’s, and con-leche’s acceptance of the published export against Euler’s own challenge. <span id="local-settled" class="live-sentence"></span></p>
+    <p><b>Understood by people.</b> No one claims this yet. The author writes that he has “just taken a step” towards understanding and explaining the argument, and expects it to be “massively simplified”. The reading project calls its own work “not a proof, not a referee report and not an endorsement”.</p>
+    <blockquote class="pull-line"><p>The third line stays in pencil.</p></blockquote>
+    <p>What a kernel’s acceptance establishes is narrow and exact: each named theorem has the statement written in the challenge, and its proof typechecks using only <code>propext</code>, <code>Quot.sound</code> and <code>Classical.choice</code>. It does not establish that the statement means the Riemann Hypothesis; that rests on a human reading of Mathlib’s definitions, which the joint statement calls carefully vetted. The soundness of each kernel, and of the compiler and machine beneath it, is assumed. And “GRH” here means Dirichlet L-functions only.</p>
+    <p>The label below has three lines. <span id="label-sentence" class="live-sentence">The first is inked. The second is inked for the published export and pencilled, for now, for Euler’s own.</span> The third stays in pencil. It is not ours to fill.</p>
+  </div>
+  <figure class="figure" data-figure="three-lines">
+    <div class="figure-stage">A paper label with three ruled lines. “Collected” is inked in gold. “Determined” is inked for the published input and pencilled for Euler’s own export. “Studied” is a pencil line with nothing written on it.</div>
+    <figcaption><span class="tag" data-tag="receipt">receipt</span> The specimen label with three lines. <i>Collected</i>: compiled on Euler, inked in gold once the build passed. <i>Determined</i>: by the kernel, inked for the published input; for Euler’s own export it stays in pencil, showing its current state, until <code>local-replay.json</code> passes. <i>Studied</i>: by people, always in pencil, and blank.</figcaption>
+    <details class="numbers"><summary>Read the numbers</summary>
+      <table>
+        <caption>The numbers behind this figure</caption>
+        <thead><tr><th scope="col">Line</th><th scope="col">State</th><th scope="col">From</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Collected</th><td>compiled on Euler · 175,187 modules · Lake exit 0 · 23 November 2026, 5:10:11 a.m. EST</td><td><code>replay.build</code></td></tr>
+          <tr><th scope="row">Determined · published input</th><td>accepted 23 Nov 2026, 12:47 p.m. EST</td><td>reference receipt</td></tr>
+          <tr><th scope="row">Determined · Euler’s own export</th><td>not yet examined</td><td>local receipt / <code>replay.local_export</code></td></tr>
+          <tr><th scope="row">Studied</th><td>blank</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </details>
+  </figure>
+</section>
+
+<hr class="rule-line" data-from="t = 49.773832" data-to="t = 52.970321">
+
+<!-- Appendix A · ρ₁₁ ─────────────────────────────────────────────────────── -->
+<section class="plate appendix" id="evidence" data-zero="11" aria-labelledby="evidence-title">
+  <header class="plate-head">
+    <div class="margin-specimen" data-figure="margin-specimen" data-kind="fern" data-text="replay" aria-hidden="true"><div class="figure-stage"></div></div>
+    <span class="numeral">A</span>
+    <p class="zero-tag">ρ₁₁ · ½ + 52.9703i</p>
+    <h2 class="plate-title" id="evidence-title">Appendix A&nbsp;· The label</h2>
+    <p class="dek">The reverse of the specimen label: every record, its digest, and where to check it.</p>
+  </header>
+  <div class="prose">
+    <p>This is the back of the label. Every record the desk publishes is listed here with its SHA-256 digest, drawn as a rosette: sixty-four florets, one for each hexadecimal digit, so identical digests draw identical rosettes. A rosette is a picture of a hash, not a check of one. To check, fetch the files and hash them yourself; the box at the end shows how.</p>
+  </div>
+
+  <section class="manifest" aria-labelledby="manifest-title">
+    <h3 class="instrument-title" id="manifest-title">The evidence manifest</h3>
+    <p class="manifest-state" id="manifest-state">Reading the manifest…</p>
+    <div class="scroll-x">
+      <table class="manifest-table">
+        <thead><tr><th scope="col">Record</th><th scope="col">SHA-256</th><th scope="col">Rosette</th><th scope="col">Open</th></tr></thead>
+        <tbody id="manifest-records"></tbody>
+      </table>
+    </div>
+    <p class="sanitized">The files served here are sanitized copies. Local paths are replaced by “[local path]”, and private fields such as process lists and host names are removed. The digests in the manifest are digests of these copies, so you can verify each download. One digest is different: the <code>build_record_sha256</code> in every receipt, b0b6a182…65bb, is the digest of the workstation’s private attestation, a 1,721-byte file that is not published. Its public copy hashes differently, and nothing served here will reproduce b0b6a182…. What you can check independently is listed below.</p>
+  </section>
+
+  <section class="provenance" aria-labelledby="provenance-title">
+    <h3 class="instrument-title" id="provenance-title">Provenance</h3>
+    <dl class="provenance-rows">
+      <div><dt>Run</dt><dd class="mono" id="prov-run">rh-20261120</dd></div>
+      <div><dt>Source</dt><dd><a class="mono" href="https://github.com/Deicyde/riemann-hypothesis/tree/a172c464fd4bcfc4f53e394dcba45d742b1409a6">Deicyde/riemann-hypothesis @ a172c464fd4bcfc4f53e394dcba45d742b1409a6</a> <span class="quiet">(GitHub now redirects this owner to leanprover-community; the commit is the same)</span></dd></div>
+      <div><dt>Source archive</dt><dd class="mono">lean.tar.gz · 14 parts · 239,275,554 bytes · 175,190 members</dd></div>
+      <div><dt>Archive SHA-256</dt><dd class="mono" id="prov-archive">9631b4f020199e580ba86178cb56c6e9b09f690c2369a80dc4334aa93f49c7fc</dd></div>
+      <div><dt>Lean</dt><dd class="mono">4.33.1 · commit 819816b2e0a3bf405af45ae5c7af2491d8f5bee6</dd></div>
+      <div><dt>Mathlib</dt><dd class="mono">0df444a360eaa60ab8c11dca51a86af692955474 (v4.33.1)</dd></div>
+      <div><dt>Exporter</dt><dd class="mono">lean4export 15f6055e299ad5b89345e533cc2192f4cc00f659 · format 3.1.0</dd></div>
+      <div><dt>Kernel</dt><dd class="mono">con-leche <span id="prov-kernel-commit">5dc36dc15b7bee891a02406b78a8ac816a47baad</span> · --verified --compare</dd></div>
+      <div><dt>Kernel binary SHA-256</dt><dd class="mono"><span id="prov-kernel-binary">588c0b86a3cb5e9fbee489ec1d609435599d82b155df1bb4f5e6886d43e3a12e</span> (compiled with Lean 4.36.0)</dd></div>
+      <div><dt>Permitted axioms</dt><dd class="mono">propext · Quot.sound · Classical.choice</dd></div>
+      <div><dt>Challenge source SHA-256</dt><dd class="mono">031f4f2ca55a03f720deb562c6c2451d251acc8412b122288af52ad89ae03e32 · 24 lines · 1,310 bytes</dd></div>
+      <div><dt>Challenge export SHA-256</dt><dd class="mono"><span id="prov-challenge">cf9cb6e4cf734322f1bb23d70a7ff8c041bbb907e7498dca7b7d53e759072842</span> · 350,794,865 bytes · 51,692 declarations</dd></div>
+      <div><dt>Published solution, compressed</dt><dd class="mono"><span class="prov-flower" id="prov-compressed"></span>61a8938ad5f5e57397c1c0e3b954916af546d9004ade01c3555744a681b05381 · 7,699,933,588 bytes</dd></div>
+      <div><dt>Published solution, unpacked</dt><dd class="mono"><span id="prov-solution">5ea74b912147c5c93cc2b6d70cc727cf908df2f62ac6a20480a3fa02f6be244e</span> · 61,570,595,788 bytes · 1,468,418 declarations</dd></div>
+      <div><dt>Main.olean SHA-256</dt><dd class="mono"><span id="prov-main-olean">9146dfb4148e24d2252e04c50742f3e49dd126dfcc5006d10bf5f873ddf796ad</span> · identical to MIT’s</dd></div>
+      <div><dt>Build record SHA-256</dt><dd class="mono"><span id="prov-build-record">b0b6a182bc61acc88ac8182a405f9ccad4cc251a470116ee5740d9adfc1b65bb</span> · of the workstation’s private attestation</dd></div>
+      <div><dt>Euler’s own export</dt><dd class="mono" id="prov-own-export">—</dd></div>
+    </dl>
+  </section>
+
+  <section class="pairs" aria-labelledby="pairs-title">
+    <h3 class="instrument-title" id="pairs-title">Matching digests</h3>
+    <div class="digest-pairs" id="digest-pairs"></div>
+    <p class="instrument-caption"><span class="tag" data-tag="receipt">receipt</span> Each pair sets the digest in Euler’s receipt beside the digest pinned before the run. Matching digests draw matching rosettes.</p>
+  </section>
+
+  <aside class="check-yourself slip" aria-labelledby="check-title">
+    <h3 class="slip-title" id="check-title">Check it yourself</h3>
+    <p>Everything below is public. None of it depends on trusting this page.</p>
+    <ul class="check-links">
+      <li><a href="./feed/evidence/manifest.json">The evidence manifest</a></li>
+      <li><a href="https://github.com/Deicyde/riemann-hypothesis/tree/a172c464fd4bcfc4f53e394dcba45d742b1409a6">The Lean source at its pin</a> (and <a href="https://github.com/Deicyde/riemann-hypothesis/blob/a172c464fd4bcfc4f53e394dcba45d742b1409a6/src/Main.lean#L4">Main.lean, line 4</a>)</li>
+      <li><a href="https://github.com/leanprover/con-leche/tree/5dc36dc15b7bee891a02406b78a8ac816a47baad">con-leche at commit 5dc36dc1</a></li>
+      <li><a href="https://math.mit.edu/~drew/grh/">Andrew Sutherland’s independent checks, MIT</a></li>
+    </ul>
+<pre class="check-commands"><code># 1. A receipt against the manifest
+curl -sO http://localhost:8765/feed/evidence/manifest.json
+curl -sO http://localhost:8765/feed/evidence/reference-replay.json
+sha256sum reference-replay.json
+#    compare with records["reference-replay.json"].sha256 in manifest.json
+
+# 2. Euler's Main.olean against MIT's build
+curl -s http://localhost:8765/feed/evidence/build-attestation.json | grep -o '9146dfb4[0-9a-f]*'
+#    then find the same digest on https://math.mit.edu/~drew/grh/
+
+# 3. The published export (a 7.70 GB download, 61.57 GB unpacked)
+curl -sO https://math.mit.edu/~drew/grh/solution.ndjson.zst
+sha256sum solution.ndjson.zst
+#    61a8938ad5f5e57397c1c0e3b954916af546d9004ade01c3555744a681b05381
+zstd -dc solution.ndjson.zst | sha256sum
+#    5ea74b912147c5c93cc2b6d70cc727cf908df2f62ac6a20480a3fa02f6be244e
+
+# 4. The source and the kernel at their pins
+git clone https://github.com/Deicyde/riemann-hypothesis
+git -C riemann-hypothesis checkout a172c464fd4bcfc4f53e394dcba45d742b1409a6
+git clone https://github.com/leanprover/con-leche
+git -C con-leche checkout 5dc36dc15b7bee891a02406b78a8ac816a47baad</code></pre>
+    <p class="check-footnote">con-leche’s README describes <code>--compare CHALLENGE SOLUTION</code>. At MIT the comparison took 3 min 22.56 s on 64 workers with a peak of 45.84 GiB; on Euler, 20 min 30 s with six jobs and a 58.01 GiB peak. The two peaks are measured differently (process memory there, the whole control group with its file cache here), so read them as context, not a race.</p>
+  </aside>
+</section>
+
+<hr class="rule-line" data-from="t = 52.970321" data-to="t = 56.446248">
+
+<!-- Appendix B · ρ₁₂ ─────────────────────────────────────────────────────── -->
+<section class="plate appendix" id="ledger" data-zero="12" aria-labelledby="ledger-title">
+  <header class="plate-head">
+    <div class="margin-specimen" data-figure="margin-specimen" data-kind="frond-pair" data-text="forest" aria-hidden="true"><div class="figure-stage"></div></div>
+    <span class="numeral">B</span>
+    <p class="zero-tag">ρ₁₂ · ½ + 56.4462i</p>
+    <h2 class="plate-title" id="ledger-title">Appendix B&nbsp;· Field notes</h2>
+    <p class="dek">The run’s own diary, newest first, and the host’s vital signs.</p>
+  </header>
+  <div class="prose">
+    <p>These are the run’s field notes, as Euler wrote them, newest first, timed in US Eastern time. Runs of identical progress lines are folded into one row so the record stays readable; unfold a row to see every entry. Below the notes are the host’s vital signs for the last twenty minutes.</p>
+  </div>
+
+  <div class="instrument ledger-desk">
+    <div class="ledger-tools">
+      <label class="field ledger-find" for="find"><span class="label">Search the notes</span><input type="search" id="find" placeholder="module, stage or message" autocomplete="off"></label>
+      <label class="field ledger-type" for="type"><span class="label">Show</span><select id="type"><option value="">All entries</option><option value="module">Modules</option><option value="warning">Warnings</option><option value="error">Errors</option><option value="stage">Stages</option><option value="part">Downloads</option></select></label>
+      <button id="pause" class="button" type="button" aria-pressed="false">Pause updates</button>
+    </div>
+    <p class="quiet search-state" id="search-state">Reading the notes…</p>
+    <div class="rows-head" aria-hidden="true"><span id="rows-zone">EST</span><span>kind</span><span>entry</span></div>
+    <div id="rows" class="rows"></div>
+    <div class="actions"><button id="older" class="button" type="button">Load earlier notes</button><button id="latest" class="button" type="button" hidden>Back to the latest</button></div>
+    <p class="quiet archive-note public-only">Earlier notes are read from the public archive, six chunks at a time.</p>
+  </div>
+
+  <details class="vitals" id="vitals">
+    <summary>Host vitals · last 20 minutes <span class="sample-range" id="sample-range"></span></summary>
+    <div id="charts" class="vital-strips"><p class="quiet">No host samples yet.</p></div>
+    <p class="instrument-caption"><span class="tag" data-tag="measured">measured</span> Euler’s host, sampled every 10 seconds. Seismograph strips, literal values; no process names or paths are published.</p>
+  </details>
+
+  <details class="bench-drawer" id="machine" hidden><summary>Machine · this workstation only</summary><div id="guest" class="quiet" hidden></div><div id="local-info"></div></details>
+  <details class="bench-drawer" id="raw" hidden><summary>Raw logs · this workstation only</summary>
+    <p class="quiet">Unsanitized. These lines never leave Euler.</p>
+    <div class="raw-tools">
+      <label class="field" for="log-file"><span class="label">Log file</span><select id="log-file"></select></label>
+      <label class="field grow" for="log-q"><span class="label">Filter lines</span><input id="log-q" type="search" placeholder="text to match"></label>
+      <button id="read-log" class="button" type="button">Read</button>
+    </div>
+    <pre id="raw-text" class="raw-text"></pre>
+    <button id="older-log" class="button" type="button" hidden>Read the previous block</button>
+  </details>
+</section>
+
+<hr class="rule-line" data-from="t = 56.446248" data-to="t = 60">
+
+<!-- Colophon · t = 60 ─────────────────────────────────────────────────────── -->
+<section class="plate colophon" id="colophon" data-t="60" aria-labelledby="colophon-title">
+  <header class="plate-head">
+    <p class="zero-tag">t = 60 · the top of the rail</p>
+    <h2 class="plate-title" id="colophon-title">Colophon</h2>
+  </header>
+  <div class="prose">
+    <h3 class="colophon-head">Why we did this</h3>
+    <p>We wanted to watch a proof of the Riemann Hypothesis checked on one ordinary workstation, from the source archive to an independent kernel’s stamp, and to keep a record honest enough to hold three things apart: what machines have checked, what we have reproduced here, and what no one yet understands. Its author calls the argument “incredibly long” and has not yet published a readable account of it. A proof like that can be checked long before it can be read.</p>
+    <p>The collaborators on this page are not all people, and we would rather say so plainly. The Lean proof is by Levent Alpöge, working with Claude. The kernel that re-read it here, con-leche, was implemented and proven consistent by Claude under the supervision of Joachim Breitner at the Lean FRO. The run on Euler was operated by Astra (GPT-6). The plates were drawn by Claude. Lean’s reference manual counts un-reviewed AI-generated proofs among the inputs that deserve an independent check. This page is the record of that check, kept one receipt at a time.</p>
+  </div>
+  <div class="colophon-columns">
+    <section class="credits" aria-labelledby="credits-title">
+      <h3 class="colophon-head" id="credits-title">Credits</h3>
+      <ul>
+        <li>Bernhard Riemann, “Ueber die Anzahl der Primzahlen unter einer gegebenen Grösse” (1859), in <a href="https://www.maths.tcd.ie/pub/HistMath/People/Riemann/Zeta/EZeta.pdf">Wilkins’s translation</a></li>
+        <li>Levent Alpöge and Claude, the Lean proof: <a href="https://alpo.ge/remark.pdf">the author’s note</a> · <a href="https://github.com/Deicyde/riemann-hypothesis/tree/a172c464fd4bcfc4f53e394dcba45d742b1409a6">the source at the pin</a></li>
+        <li>The Lean and Mathlib communities: <a href="https://lean-lang.org/">Lean</a> · <a href="https://github.com/leanprover-community/mathlib4">Mathlib</a> · <a href="https://leanprover-community.github.io/blog/posts/riemann-hypothesis/">the joint statement of the Lean FRO and the Mathlib Initiative, 21 November 2026</a></li>
+        <li><a href="https://github.com/leanprover/con-leche">con-leche</a>, implemented and proven consistent by Claude (Fable and Opus) under the supervision of Joachim Breitner at the Lean FRO, <a href="https://leodemoura.github.io/blog/2026-10-15-lean-now-ships-with-verified-kernels/">as described by Leonardo de Moura</a></li>
+        <li><a href="https://github.com/leanprover/lean4export">lean4export</a>, the exporter</li>
+        <li>Andrew Sutherland (MIT), <a href="https://math.mit.edu/~drew/grh/">independent builds and checks, and the published export</a></li>
+        <li>The reading project’s <a href="https://nasqret.github.io/riemann-rev/book/_static/atlas/index.html">proof atlas</a>, used in chapters III and V (0BSD)</li>
+        <li><a href="https://shosonoda.github.io/lean-rh-alpoge/">The RIKYU report</a>, RIKEN R-CCS, cited in chapter VI</li>
+        <li>Enrico Bombieri’s <a href="https://www.claymath.org/wp-content/uploads/2022/05/riemann.pdf">problem description for the Clay Mathematics Institute</a></li>
+        <li>NIST Digital Library of Mathematical Functions, <a href="https://dlmf.nist.gov/25.15">§25.15</a>–<a href="https://dlmf.nist.gov/25.16">25.16</a></li>
+        <li>Platt and Trudgian, <a href="https://arxiv.org/abs/2004.09765">the zeros checked to height 3·10¹² (2020)</a></li>
+        <li>Andrew Odlyzko’s table of the first 100 zeros, against which our embedded zero heights were checked</li>
+        <li>Barendregt and Wiedijk, <a href="https://www.cs.ru.nl/F.Wiedijk/pubs/rspaper.pdf">“The Challenge of Computer Mathematics”</a> (2005)</li>
+        <li>Lean Language Reference, <a href="https://lean-lang.org/doc/reference/latest/ValidatingProofs/">“Validating a Lean Proof”</a></li>
+        <li>Anna Atkins, whose cyanotypes in <i>Photographs of British Algae</i> (1843) printed real specimens in this same blue, sixteen years before Riemann’s paper</li>
+        <li>Euler, the workstation that compiled the proof and ran its second reading</li>
+        <li>Astra (GPT-6), who operated the run</li>
+        <li>Claude, who drew the plates</li>
+      </ul>
+    </section>
+    <section class="method" aria-labelledby="method-title">
+      <h3 class="colophon-head" id="method-title">Method notes</h3>
+      <dl>
+        <dt>Type</dt><dd>Set in Cormorant Garamond (display), EB Garamond (text) and JuliaMono (Lean and data), each under the SIL Open Font License 1.1; formulas are typeset in your browser by KaTeX, in its own faces, under the MIT licence. The licence files sit beside the fonts in <code>/fonts/</code>.</dd>
+        <dt>Live data</dt><dd><code>/feed/status.json</code>, read every 4 seconds; <code>/feed/evidence/*.json</code>, sanitized copies of Euler’s receipts and provenance; <code>/feed/events/*.jsonl</code>, the field notes. All are written by Euler; this page loads nothing from any other site.</dd>
+        <dt>Computed in your browser</dt><dd><span class="math">\zeta</span> itself, the <span class="math">\psi</span> staircase, Hardy’s <span class="math">Z</span> on the rail and both curves of <span class="math">G(y)</span> are computed on your device by <code>zeta.js</code>. The first hundred zero heights are mathematical constants: computed with mpmath, checked against Andrew Odlyzko’s table of the first 100 zeros, and embedded to nine decimals. Our tests confirm <span class="math">\lvert\zeta(\tfrac12+i\gamma)\rvert&lt;10^{-6}</span> at each of them.</dd>
+        <dt>Drawn by rule</dt><dd>Layouts such as the capitulum and the plate furniture are conventions, tagged as such. Drawings printed in Lean glyphs are made of tokens from the formalization.</dd>
+        <dt>Sources and licences</dt><dd>The Lean source is its authors’; we quote and link it and do not redistribute it. The reading project’s atlas is 0BSD. The RIKYU report declares no licence; we cite its figures and link it, as we do Sutherland’s page.</dd>
+        <dt>Units and time</dt><dd>GB = 10⁹ bytes, for files; GiB = 2³⁰ bytes, for memory. Times are US Eastern, written with their zone (EST or EDT); the build’s day totals in chapter VII are counted in UTC days.</dd>
+        <dt>Privacy</dt><dd>No cookies, no third-party scripts. Page loads are recorded on our server (address, browser, language and referring site) and deleted after at most 30 UTC days; the feed and assets are not counted.</dd>
+      </dl>
+    </section>
+  </div>
+  <p class="printed-from" id="printed-from">Printed from run rh-20261120 · source a172c464</p>
+  <p class="signature">— Lark</p>
+</section>
+
+</main>
+
+<footer class="site-foot">
+  <a href="https://alpo.ge/remark.pdf">The author’s note</a>
+  <a href="./feed/status.json">Live feed (JSON)</a>
+  <a href="#colophon">Colophon</a>
+</footer>
+</body>
+</html>

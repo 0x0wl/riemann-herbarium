@@ -1,0 +1,144 @@
+/* ==========================================================================
+   receipt.css · an archived receipt, pasted onto the herbarium sheet
+   ==========================================================================
+
+   The page (reference-controls-20261123T161552Z.html) is one paper slip on the
+   cyanotype ground: the record of the first attempt on the published input,
+   which stopped in its controls. ink.css gives the paper, the inks and the
+   stamp; masthead.css the bar. The embedded JSON receipt is not styled (it is
+   a script element) and must never change: three consumers hash its text.   */
+
+.archive {
+  display: grid;
+  justify-items: center;
+  padding: clamp(28px, 7vh, 88px) var(--gutter) clamp(48px, 10vh, 120px);
+  outline: none;
+}
+
+.archive-slip {
+  display: grid;
+  gap: clamp(20px, 3vh, 32px);
+  inline-size: 100%;
+  max-inline-size: 860px;
+  padding: clamp(20px, 4vw, 48px);
+}
+
+.archive-head {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.archive-slip h1 {
+  color: var(--ink);
+  font-size: clamp(2.6rem, 1.6rem + 4vw, 4.5rem);
+  line-height: .95;
+}
+
+/* On paper the gold word takes the deeper lettering ink. */
+.archive-slip h1 :is(em, i) {
+  color: var(--seal-gold-ink);
+}
+
+.archive-date {
+  margin: 0;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: .8125rem;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.archive-stamp {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  margin: var(--space-2) 0 0;
+}
+
+.archive-stamp .det-line {
+  margin: 0;
+}
+
+.archive-intro {
+  max-inline-size: 62ch;
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+
+.archive-section {
+  display: grid;
+  gap: var(--space-3);
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--line);
+}
+
+.archive-section h2 {
+  color: var(--ink);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  font-style: italic;
+}
+
+.archive-count {
+  margin: 0;
+  color: var(--state-passed);
+  font-family: var(--font-mono);
+  font-size: .875rem;
+}
+
+.archive-fixtures {
+  inline-size: 100%;
+}
+
+.archive-fixtures th[scope="row"] {
+  inline-size: 48%;
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  font-variant-caps: normal;
+  letter-spacing: 0;
+}
+
+.archive-fixtures td {
+  color: var(--state-passed);
+}
+
+.archive-mismatch td {
+  color: var(--state-inconclusive);
+}
+
+.archive-mismatch code {
+  display: block;
+  color: var(--ink-2);
+}
+
+.archive-outcome,
+.archive-note {
+  max-inline-size: 62ch;
+  margin: 0;
+  color: var(--ink-2);
+  font-size: .9375rem;
+  line-height: 1.5;
+}
+
+.archive-identity dd code {
+  color: var(--ink);
+  font-size: .8125rem;
+  overflow-wrap: anywhere;
+}
+
+.archive-page .link-state[data-state="archived"]::before {
+  border-color: var(--heather);
+  background: linear-gradient(90deg, var(--heather) 50%, transparent 50%);
+}
+
+@media (max-width: 599.98px) {
+  .archive {
+    padding-inline: 10px;
+  }
+
+  .archive-fixtures th[scope="row"] {
+    inline-size: auto;
+  }
+}
